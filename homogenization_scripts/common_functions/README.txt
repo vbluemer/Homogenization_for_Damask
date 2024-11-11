@@ -1,0 +1,1 @@
+The functions in this folder are placed here as they are used for at least 2 modules.
