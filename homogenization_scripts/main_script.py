@@ -73,7 +73,8 @@ def main_loop(project_name_input: str, scripts_folder: str, skip_checks: bool = 
 
         if problem_definition.general.reduce_parasitic_stresses:
             # Use the iterative mode (experimental)
-            run_ended_succesfully = run_iterative_mode(problem_definition, damask_job)
+            raise Exception("iterative modes are currently disabled on public version")
+            # run_ended_succesfully = run_iterative_mode(problem_definition, damask_job)
             # run_ended_succesfully = run_iterative_bfgs(problem_definition, damask_job)
         else:
             # Pre-process files needed to run DAMASK_grid per job
