@@ -13,8 +13,23 @@ To achieve these results, this extension provides:
     - Plotting of stress-strain curves
 
 ## Installation
+It is highly recommended to run this project inside of a Conda (or similar) environment. 
+### With Conda (Python 3.12): 
+``` 
+git clone https://github.com/JoppeKleinhout/Homogenization_for_Damask.git
+cd Homogenization_for_Damask
+conda create -n [environment_name] python=3.12
+conda activate [environment_name]
+pip install -r requirements.txt # Install the required packages
+```
+If an installation of DAMASK does not exist on the system yet,  it can be installed into the conda environment.
+``` sdaw
+conda activate [environment_name]
+conda config --add channels conda-forge # Add the conda-forge channel
+conda install conda-forge::damask
+```
 
-## Usage
+## Usage 
 
 ## Context
 This project has been developed by Joppe Kleinhout in the context of pursuing a Msc degree in Mechanical Engineering at the University of Twente. Specifically as an internship at the Research chair of Nonlinear Solid Mechanics.
