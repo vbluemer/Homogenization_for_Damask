@@ -9,7 +9,7 @@ from .pre_processor.read_input_file import read_problem_definition
 from .pre_processor.create_jobs import create_jobs
 from .pre_processor.get_project_name_and_folder import get_project_name_and_folder
 from .pre_processor.summarize_tasks import summarize_tasks
-from .iterative_modes import *
+# from .iterative_modes import *
 from .post_processor.yield_surfaces import general_functions
 from .damask_monitor.pre_processor.damask_pre_processor import pre_process_damask_files
 from .damask_monitor.simulation.damask_monitor import run_and_monitor_damask
