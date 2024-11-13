@@ -57,9 +57,10 @@ Included in the default installation is a simple ready-to-run example project. T
 conda activate [environment_name]
 python run_project ExampleProject
 ```
-By default this project is setup to find the elastic matrix components of an isotropic material. This can be changed by adjusting the `problem_definition.yaml` located in `projects/ExampleProject`, see it [here](projects/ExampleProject/problem_definition.yaml).
+By default this project is setup to find the elastic matrix components of an isotropic material. This can be changed by adjusting the `problem_definition.yaml` located in [`projects/ExampleProject`](projects/ExampleProject/problem_definition.yaml).
 
-
+### Users guide
+For further guidance, review the [`users guide`](docs/users_guide.md)
 ## Context
 This project has been developed by Joppe Kleinhout in the context of pursuing a Msc degree in Mechanical Engineering at the University of Twente. Specifically as an internship at the Research chair of Nonlinear Solid Mechanics.
 
