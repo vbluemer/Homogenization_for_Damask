@@ -194,7 +194,7 @@ Do not forget to set the `estimated_tensile_yield` and `estimated_shear_yield` i
 
 - yield_criterion
 
-(`Hill` [[source](https://royalsocietypublishing.org/doi/abs/10.1098/rspa.1948.0045)], `Cazacu-Plunkett-Barlat` [[source](https://doi.org/10.1016/j.ijplas.2007.07.013)], `Cazacu-Plunkett-Barlat_extended_n` [[source](https://doi.org/10.1016/j.ijplas.2007.07.013)], `...`) The yield surface to fit the yield point data to. 
+(`Hill` [[source](https://royalsocietypublishing.org/doi/abs/10.1098/rspa.1948.0045)], `Cazacu-Plunkett-Barlat` [[source](https://doi.org/10.1016/j.ijplas.2007.07.013)], `Cazacu-Plunkett-Barlat_extended_n` [[source](https://doi.org/10.1016/j.ijplas.2007.07.013)], `None`, `...`) The yield surface to fit the yield point data to. 
 
 For `Cazacu-Plunkett-Barlat_extended_n` replace n by any positive integer.
 
