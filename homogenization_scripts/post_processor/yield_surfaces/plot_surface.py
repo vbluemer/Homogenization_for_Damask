@@ -33,9 +33,9 @@ def calculate_value_plot(yield_surface: YieldSurfaces, stress_1: float, stress_2
     stress[index_1[0]][index_1[1]] = stress_1
     stress[index_2[0]][index_2[1]] = stress_2
 
-    stress_voight = [stress[0][0], stress[1][1], stress[2][2], stress[1][2], stress[0][2], stress[0][1]]
+    stress_Voigt = [stress[0][0], stress[1][1], stress[2][2], stress[1][2], stress[0][2], stress[0][1]]
 
-    yield_surface_value = yield_surface.evaluate(stress_voight)
+    yield_surface_value = yield_surface.evaluate(stress_Voigt)
 
     return yield_surface_value
 

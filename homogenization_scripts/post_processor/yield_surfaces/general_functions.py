@@ -126,8 +126,8 @@ def fit_surface(yield_surface: YieldSurfaces, data_set: DataFrame) -> YieldSurfa
 
 
 def get_yield_points_form_data_set(data_set: DataFrame, unit_conversion: float) -> NDArray[np.float64]:
-    voight_notation = ['stress_xx', 'stress_yy', 'stress_zz', 'stress_yz', 'stress_xz', 'stress_xy']
-    yield_points_pandas = data_set[voight_notation]
+    Voigt_notation = ['stress_xx', 'stress_yy', 'stress_zz', 'stress_yz', 'stress_xz', 'stress_xy']
+    yield_points_pandas = data_set[Voigt_notation]
 
     yield_points: NDArray[np.float64] = yield_points_pandas.to_numpy() * unit_conversion # type: ignore
     

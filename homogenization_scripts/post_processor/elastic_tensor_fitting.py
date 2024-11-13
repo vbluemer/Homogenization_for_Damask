@@ -109,19 +109,19 @@ def read_elastic_tensor_data_points(elastic_tensor_data_file: str) -> DataFrame:
 def fit_elastic_tensor(material_type: str, elastic_tensor_data_pandas: DataFrame) -> NDArray[np.float64]:
     # This function fits the components of the elastic tensor using a optimization scheme. 
 
-    # It returns the elastic tensor (voight notation).
+    # It returns the elastic tensor (Voigt notation).
     
     MPa_to_Pa = 1E6
     Pa_to_MPA = 1/MPa_to_Pa
 
     Messages.ElasticTensor.fitting_type_to_dataset(material_type)
 
-    voight_notation_stress = ['stress_xx', 'stress_yy', 'stress_zz', 'stress_yz', 'stress_xz', 'stress_xy']
-    voight_notation_strain = ['strain_xx', 'strain_yy', 'strain_zz', 'strain_yz', 'strain_xz', 'strain_xy']
+    Voigt_notation_stress = ['stress_xx', 'stress_yy', 'stress_zz', 'stress_yz', 'stress_xz', 'stress_xy']
+    Voigt_notation_strain = ['strain_xx', 'strain_yy', 'strain_zz', 'strain_yz', 'strain_xz', 'strain_xy']
 
     # Make sure the data is represented in voihgt notation
-    stress_data_pandas = elastic_tensor_data_pandas[voight_notation_stress]
-    strain_data_pandas = elastic_tensor_data_pandas[voight_notation_strain]
+    stress_data_pandas = elastic_tensor_data_pandas[Voigt_notation_stress]
+    strain_data_pandas = elastic_tensor_data_pandas[Voigt_notation_strain]
     
     stress_data = stress_data_pandas.to_numpy() * Pa_to_MPA # type: ignore
     strain_data = strain_data_pandas.to_numpy() # type: ignore

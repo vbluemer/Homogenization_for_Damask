@@ -52,24 +52,24 @@ class CazacuPlunkettBarlat:
         unit_name = "MPa"
         return unit_name
 
-    def evaluate(self, stress_voight: list[float]) -> float:
+    def evaluate(self, stress_Voigt: list[float]) -> float:
 
-        stress: NDArray[np.float64] = np.array(stress_voight)
+        stress: NDArray[np.float64] = np.array(stress_Voigt)
 
         hydrostatic_pressure = np.sum(stress[0:3])/3
 
-        deviatoric_stress_voight = copy.deepcopy(stress)
+        deviatoric_stress_Voigt = copy.deepcopy(stress)
 
         for i in range(3):
-            deviatoric_stress_voight[i] = deviatoric_stress_voight[i] - hydrostatic_pressure
+            deviatoric_stress_Voigt[i] = deviatoric_stress_Voigt[i] - hydrostatic_pressure
 
-        Sigma_voight = np.matmul(self.c, deviatoric_stress_voight)
+        Sigma_Voigt = np.matmul(self.c, deviatoric_stress_Voigt)
         Sigma = np.zeros((3,3))
         for diagonal in range(3):
-            Sigma[diagonal][diagonal] = Sigma_voight[diagonal]
-        Sigma[1][2] = Sigma_voight[3]
-        Sigma[0][2] = Sigma_voight[4]
-        Sigma[0][1] = Sigma_voight[5]
+            Sigma[diagonal][diagonal] = Sigma_Voigt[diagonal]
+        Sigma[1][2] = Sigma_Voigt[3]
+        Sigma[0][2] = Sigma_Voigt[4]
+        Sigma[0][1] = Sigma_Voigt[5]
         Sigma[2][1] = Sigma[1][2]
         Sigma[2][0] = Sigma[0][2]
         Sigma[1][0] = Sigma[0][1]

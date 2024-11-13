@@ -36,9 +36,9 @@ class ExampleYieldSurface():
         unit_name = "kPa"
         return unit_name
     
-    def evaluate(self, stress_voight: list[float]) -> float:
+    def evaluate(self, stress_Voigt: list[float]) -> float:
         
-        stress_numpy = np.array(stress_voight)
+        stress_numpy = np.array(stress_Voigt)
 
         # Non-physical example: only take stress magnitude into account.
         stress_magnitude: float = float(np.linalg.norm(stress_numpy))

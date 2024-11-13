@@ -12,9 +12,9 @@ from .types.orthotropic import elastic_tensor_orthotropic
 from .types.monoclinic import elastic_tensor_monoclinic
 from .types.anisotropic import elastic_tensor_anisotropic
 
-voight_notation_stress = ['stress_xx', 'stress_yy', 'stress_zz', 'stress_yz', 'stress_xz', 'stress_xy']
-voight_notation_strain = ['strain_xx', 'strain_yy', 'strain_zz', 'strain_yz', 'strain_xz', 'strain_xy']
-all_values = voight_notation_strain + voight_notation_stress
+Voigt_notation_stress = ['stress_xx', 'stress_yy', 'stress_zz', 'stress_yz', 'stress_xz', 'stress_xy']
+Voigt_notation_strain = ['strain_xx', 'strain_yy', 'strain_zz', 'strain_yz', 'strain_xz', 'strain_xy']
+all_values = Voigt_notation_strain + Voigt_notation_stress
 
 MPa_to_Pa = 1E6
 Pa_to_MPA = 1/MPa_to_Pa
@@ -171,7 +171,7 @@ def algebraic_fit_components(material_type: str, elastic_tensor_data_pandas: Dat
     # This function calculates the elastic tensor with algebraic relationships.
     # The dataset must consist of uni-axial strain steps which must be in specific directions.
 
-    # Returns the elastic tensor (voight notation)
+    # Returns the elastic tensor (Voigt notation)
     Messages.ElasticTensor.fitting_type_to_dataset(material_type)
     match material_type:
         case "isotropic":
@@ -194,8 +194,8 @@ def algebraic_fit_components(material_type: str, elastic_tensor_data_pandas: Dat
     tensor_is_positive_definite = all(eigenvalues_tensor>0)
 
     # Calculate the MSE of the fit.
-    stress_data_pandas = elastic_tensor_data_pandas[voight_notation_stress]
-    strain_data_pandas = elastic_tensor_data_pandas[voight_notation_strain]
+    stress_data_pandas = elastic_tensor_data_pandas[Voigt_notation_stress]
+    strain_data_pandas = elastic_tensor_data_pandas[Voigt_notation_strain]
     
     stress_data = stress_data_pandas.to_numpy() * Pa_to_MPA # type: ignore
     strain_data = strain_data_pandas.to_numpy() # type: ignore

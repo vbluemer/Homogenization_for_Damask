@@ -48,7 +48,7 @@ class Hill:
         display_name = "Hill"
         return display_name
 
-    def evaluate(self, stress_voight: list[float]) -> float:
+    def evaluate(self, stress_Voigt: list[float]) -> float:
         f = self.f
         g = self.g
         h = self.h
@@ -56,12 +56,12 @@ class Hill:
         m = self.m
         n = self.n
 
-        s_xx = stress_voight[0]
-        s_yy = stress_voight[1]
-        s_zz = stress_voight[2]
-        s_yz = stress_voight[3]
-        s_xz = stress_voight[4]
-        s_xy = stress_voight[5]
+        s_xx = stress_Voigt[0]
+        s_yy = stress_Voigt[1]
+        s_zz = stress_Voigt[2]
+        s_yz = stress_Voigt[3]
+        s_xz = stress_Voigt[4]
+        s_xy = stress_Voigt[5]
         
         unit_conversion = self.unit_conversion()
 

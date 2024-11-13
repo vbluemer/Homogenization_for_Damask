@@ -167,7 +167,7 @@ yield_surface:
     stress_y_z: [     0,      0,      0,     0,     0, 700e6]
     stress_z_z: [     0,      0, 1300e6,     0,     0,     0]
 
-    # NOTE: More results then the minimum defined here can accumilate in the
+    # NOTE: More results then the minimum defined here can accu%%milate in the
     #       stored results (results/results_database.yaml). To make sure only
     #       the results defined here are used the results_database.yaml can
     #       be removed or specific values redacted from it.            
@@ -177,15 +177,15 @@ yield_surface:
     #   f(s) = 1/(1e6) = F*(s_yy-s_zz)^2 + G*(s_zz-s_xx)^2 + H*(s_xx-s_yy)^2 + 2*L*s_yz^2 + 2*M*s_xz^2 + 2*N*s_xy^2
     #
     # Cazacu-Plunkett-Barlat, unit stress = [MPa]:
-    #   Sigma_voight = C*sigma_voight [C = 6x6, sigma_voight = 6x1]
-    #   Sigma_voight [6x1] -> Sigma [3x3]
+    #   Sigma_Voigt = C*sigma_Voigt [C = 6x6, sigma_Voigt = 6x1]
+    #   Sigma_Voigt [6x1] -> Sigma [3x3]
     #   Sigma_1,2,3 are eigenvalues of Sigma
     #   f(s) = [abs(Sigma_1) - k*Sigma_1]^a + [abs(Sigma_2) - k*Sigma_2]^a + [abs(Sigma_3) - k*Sigma_3]^a
     #   1/(1e6) = f(s)
     #
     # Cazacu-Plunkett-Barlat_extended_n, unit stress = [MPa], ^i is index:
-    #   Sigma_voight^i = C^i*sigma_voight [C = 6x6, sigma_voight = 6x1]
-    #   Sigma_voight [6x1] -> Sigma [3x3]
+    #   Sigma_Voigt^i = C^i*sigma_Voigt [C = 6x6, sigma_Voigt = 6x1]
+    #   Sigma_Voigt [6x1] -> Sigma [3x3]
     #   Sigma^i_1,2,3 are eigenvalues of Sigma^i
     #   f^i(s) = [abs(Sigma^i_1) - k^i*Sigma^i_1]^a + [abs(Sigma^i_2) - k^i*Sigma^i_2]^a + [abs(Sigma^i_3) - k^i*Sigma^i_3]^a
     #   1/(1e6) = sum[f^i(s)] for i in 1->n

@@ -12,7 +12,7 @@ import homogenization_scripts.common_functions.consolelog as consolelog
 from ..common_classes.problem_definition import Tensor, StrainTensors, StressTensors
 
 def strain_tensor_to_vector_notation(tensor: NDArray[np.float64]):
-    # Transform the strain tensor to vector voight notation.
+    # Transform the strain tensor to vector Voigt notation.
     tensor = np.squeeze(tensor)
     if not np.shape(tensor) == (3,3):
         raise Exception(f"Can not form strain vector from stress tensor as tensor is not 3x3! Shape is: {np.shape(tensor)}")
@@ -29,7 +29,7 @@ def strain_tensor_to_vector_notation(tensor: NDArray[np.float64]):
     return vector
 
 def stress_tensor_to_vector_notation(tensor: NDArray[np.float64]):
-    # Transform the stress tensor to vector voight notation. 
+    # Transform the stress tensor to vector Voigt notation. 
 
     tensor = np.squeeze(tensor)
     if not np.shape(tensor) == (3,3):

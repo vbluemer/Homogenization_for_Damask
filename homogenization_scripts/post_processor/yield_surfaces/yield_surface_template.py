@@ -59,8 +59,8 @@ class YieldSurfaces(Protocol):
         unit_name = "MPa"
         return unit_name
     
-    def evaluate(self, stress_voight: list[float]) -> float:
-        # This function takes a stress state (voight notation) and returns the value
+    def evaluate(self, stress_Voigt: list[float]) -> float:
+        # This function takes a stress state (Voigt notation) and returns the value
         # of the yield surface function. Yield surface function must equal 0 for yielding. 
         # For example, in the case of Hill, notation must be:
         # evaluate() = -1/self.unit_conversion() + F*(...) + G*(...) + H*(...) + L*(...) + M*(...) + N*(...) 
