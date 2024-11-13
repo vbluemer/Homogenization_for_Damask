@@ -1,5 +1,7 @@
-Sections that can be found in the `problem_definition.yaml` file.
+# Problem definition manual
+This documents reference for all the values that in the `problem_definition.yaml` file. The sections of the not used simulation types may be removed as long as the Main sections and the section of the Simulation type are present.
 
+The sections `General`, `Yielding condition` and `Solver` are considered the Main sections and should be present independent of the simulation type chosen. For the chosen simulation type, also the relevant section needs to be filled in. For any section present, all values should have at least a valid value. 
 
 **Main sections**
 - [General](#general)
@@ -13,12 +15,13 @@ Sections that can be found in the `problem_definition.yaml` file.
 - [Yielding condition](#yielding-condition)
     - [Yield condition](#yield-condition)
     - [Plastic strain yield](#plastic-strain-yield)
-    - [Estimated tensile](#estimated-tensile)
-    - [Estimated tensile yield](#estimated-tensile-yield)
-    - [Estimated shear yield](#estimated-shear-yield)
+    - [Modulus degradation percentage](#modulus-degradation-percentage)
+    - [Over-estimated tensile yield](#over-estimated-tensile-yield)
+    - [Over-estimated shear yield](#over-estimated-shear-yield)
 - [Solver](#solver)
     - [Number of increments](#number-of-increments)
     - [CPU cores](#cpu-cores)
+    - [Stop after subsequent parsing errors](#stop-after-subsequent-parsing-errors)
     - [Solver type](#solver-type)
     - [Monitor update cycle](#monitor-update-cycle)
     - [Other solver settings](#other-solver-settings)
@@ -42,8 +45,6 @@ Sections that can be found in the `problem_definition.yaml` file.
     - [Enable yielding detection](#enable-yielding-detection)
 
 
-
-The sections `General`, `Yielding condition` and `Solver` are considered the main sections and should be present independent of the simulation type chosen. For the chosen simulation type, also the relevant section needs to be filled in. 
 # General 
 - general:
 
