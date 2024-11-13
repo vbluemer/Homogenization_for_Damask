@@ -62,7 +62,8 @@ def create_launch_command(problem_definition: ProblemDefinition, damask_job: Dam
         launch_command = launch_command + restart
 
     env = os.environ.copy()
-    env["OMP_NUM_THREADS"] = f"{problem_definition.solver.cpu_cores}"
+    if not problem_definition.solver.cpu_cores == 0:
+        env["OMP_NUM_THREADS"] = f"{problem_definition.solver.cpu_cores}"
 
     return launch_command + args, env
 
