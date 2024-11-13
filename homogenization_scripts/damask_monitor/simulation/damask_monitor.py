@@ -45,7 +45,7 @@ from ..post_processor.plots import plot_stress_strain_curves_monitor
 
 def create_launch_command(problem_definition: ProblemDefinition, damask_job: DamaskJobTypes) -> tuple[list[str], dict[str, str]]:
 
-    # parallel = f"OMP_NUM_THREADS={problem_definition.solver.cpu_cores} "
+
     executable = [f"DAMASK_grid"]
     grid = [f"--geom", f"{damask_job.runtime.grid_file}"]
     loadcase = [f"--load", f"{damask_job.runtime.loadcase_file}"]
