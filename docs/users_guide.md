@@ -7,4 +7,5 @@ Most of the settings defined in the `problem_definition.py` will be checked for 
 
 Files can be specified relative to the problem_definition.yaml or with the full path (starting with `/`).
 
-
+## Problem definition
+The problem definition contains all the settings for a project. It defines the grid and material file to use, what type of analysis to do and under what conditions. For support with the `problem_definition.yaml`, see the [documentation](problem_definition.md)
