@@ -645,7 +645,7 @@ def create_multiaxial_yield_point_for_yield_locus(problem_definition: ProblemDef
         job_list = create_multiaxial_yield_point_manual_values(problem_definition, job_name, required_results)
         return job_list
 
-    compressive_symmetry = problem_definition.yield_surface.asume_tensile_compressive_symmetry
+    compressive_symmetry = problem_definition.yield_surface.assume_tensile_compressive_symmetry
     points_per_plane = problem_definition.yield_surface.load_points_per_plane
 
     first_points_ordering: list[int]

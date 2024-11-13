@@ -27,7 +27,7 @@ def write_dataset(problem_definition: ProblemDefinition) -> ProblemDefinition:
 
     data_set: list[list[list[float]]] = []
     data_names: list[str] = []
-    setting_field_names = ["N_increments", "asume_tensile_compressive_symmetry", "estimated_shear_yield", "estimated_tensile_yield", "points_per_plane", "yield_condition", "yield_condition_value", "stress_state_creation"]
+    setting_field_names = ["N_increments", "assume_tensile_compressive_symmetry", "estimated_shear_yield", "estimated_tensile_yield", "points_per_plane", "yield_condition", "yield_condition_value", "stress_state_creation"]
     for keyname in results_database[simulation_type]:
         is_setting_field = keyname in setting_field_names
         if is_setting_field:

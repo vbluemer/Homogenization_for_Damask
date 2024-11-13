@@ -67,7 +67,7 @@ def store_yield_surface_settings(
         results_database['yield_surface']['estimated_shear_yield'] = problem_definition.yielding_condition.estimated_shear_yield
 
         results_database['yield_surface']['points_per_plane'] = problem_definition.yield_surface.load_points_per_plane
-        results_database['yield_surface']['asume_tensile_compressive_symmetry'] = problem_definition.yield_surface.asume_tensile_compressive_symmetry
+        results_database['yield_surface']['assume_tensile_compressive_symmetry'] = problem_definition.yield_surface.assume_tensile_compressive_symmetry
 
         results_database['yield_surface']['stress_state_creation'] = problem_definition.yield_surface.stress_state_creation
 

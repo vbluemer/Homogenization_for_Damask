@@ -18,7 +18,7 @@
 general: 
 
     # Choose: yield_point, yield_surface, elastic_tensor, load_path
-    simulation_type     : yield_surface
+    simulation_type     : elastic_tensor
     # Go down to the section asscociated with the type to fill in the other details.
     # The other sections can be kept as is, or kept empty.
 
@@ -86,7 +86,7 @@ yielding_condition:
 # Default settings should be ok in most cases, but can be adapted if needed.
 solver:
     N_increments: 15
-    cpu_cores: 6
+    cpu_cores: 0
     stop_after_subsequent_parsing_errors: 20
 
     # Choose "spectral_basic"
@@ -152,7 +152,7 @@ yield_surface:
 
     ## Automatic stress state settings:
     # Asume that the tensile and compressive yield values are the same.
-    asume_tensile_compressive_symmetry: True
+    assume_tensile_compressive_symmetry: True
 
     # There are three planes, x-y, x-z and y-z.
     # minimum is 1, then only uniaxial loads are applied

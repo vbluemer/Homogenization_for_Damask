@@ -176,7 +176,7 @@ valid_problem_definition_file_scheme = {  # type: ignore
                 'required': True,
                 'type': 'integer',
             },
-            'asume_tensile_compressive_symmetry': {
+            'assume_tensile_compressive_symmetry': {
                 'required': True,
                 'type': 'boolean',
             },
