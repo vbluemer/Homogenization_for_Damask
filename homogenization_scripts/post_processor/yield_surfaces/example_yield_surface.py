@@ -3,7 +3,6 @@ from pandas import DataFrame
 import numpy as np
 
 # Local packages
-from ...messages.messages import Messages
 from .general_functions import calculate_MSE_stress
 
 class ExampleYieldSurface():
@@ -12,6 +11,8 @@ class ExampleYieldSurface():
     coefficient_1: float
 
     def __init__(self, some_constant: float) -> None:
+        # some_constant is setup before the optimization process starts.
+        # This is used as: example_yield_surface = ExampleYieldSurface(some_constant = 5)
         self.some_constant = some_constant
         return
 
@@ -57,11 +58,12 @@ class ExampleYieldSurface():
         # Suppose coefficient_1 needs to be larger then 0
         coefficient_1 = self.coefficient_1
 
-        penalty = 10000*min([0, coefficient_1])**2
+        penalty = 1000000*min([0, coefficient_1])**2
         return penalty
     
     def write_to_file(self, path:str, MSE: float | None = None) -> None:
-        Messages.YieldSurface.writing_results(self.display_name(), path)
+        print("")
+        print(f"Writing {self.display_name()} fit to .csv file: {path}")
         with open(path, "w") as file:
             if MSE == None:
                 file.write(f"coefficient_1 = {self.coefficient_1}, unit_stress = {self.unit_name()}")

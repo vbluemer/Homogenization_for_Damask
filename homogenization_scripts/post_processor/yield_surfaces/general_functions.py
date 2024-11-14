@@ -113,7 +113,7 @@ def fit_surface(yield_surface: YieldSurfaces, data_set: DataFrame) -> YieldSurfa
     initial_guess: list [float] = np.squeeze(np.ones((1,number_optimization_coefficients))).tolist()
 
     optimization_result = scipy.optimize.minimize(objective, initial_guess, options={'disp': False }, method="L-BFGS-B") # type: ignore
-\
+
     optimized_coefficients: list[float] = optimization_result.x # type: ignore
 
     yield_surface_fitted = copy.deepcopy(yield_surface)

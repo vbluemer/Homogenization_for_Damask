@@ -26,7 +26,7 @@ The sections `General`, `Yielding condition` and `Solver` are considered the Mai
     - [Monitor update cycle](#monitor-update-cycle)
     - [Other solver settings](#other-solver-settings)
 
-**Simulation specific sections**
+**Simulation type specific sections**
 - [Yield point](#yield-point)
     - [Load direction(s)](#load-directions)
 - [Yield surface](#yield-surface)
@@ -198,7 +198,9 @@ Do not forget to set the `estimated_tensile_yield` and `estimated_shear_yield` i
 
 For `Cazacu-Plunkett-Barlat_extended_n` replace n by any positive integer.
 
- Implementation of custom yield surface is possible, see [TODO](TODO)
+Implementation of custom yield surfaces is possible. This requires the user to write some Python functions. For the steps to take to do so, review the [Advanced](users_guide.md#implementation-of-additional-yield-surface) section in the `Users guide`.
+
+If less then expected results are shown in the resulting plot of the yield surface, or the `yield_points_yield_surface.csv` contains less then expected yielding points, check the `results_database.yaml` under the section `yield_surface` for `NO_YIELDING_FOUND`. If these are present, the applied loading was not great enough to induce yielding in the material. Either increase the `estimated_tensile_yield` and `estimated_shear_yield` values if automatic stress state generation is used or increase the magnitude given in the manual stress state if manual stress state generation is used, see [`Stress state generation`](#stress-state-generation).
 
 ### Stress state generation
 
@@ -228,6 +230,8 @@ For `manual` creation, define the loading directions with loading magnitude in t
  - stress_x_x, stress_x_y, stress_x_z, stress_y_y, stress_y_z, stress_z_z
 
 (`float [Pa]`, `list(float) [Pa]`) The loading directions with over-exaggerated stress magnitudes to identify yielding in. Can either by single value for each loading direction, or list of equal length in each direction. 
+
+For stress states to be visible in the resulting plot, a applied load must either be uni-axial or be a combined loading in at most 2 directions. For combined loadings, only pure normal loadings or pure shear loads are shown. All data is used during the data fitting process, even when not shown in the plot. 
 
 # Elastic tensor
 

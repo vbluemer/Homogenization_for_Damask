@@ -54,7 +54,7 @@ def fit_yield_surface(yield_surface_name: str, dataset_path: str, output_path: s
 
 
 # This is an example yield surface
-def fit_example_yield_surface(dataset_path: str, output_path: str, plot_path: str) -> ExampleYieldSurface:#
+def fit_example_yield_surface(dataset_path: str, output_path: str, plot_path: str) -> ExampleYieldSurface:
 
     print("Running example_yield_surface, this does not do much rather then act as a simple example")
 

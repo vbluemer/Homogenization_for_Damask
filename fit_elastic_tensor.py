@@ -12,14 +12,12 @@ from homogenization_scripts.post_processor.elastic_tensor_fitting import fit_ela
 scripts_folder = os.path.dirname(os.path.abspath(__file__))
 
 # run the project
-def fit_elastic_tensor_from_dataset(material_type: str, dataset_path: str, write_file: bool, output_path: str| None = None) -> NDArray[np.float64]:
+def fit_elastic_tensor_from_dataset(material_type: str, dataset_path: str, output_path: str| None = None) -> NDArray[np.float64]:
 
     data_set: DataFrame = read_elastic_tensor_data_points(dataset_path)
     elastic_tensor: NDArray[np.float64] = fit_elastic_tensor(material_type, data_set)
 
-    if write_file:
-        if output_path == None:
-            raise ValueError("Command given to write elastic tensor to file but no path is provided!")
+    if not output_path == None:
         write_elastic_tensor_to_file(elastic_tensor, output_path)
 
     return elastic_tensor
@@ -55,4 +53,4 @@ if __name__ == "__main__":
         write_result = False
         output_path: str| None = None
 
-    elastic_tensor = fit_elastic_tensor_from_dataset(material_type, dataset_path, write_result,output_path)
+    elastic_tensor = fit_elastic_tensor_from_dataset(material_type, dataset_path,output_path)

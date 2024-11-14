@@ -1,9 +1,9 @@
 # Homogenization for Damask
 
-This project is an unaffiliated extension to [DAMASK](https://github.com/damask-multiphysics/damask) and aims to homogenize DAMASK results and extract useful information for engineers. In particular, the [DAMASK_grid](https://damask-multiphysics.org/support/FAQ/grid_solver.html) solver and the [Python package](https://pypi.org/project/damask/) are used to find the homogenized stress and strain state used for identifying the components of the elastic matrix, yield surface and general loading response. 
+This project is an unaffiliated extension to [DAMASK](https://github.com/damask-multiphysics/damask) and aims to homogenize DAMASK results and extract useful information for engineers. In particular, the [DAMASK_grid](https://damask-multiphysics.org/support/FAQ/grid_solver.html) solver and the [DAMASK Python package](https://pypi.org/project/damask/) are used to find the homogenized stress and strain state used for identifying the components of the elastic matrix, yield surface and general loading response. 
 
 To achieve these results, this extension provides:
-- Generation of DAMASK simulation files.
+- Generation of DAMASK_grid load case and numerics files.
 - Running and monitoring of DAMASK_grid simulations, including condition based termination of simulations.
 - Post-processing of DAMASK simulation results extending to:
     - Homogenization of simulation domain for stress and strain
@@ -13,7 +13,7 @@ To achieve these results, this extension provides:
     - Plotting of stress-strain curves
 
 ## Installation
-It is highly recommended to run this project inside of a Conda (or similar) environment. Use `python 3.12` to run this project. Testing of this code is only verified to work on `Linux` and `DAMASK v3.0.1`.
+It is highly recommended to run this project inside of a Conda (or similar) environment. Use `python 3.12` to run this project. This code is only verified to work on `Linux` with `DAMASK_grid` and `DAMASK Python` versions `v3.0.1`.
 ### With Conda (Python 3.12): 
 ``` 
 git clone https://github.com/JoppeKleinhout/Homogenization_for_Damask.git
@@ -55,6 +55,7 @@ Included in the default installation is a simple ready-to-run example project. T
 ```
 # Activate the conda environment if not already active
 conda activate [environment_name]
+
 python run_project ExampleProject
 ```
 By default this project is setup to find the elastic matrix components of an isotropic material. This can be changed by adjusting the `problem_definition.yaml` located in [`projects/ExampleProject`](projects/ExampleProject/problem_definition.yaml).
