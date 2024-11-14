@@ -51,6 +51,9 @@ def plot_stress_strain_curves(
 
             subplot[i][j].grid()
 
+            subplot[i][j].set_xlabel('strain [-]')
+            subplot[i][j].set_ylabel('stress [Pa]')
+
             if not interpolated_yield == None:
                 stress_yield = interpolated_yield.stress[i][j]
                 strain_yield = interpolated_yield.strain[i][j]
