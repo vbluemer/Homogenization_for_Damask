@@ -109,7 +109,7 @@ class ExampleYieldSurface():
 The fitting process assumes that the yield surface function will equate to 0 at yielding. This requires the yield function as given before to be rewritten:
 $$0 \approx 1 -  A * c * | \sigma |^2$$
 Normalization of the coefficients is also a good practice to improve the data fitting process. This can be applied by adjusting the $1$ term to be normalized with the `unit_conversion()` function:
-$$0 \approx \frac{1}{\textrm{self.unit\_{}conversion()}} -  A * c * | \sigma |^2$$
+$$0 \approx \frac{1}{\textrm{self.unit-conversion()}} -  A * c * | \sigma |^2$$
 
 ```
 class ExampleYieldSurface():
