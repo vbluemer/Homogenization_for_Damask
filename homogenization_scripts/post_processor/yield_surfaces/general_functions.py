@@ -27,6 +27,10 @@ def write_dataset(problem_definition: ProblemDefinition) -> ProblemDefinition:
 
     data_set: list[list[list[float]]] = []
     data_names: list[str] = []
+
+    data_set_no_yield: list[list[list[str]]] = []
+    data_names_no_yield: list[str] = []
+
     setting_field_names = ["N_increments", "assume_tensile_compressive_symmetry", "estimated_shear_yield", "estimated_tensile_yield", "points_per_plane", "yield_condition", "yield_condition_value", "stress_state_creation"]
     for keyname in results_database[simulation_type]:
         is_setting_field = keyname in setting_field_names
@@ -35,6 +39,9 @@ def write_dataset(problem_definition: ProblemDefinition) -> ProblemDefinition:
         
         # When a job ended in no yielding, this is omited from the .csv file.
         if results_database[simulation_type][keyname][0][0] == "NO_YIELD_DETECTED": # type: ignore
+            data_point_no_yield: list[list[str]] = results_database[simulation_type][keyname] # type: ignore
+            data_set_no_yield.append(data_point_no_yield)
+            data_names_no_yield.append(keyname)
             continue
 
         data_point: list[list[float]] = results_database[simulation_type][keyname] # type: ignore
@@ -55,10 +62,25 @@ def write_dataset(problem_definition: ProblemDefinition) -> ProblemDefinition:
         data_point_dict["field_name"] = data_name
         data_set_dict.append(data_point_dict)
 
+    data_set_dict_no_yield: list[dict[str, float|str]] = []
+
+    for data_point_no_yield, data_name_no_yield in zip(data_set_no_yield, data_names_no_yield):
+        data_point_dict_no_yield: dict[str, float|str] = dict()
+        data_point_dict_no_yield['stress_xx'] = data_point_no_yield[0][0]
+        data_point_dict_no_yield['stress_yy'] = data_point_no_yield[1][1]
+        data_point_dict_no_yield['stress_zz'] = data_point_no_yield[2][2]
+        data_point_dict_no_yield['stress_xy'] = data_point_no_yield[0][1]
+        data_point_dict_no_yield['stress_xz'] = data_point_no_yield[0][2]
+        data_point_dict_no_yield['stress_yz'] = data_point_no_yield[1][2]
+        data_point_dict_no_yield["unit"] = "Pa"
+        data_point_dict_no_yield["field_name"] = data_name_no_yield
+        data_set_dict_no_yield.append(data_point_dict_no_yield)
+
 
     field_names = ["field_name", "unit", "stress_xx", "stress_yy", "stress_zz", "stress_xy", "stress_xz", "stress_yz"]
 
     yield_points_csv = os.path.join(problem_definition.general.path.results_folder, f"yield_points_{simulation_type}.csv")
+    yield_points_no_yield_csv = os.path.join(problem_definition.general.path.results_folder, f"yield_points_{simulation_type}_NO_YIELD.csv")
 
     problem_definition.general.path.yield_points_csv = yield_points_csv
 
@@ -68,6 +90,14 @@ def write_dataset(problem_definition: ProblemDefinition) -> ProblemDefinition:
         writer = csv.DictWriter(csvfile, fieldnames=field_names)
         writer.writeheader()
         writer.writerows(data_set_dict)
+
+    if len(data_set_dict_no_yield) > 0:
+        Messages.YieldSurface.writing_no_yield_dataset_to(yield_points_no_yield_csv, len(data_set_dict_no_yield))
+
+        with open(yield_points_no_yield_csv, 'w', newline='') as csvfile:
+            writer = csv.DictWriter(csvfile, fieldnames=field_names)
+            writer.writeheader()
+            writer.writerows(data_set_dict_no_yield)
 
     return problem_definition
 

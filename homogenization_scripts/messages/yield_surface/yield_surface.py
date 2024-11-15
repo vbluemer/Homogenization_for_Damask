@@ -10,6 +10,11 @@ class YieldSurface:
     def writing_dataset_to(self, dataset_path: str) -> None:
         print(f"Writing dataset to .csv file: {dataset_path}")
 
+    def writing_no_yield_dataset_to(self, no_yield_dataset_path: str, number_no_yield: int) -> None:
+        print("")
+        print(f"For {number_no_yield} simulations, the applied load was not sufficient to induce yielding.")
+        print(f"Writing no yielding dataset to .csv file: {no_yield_dataset_path}")
+
     def reading_dataset_from(self, dataset_path: str) -> None:
         print(f"Reading dataset from .csv file: {dataset_path}")
 
