@@ -91,3 +91,113 @@ The loading direction and magnitude are setup for uniaxial yielding:
 - `stress_y_y`: [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,  650e6,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0]
 - `stress_y_z`: [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0, 350e6]
 - `stress_z_z`: [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,  650e6,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0]
+
+This concludes setting up the simulation details.
+
+## Running the simulations
+With the project folder created, the grid and materials added and problem definition defined, the project can be run. Go to installation root and run the project. Do not forget to activate a Conda environment if needed.
+```
+# Activate Conda environment if needed:
+conda activate [environment_name]
+
+# Run the project
+python run_project.py fit_hill
+```
+This should end up in a summary of the simulations to run. 
+
+Check if the settings match what was expected and confirm.
+
+## The simulations are completed
+When the simulations are completed, the results will be stored in the results folder inside of the project folder.
+
+Directly in the results folder, three files can be found, these are:
+
+1. `yield_points_yield_surface.csv`: This file contains the yield points that have been found found.
+   ```
+   field_name,unit,stress_xx,stress_yy,stress_zz,stress_xy,stress_xz,stress_yz
+    stress_xx=0_yy=0_zz=0_xy=0_xz=0_yz=350000000-0,Pa,-414.12442246457266,2063308.2347022966,-88.18719174432681,326.6733914353258,-361.6648476862681,220511071.9005208
+    stress_xx=0_yy=0_zz=0_xy=0_xz=350000000-0_yz=0,Pa,3023133.684340043,-222.03878300775446,-78.52769201105238,174647.82286968385,288406382.90091133,-194.19379140429533
+    stress_xx=0_yy=0_zz=0_xy=350000000-0_xz=0_yz=0,Pa,2659354.027203298,-573.4357862756814,318.11305747897217,263461906.74636516,378.3795240305898,-30.433705820888946
+    stress_xx=0_yy=0_zz=650000000-0_xy=0_xz=0_yz=0,Pa,1254.128768166286,527.7854602454739,424530822.6395018,-209.77376066556897,96.11620153879807,445.1151705029939
+    stress_xx=0_yy=650000000-0_zz=0_xy=0_xz=0_yz=0,Pa,1113.0095386840167,398853651.75510514,-567.8334646442477,13.074524390932282,-235.25191206748934,-440.68624875677307
+    stress_xx=650000000-0_yy=0_zz=0_xy=0_xz=0_yz=0,Pa,492694368.35456675,359.2731477615205,880.5424790918764,-149.12313108569276,-170.0804035486115,-528.4448882835304
+
+   ```
+   If some loading directions did not result in the detection of yielding, these will be located in a file called `yield_points_yield_surface_NO_YIELD.csv`
+
+2. `Hill.csv`: This contains the the coefficients of the Hill yield surface and the mean square error of the fit. See TODO to see the formulation used for the Hill fit.
+3. `Hill.png`: This contains the plot of the yield surface along with the simulated yielding data.
+   
+Also the folder `yield_surface` is created, in this, the the individual stress-strain curves and modulus degradation diagrams are shown. These have been created during each run and can be used to monitor the progress of the individual simulations.
+
+The `results_database.yaml` is considered an internal document, however, it can be reviewed for the data it is containing. If this file is deleted, the code forgets the results it has stored. 
+
+## Using automatic generated states
+Included is an algorithm that can create n number of load points along each loading plane (see the `Hill.png` for the loading directions). In the following example, this setting will be used to created combined loading directions.
+
+The following changes need to made to the previous `problem_definition.yaml`:
+```
+### Settings not mentioned here remain unchanged (and still have to be present)
+general: 
+    ...
+
+yielding_condition:
+    yield_condition: modulus_degradation
+    modulus_degradation_percentage: 0.15
+    ...
+
+solver:
+    ...
+
+yield_surface:
+    ...
+    stress_state_creation: automatic
+
+    # Automatic generation settings: 
+    assume_tensile_compressive_symmetry: True
+    load_points_per_plane: 3
+    ...
+```
+
+Here, the following changes have been made:
+
+The automatic stress state generation mode is enabled:
+- `stress_state_creation`: automatic
+  
+Symmetry is assumed in tensile and compressive yield strength:
+- `assume_tensile_compressive_symmetry`: True
+
+Three loading directions will be tested per plane. As there are 6 planes this results in 3x6=18 simulations:
+- `load_points_per_plane`: 3
+
+**Change in yielding condition**
+
+Bidirectional loading directions will be used for this simulation. The definition of 0.2% strain for yielding based on the stress-strain curve does not work for these load cases. Therefore the the energetic yielding condition `modulus_degradation` will be used for this simulation:
+- `yield_condition`: modulus_degradation
+
+This condition also needs a threshold to define when yielding has occurred. This threshold is applied to the modulus (ratio between linear deformation energy and strain squared). Here, a 15% degradation of the linear modulus is chosen to approach (but not exactly match) the 0.2% plastic strain condition:
+- `modulus_degradation_percentage`: 0.15
+
+## Run the updated project
+Run the updated project. The very first messages of the script will mention that a change in settings is detected and some results are moved to a backup folder. Note however, the already existing Hill fit still exists until it is overwritten! Running the rest of the code should function as it had before.
+
+Take into account that this set will take 3 times as long to run.
+
+## Fitting Plunkett-Cazacu-Barlat
+Wait for all the simulations to complete successfully. This will give an updated fit and plots of the Hill yield surface. If this yield surface is to be compared to the `Plunkett-Cazacu-Barlat` surface, this can be achieved by adjusting only the yield `yield_criterion` in the problem definition:
+```
+### Settings not mentioned here remain unchanged (and still have to be present)
+general: 
+    ...
+
+yielding_condition:
+    ...
+
+solver:
+    ...
+
+yield_surface:
+    yield_criterion: Cazacu-Plunkett-Barlat
+    ...
+```
+If the project is run in this way without any other setting changing, the code will ask to reuse the existing yielding data. Confirm by pressing `Enter`. This will take the user to the summary mentioning that all results are reused and no jobs need to run. Confirming again will directly take the execution to the fitting of the `Plunkett-Cazacu-Barlat` yield surface, saving the time of having to redo all simulations.
