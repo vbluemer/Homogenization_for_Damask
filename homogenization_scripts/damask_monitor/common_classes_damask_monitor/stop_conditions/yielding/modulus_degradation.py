@@ -202,8 +202,12 @@ def modulus_degradation_post_process(problem_definition: ProblemDefinition, dama
             iteration_after_yield = iteration
             yield_found = True
             break
+
+
     
     if not yield_found:
+        plot_stress_strain_curves(problem_definition, damask_job, stress_averaged_per_increment,strain_averaged_per_increment)
+        plot_modulus_degradation(problem_definition, damask_job, stress_averaged_per_increment,strain_averaged_per_increment)
         yield_detected = False
         return None 
     
@@ -226,5 +230,6 @@ def modulus_degradation_post_process(problem_definition: ProblemDefinition, dama
     # Make the plots including the interpolated yield point
     plot_stress_strain_curves(problem_definition, damask_job, stress_averaged_per_increment,strain_averaged_per_increment, interpolated_results)
     plot_modulus_degradation(problem_definition, damask_job, stress_averaged_per_increment,strain_averaged_per_increment, interpolated_results)
+
     post_process_succeeded = True # type: ignore
     return  interpolated_results

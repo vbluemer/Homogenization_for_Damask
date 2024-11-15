@@ -46,10 +46,10 @@ def run_post_processing_job(
 
     match damask_job:
         case DamaskJob.LoadPath():
-            # load_path post-processing saves the homogonized stresses and strains for each iteration
+            # load_path post-processing saves the homogenized stresses and strains for each iteration
             post_process_succeeded = load_path_post_processing(problem_definition, damask_job)
         case DamaskJob.YieldPointMultiaxial():
-            # Used for yield_surface and yield_point. Saves the stres state at the interpolated yield point.
+            # Used for yield_surface and yield_point. Saves the stress state at the interpolated yield point.
             # NO_YIELD_DETECTED if the simulation did not find yielding.
 
             interpolated_result = yield_point_post_processing(problem_definition, damask_job)

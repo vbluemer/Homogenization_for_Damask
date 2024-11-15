@@ -131,7 +131,6 @@ def slope_stress_strain_curve_post_process(problem_definition: ProblemDefinition
     # Returns None if no yielding is found or the fraction used for linear interpolation between the states where yielding is met.
 
     damask_results       = damask.Result(damask_job.runtime.damask_result_file)
-
     stress_tensor_type = problem_definition.general.stress_tensor_type
     strain_tensor_type = problem_definition.general.strain_tensor_type
 
@@ -174,7 +173,12 @@ def slope_stress_strain_curve_post_process(problem_definition: ProblemDefinition
             yield_found = True
             break
 
+    # Produce the completed set of plots including the interpolated yielding value.
+
+
     if not yield_found:
+        plot_stress_strain_curves(problem_definition, damask_job, stress_averaged_per_increment,strain_averaged_per_increment)
+        plot_modulus_degradation(problem_definition, damask_job, stress_averaged_per_increment,strain_averaged_per_increment)
         yield_detected = False # type: ignore
         return None
     
@@ -194,7 +198,6 @@ def slope_stress_strain_curve_post_process(problem_definition: ProblemDefinition
     
     interpolated_results = InterpolatedResults(fraction_for_interpolation, damask_results, iteration_before_yield, iteration_after_yield, stress_tensor_type, strain_tensor_type)
 
-    # Produce the completed set of plots including the interpolated yielding value.
     plot_stress_strain_curves(problem_definition, damask_job, stress_averaged_per_increment, strain_averaged_per_increment, interpolated_results)
     plot_modulus_degradation(problem_definition, damask_job, stress_averaged_per_increment, strain_averaged_per_increment, interpolated_results)
 
