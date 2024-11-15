@@ -126,7 +126,12 @@ Directly in the results folder, three files can be found, these are:
    If some loading directions did not result in the detection of yielding, these will be located in a file called `yield_points_yield_surface_NO_YIELD.csv`
 
 2. `Hill.csv`: This contains the the coefficients of the Hill yield surface and the mean square error of the fit. See TODO to see the formulation used for the Hill fit.
-3. `Hill.png`: This contains the plot of the yield surface along with the simulated yielding data.
+   ```
+    F,G,H,L,M,N,unit_stress,MSE
+    3.857531901670379,1.6910637586328663,2.428448634138371,10.28247302204908,6.01095842899721,7.20313721713033,MPa,0.0
+   ```
+4. `Hill.png`: This contains the plot of the yield surface along with the simulated yielding data:
+    ![Fit of Hill surface](Hill.png)
    
 Also the folder `yield_surface` is created, in this, the the individual stress-strain curves and modulus degradation diagrams are shown. These have been created during each run and can be used to monitor the progress of the individual simulations.
 
