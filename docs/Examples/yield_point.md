@@ -1,5 +1,5 @@
 # Example: Finding uniaxial yield points
-In this example, it is shown how to find the uniaxial yield point of a material. The steps in this example are more elaborate then the other examples as this example is considered the 'starting point' to show all the features and functionality of the code.
+In this example, it is shown how to find the uniaxial yield point of a material in tensile direction and in shear. The steps in this example are more elaborate then the other examples as this example is considered the 'starting point' to show all the features and functionality of the code.
 
 Intentionally, the estimated yield stresses are set too low at first to show the importance of these setting and the need for identifying the values.
 

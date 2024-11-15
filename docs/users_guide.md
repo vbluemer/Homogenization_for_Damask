@@ -143,9 +143,13 @@ A example is given for each simulation type that can be used. The `Finding (unia
 
 For more extensive reference on the options, see the [`Problem definition guide`](problem_definition.md).
 ## Finding (uniaxial) yield points
+In this example, it is shown how to find the uniaxial yield point of a material in tensile direction and in shear.
+
 See this example [`here`](Examples/yield_point.md).
 ## Fitting Hill yield surface
+In this example, the Hill yield surface will be fitted with yielding data in multiple loading directions. The yielding data will be acquired by running the nesscecary DAMASK simulations.
 
+See this example [here](Examples/yield_surface.md).
 ## Fitting isotropic elastic matrix components
 
 ## Running a simple loading and unloading load case
