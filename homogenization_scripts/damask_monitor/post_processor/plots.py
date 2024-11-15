@@ -22,7 +22,6 @@ def plot_stress_strain_curves(
         file_name: str | None = None,
         plot_title: str | None = None):
     
-    # print("TODO: Refractor the plot stress_strain_curve function")
 
     fig = plt.figure(layout='constrained', figsize=(20, 20)) # type: ignore
     subplot = fig.subplots(3,3) # type: ignore
@@ -87,11 +86,9 @@ def stress_strain_curves_plastic_yield_lines( # type: ignore
         problem_definition: ProblemDefinition, 
         damask_job: DamaskJobTypes): 
     
-    match damask_job:
-        case DamaskJob.LoadPath():
-            direction_is_loaded = damask_job.loaded_directions[0][i][j]
-        case _:
-            direction_is_loaded = damask_job.loaded_directions[i][j]
+
+    direction_is_loaded = damask_job.loaded_directions[0][i][j]
+
 
     if not(direction_is_loaded):
         return subplot  # type: ignore
