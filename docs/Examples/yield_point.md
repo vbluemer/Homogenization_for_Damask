@@ -4,7 +4,15 @@ In this example, it is shown how to find the uniaxial yield point of a material.
 Intentionally, the estimated yield stresses are set too low at first to show the importance of these setting and the need for identifying the values.
 
 - [Example: Finding uniaxial yield points](#example-finding-uniaxial-yield-points)
-  - [](#)
+  - [](#)- [Example: Finding uniaxial yield points](#example-finding-uniaxial-yield-points)
+  - [Create a new project and add nesscecary files](#create-a-new-project-and-add-nesscecary-files)
+  - [Setup the relevant settings in the `problem_definition.yaml`](#setup-the-relevant-settings-in-the-problem_definitionyaml)
+  - [Run the simulation](#run-the-simulation)
+  - [Wait for completion of the simulation](#wait-for-completion-of-the-simulation)
+  - [The simulation is finished](#the-simulation-is-finished)
+    - [No yielding found](#no-yielding-found)
+    - [Increasing the estimated yield strength](#increasing-the-estimated-yield-strength)
+
 
 
 The overall steps will be:
@@ -279,3 +287,4 @@ yielding_condition:
     estimated_shear_yield: 350e6
 ```
 
+Updating these values can be of value for later simulations.

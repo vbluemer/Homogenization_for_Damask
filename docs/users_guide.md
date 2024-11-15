@@ -15,7 +15,7 @@ In this document, explanation is given for the use of this code.
   - [Fitting of elastic tensor](#fitting-of-elastic-tensor)
   - [Fitting of yield surface](#fitting-of-yield-surface)
 - [Examples](#examples)
-  - [Finding yield point test](#finding-yield-point-test)
+  - [Finding (uniaxial) yield points](#finding-uniaxial-yield-points)
   - [Fitting Hill yield surface](#fitting-hill-yield-surface)
   - [Fitting isotropic elastic matrix components](#fitting-isotropic-elastic-matrix-components)
   - [Running a simple loading and unloading load case](#running-a-simple-loading-and-unloading-load-case)
