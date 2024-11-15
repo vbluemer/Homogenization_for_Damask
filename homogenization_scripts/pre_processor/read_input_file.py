@@ -286,13 +286,15 @@ def read_problem_definition(project_name: str, project_path: str) -> None | Prob
     problem_definition_dict['general']['path']['backup_results_folder'] = backup_folder
 
     problem_definition_dict['general']['path']['material_properties'] = problem_definition_dict['general']['material_properties']
-    # problem_definition_dict['general']['path']['grain_orientation'] = problem_definition_dict['general']['grain_orientation']
-    problem_definition_dict['general']['path']['dimensions_file'] = problem_definition_dict['general']['dimensions_file']
+    if problem_definition_dict['general'].get('dimensions_file') == None:
+        problem_definition_dict['general']['path']['dimensions_file'] = ''
+    else:
+        problem_definition_dict['general']['path']['dimensions_file'] = problem_definition_dict['general']['dimensions_file']
+        del problem_definition_dict['general']['dimensions_file']
     problem_definition_dict['general']['path']['grid_file'] = problem_definition_dict['general']['grid_file']
 
-    # del problem_definition_dict['general']['grain_orientation']
+
     del problem_definition_dict['general']['material_properties']
-    del problem_definition_dict['general']['dimensions_file']
     del problem_definition_dict['general']['grid_file']
 
     # load_path and yield_surface have settings that need aditional checking.

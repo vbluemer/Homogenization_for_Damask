@@ -34,7 +34,7 @@ valid_problem_definition_file_scheme = {  # type: ignore
                 'type': 'string',
             },
             'dimensions_file': {
-                'required': True,
+                'required': False,
                 'type': 'string',
             },
             'stress_tensor_type': {
