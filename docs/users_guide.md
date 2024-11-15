@@ -139,8 +139,11 @@ Replace `[output_path]` with the path of a `.csv` file to which the the fitted y
 Replace `[plot_path]` with the path of a `.png` file to which the plot of the yield surface must be written to. This plot will contain all 3 combinations of independent normal stress directions and all 3 combinations of independent shear directions. For the provided yield points to show up on one of these plots, the provided yield points should only have either a normal loading or shear loading, and the loading should be along at most 2 axis (very small loading values in other directions are neglected). All data points are used for in the data fitting process, regardless of being on a plot or not.
 
 # Examples
-## Finding yield point test
+A example is given for each simulation type that can be used. The `Finding (uniaxial) yield points` is considered as an entrypoint for first time users. In this example the creation of a project, setting the basic settings, running of the code and retrieval of results is discussed. For the other examples this is considered to be understood topics.
 
+For more extensive reference on the options, see the [`Problem definition guide`](problem_definition.md).
+## Finding (uniaxial) yield points
+See this example [`here`](Examples/yield_point.md).
 ## Fitting Hill yield surface
 
 ## Fitting isotropic elastic matrix components

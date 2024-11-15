@@ -59,7 +59,6 @@ general:
     dimensions          : 3D
     material_properties : "input_files/material_properties.yaml"
     grid_file           : "input_files/grid.vti"
-    dimensions_file     : ''
     stress_tensor_type: "Cauchy"
     strain_tensor_type: "true_strain"
     reduce_parasitic_stresses : False
@@ -171,7 +170,112 @@ These plots are generated while the simulation is running to show the progress a
 ## The simulation is finished
 Wait until the simulation is finished to inspect the stress-strain curves. 
 
-Find a way to open the `stress_strain_curve.png` located in the `results/yield_point/x-x` and `results/yield_point/x-y` folders. If the grid and material properties of the ExampleProject is used, the results should look similar too the following.
+Find a way to open the `stress_strain_curve.png` located in the `results/yield_point/x-x` and `results/yield_point/x-y` folders. If the grid and material properties of the ExampleProject is used, the results should look similar to the following:
 
-**The stress strain curve of: x-x**
+**The stress strain curve of: `x-x`**
 ![Stress-strain curve of x-x simulation](stress_strain_curve_x-x.png)
+**The stress strain curve of: `x-y`**
+![Stress-strain curve of x-y simulation](stress_strain_curve_x-y.png)
+
+### No yielding found
+
+As we can see in the stress-strain curves, the load that was applied was too low to find yielding in either simulation. Note that always all loading directions are shown even if a load was only applied in one direction. Also, the unloaded directions do not all show 0 stresses. This is expected behavior due to a different stress definition used by DAMASK. Because of this, parasitic stresses of the magnitude of 1% to 2% of an applied shear load can be expected in the tensile directions, see the `x-x` curve for the stress-curve of the `x-y` test case. For most cases, this small error should not be a significant problem.
+
+Back to the problem of no yielding: another hint have gotten that the applied load was too low is the hint given in the output of the script. At the end of the script, the following line should be present:
+```
+-> For 2 simulations, the applied load was not sufficient to induce yielding.
+-> Writing no yielding dataset to .csv file: /your/path/.../yield_point_test/results/yield_points_yield_point_NO_YIELD.csv
+```
+If we go back to the results folder we can inspect the contents of this file:
+```
+# Assuming currently in projects/yield_point_test/results/yield_point/x-x
+cd ../..
+
+nano yield_points_yield_point_NO_YIELD.csv
+```
+Doing so, we see the jobs that did not find yielding:
+```
+-> field_name,unit,stress_xx,stress_yy,stress_zz,stress_xy,stress_xz,stress_yz
+-> x-x, Pa, NO_YIELD_DETECTED, NO_YIELD_DETECTED, ...
+-> x-y, Pa, NO_YIELD_DETECTED, NO_YIELD_DETECTED, ...
+```
+Here we see that indeed the yield point tests in `x-x` and `x-y` did not detect any yielding. We will need to increase the yield strength estimation given in the `problem_definition.yaml`.
+
+### Increasing the estimated yield strength
+
+We need to adjust the `problem_definition.yaml`, so we will go back to root of the project folder:
+
+```
+# Assuming we are currently in the projects/yield_point_test/results folder:
+cd ..
+```
+We need to adjust the settings `estimated_tensile_yield` and `estimated_shear_yield`. A safe assumption is that both will be yielding at a applied load of `1000 MPa`:
+
+```
+nano problem_definition.yaml
+
+# Look for the lines with estimated_tensile_yield and estimated_shear_yield under the section yielding_condition. Adjust these line so it is similar to:
+
+yielding_condition:
+    ...
+    estimated_tensile_yield: 1000e6
+    estimated_shear_yield: 1000e6
+
+# Press `ctrl+x`, then `y` to save the file and finally `enter` to confirm the filename
+```
+Now we can re-run the simulation and likely we will find yielding in this case:
+```
+cd ../..
+
+python run_project.py yield_point_test
+
+# Confirm the prompts
+```
+When running this command, the previous results were still loaded. However, the code automatically detected that the estimated yield strengths have been altered and moved the old results to the `projects/yield_point_test/results_backup` folder for later reference.
+
+**Wait for the simulations to be completed**
+
+After the simulations have been completed, we can inspect the stress-strain curves again. These are once again located in `projects/yield_point_test/results/yield_point/...`:
+
+These should now look something similar to:
+
+**The stress strain curve of: `x-x`**
+![Stress-strain curve of x-x simulation](stress_strain_curve_x-x_yielding.png)
+**The stress strain curve of: `x-y`**
+![Stress-strain curve of x-y simulation](stress_strain_curve_x-y_yielding.png)
+
+In this case, we indeed see clear yielding behavior. Other then in the previous stress-strain curves, we see two new additions. There are red lines showing the yielding threshold set at 0.2% of plastic strain. The slope of this line is based on the first iteration, which is assumed to be always be fully linear.
+
+Also, the green dot for the interpolated yield point is shown. This is the linear interpolation of where yielding occurs in between the data point before and after the yielding conditions has been met.
+
+Finally, it can be noted that less data points have shown up compared to the previous stress-strain curves. In the previous, `15` data points are visible which corresponds to the `N_increments` setting provided in the `problem_definition.yaml`. In the updated stress-strain curves, only `8` are visible. This is because the monitoring loop detected that yielding had occurred and terminated the simulation prematurely to save time.
+
+The numerical values of the yield stress can be found in the generated `.csv` file. The output of the script should have already mentioned the location of this file:
+```
+-> Writing dataset to .csv file: /your/path/projects/yield_point_test/results/yield_points_yield_point.csv
+```
+Whe can inspect this file directly with `nano` (however viewing this in a more dedicated program like Excel would work as well):
+```
+nano /your/path/projects/yield_point_test/results/yield_points_yield_point.csv
+```
+This should show a output similar to the following:
+```
+field_name,unit,stress_xx,stress_yy,stress_zz,stress_xy,stress_xz,stress_yz
+x-x, Pa, 494049892.81288314, 509.5155726552522, 277.9729182444896, 462.0312202509435, 377.57650202766547, -102.04590777101937
+x-y, Pa, 2749628.1370206294, 109.66823277912755, -437.09224045146306, 268407366.9545309, 194.50825956790385, -124.82580955193718
+```
+From this, we can find that the tensile yield stress in `x-x` direction is `494 MPa` and the shear yield in the `x-y` direction is approximately `268 MPa`. 
+
+Knowing this, we can improve the estimated yielding values given in the `problem_definition.py`. When updating the estimated yield strengths, it is important to take the following into account:
+
+1. Making sure the estimated yield strengths will be an overestimation such that always yield will be found (also in other directions where the yield strength might be higher).
+2. Not setting the estimated yield strength too high as this effectively reduces the resolution of the result.
+
+For these simulation results, a good middle ground for setting the estimated yield strengths could be `650 MPa` for `estimated_tensile_yield` and `350 MPA` for estimated_shear_yield. This would lead to the following settings in the `problem_definition.yaml`:
+```
+yielding_condition:
+    ...
+    estimated_tensile_yield: 650e6
+    estimated_shear_yield: 350e6
+```
+

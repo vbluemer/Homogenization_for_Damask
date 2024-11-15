@@ -5,6 +5,7 @@ This project is an unaffiliated extension to [DAMASK](https://github.com/damask-
 To achieve these results, this extension provides:
 - Generation of DAMASK_grid load case and numerics files.
 - Running and monitoring of DAMASK_grid simulations, including condition based termination of simulations.
+- Storing of simulation results for quick reuse.
 - Post-processing of DAMASK simulation results extending to:
     - Homogenization of simulation domain for stress and strain
     - Fitting the results to the components of the elastic matrix
