@@ -106,7 +106,7 @@ def read_elastic_tensor_data_points(elastic_tensor_data_file: str) -> DataFrame:
 
     return df
 
-def fit_elastic_tensor(material_type: str, elastic_tensor_data_pandas: DataFrame) -> NDArray[np.float64]:
+def fit_elastic_tensor(material_type: str, elastic_tensor_data_pandas: DataFrame) -> tuple[NDArray[np.float64], float]:
     # This function fits the components of the elastic tensor using a optimization scheme. 
 
     # It returns the elastic tensor (Voigt notation).
@@ -183,9 +183,9 @@ def fit_elastic_tensor(material_type: str, elastic_tensor_data_pandas: DataFrame
 
     Messages.ElasticTensor.fitting_result(result, elastic_tensor, tensor_is_positive_definite, MSE) # type: ignore
 
-    return elastic_tensor
+    return elastic_tensor, float(MSE)
 
-def write_elastic_tensor_to_file(elastic_tensor: NDArray[np.float64], file_name: str) -> None:
+def write_elastic_tensor_to_file(elastic_tensor: NDArray[np.float64], file_name: str, MSE: float) -> None:
     component_names = [
         ["C_11", "C_12", "C_13", "C_14", "C_15", "C_16"],
         ["C_21", "C_22", "C_23", "C_24", "C_25", "C_26"],
@@ -202,8 +202,9 @@ def write_elastic_tensor_to_file(elastic_tensor: NDArray[np.float64], file_name:
             result_dict[0][component_names[i][j]] = elastic_tensor[i][j]
     
     component_names_flat = [value for row in component_names for value in row]
-    component_names_flat = component_names_flat + ["unit_stress"]
+    component_names_flat =  ["unit_stress", "MSE"] + component_names_flat
     result_dict[0]["unit_stress"] = "MPa"
+    result_dict[0]["MSE"] = MSE
     Messages.ElasticTensor.writing_results(file_name)
 
     with open(file_name, 'w', newline='') as csvfile:
@@ -232,15 +233,15 @@ def calculate_elastic_tensor_main(problem_definition: ProblemDefinition) -> None
 def calculate_elastic_tensor_common(material_type: str, data_set_file: str, output_file_name: str) -> NDArray[np.float64]:
     # This function redirects to the optimization based fitting of the elastic_tensor (fit_elastic_tensor)
     data_set = read_elastic_tensor_data_points(data_set_file)
-    elastic_tensor = fit_elastic_tensor(material_type, elastic_tensor_data_pandas=data_set)
-    write_elastic_tensor_to_file(elastic_tensor, output_file_name)
+    elastic_tensor, MSE = fit_elastic_tensor(material_type, elastic_tensor_data_pandas=data_set)
+    write_elastic_tensor_to_file(elastic_tensor, output_file_name, MSE)
 
     return elastic_tensor
 
 def calculate_elastic_tensor_algebraic(material_type: str, data_set_file: str, output_file_name: str) -> NDArray[np.float64]:
     # This function redirects to the algebraic fitting of the elastic_tensor (algebraic_fit_components)
     data_set = read_elastic_tensor_data_points(data_set_file)
-    elastic_tensor = algebraic_fit_components(material_type, elastic_tensor_data_pandas=data_set)
-    write_elastic_tensor_to_file(elastic_tensor, output_file_name)
+    elastic_tensor, MSE = algebraic_fit_components(material_type, elastic_tensor_data_pandas=data_set)
+    write_elastic_tensor_to_file(elastic_tensor, output_file_name, MSE)
 
     return elastic_tensor

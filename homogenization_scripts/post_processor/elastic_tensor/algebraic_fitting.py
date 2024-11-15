@@ -167,7 +167,7 @@ def fit_components_anisotropic(elastic_tensor_data_pandas: DataFrame) -> NDArray
 
     return elastic_tensor
 
-def algebraic_fit_components(material_type: str, elastic_tensor_data_pandas: DataFrame) -> NDArray[np.float64]:
+def algebraic_fit_components(material_type: str, elastic_tensor_data_pandas: DataFrame) -> tuple[NDArray[np.float64], float]:
     # This function calculates the elastic tensor with algebraic relationships.
     # The dataset must consist of uni-axial strain steps which must be in specific directions.
 
@@ -210,4 +210,4 @@ def algebraic_fit_components(material_type: str, elastic_tensor_data_pandas: Dat
     MSE = np.sum(((fitted_stress - stress_data)/max_stress)**2) / (number_data_points * 6)
     Messages.ElasticTensor.fitting_result_algebraic(elastic_tensor, tensor_is_positive_definite, MSE) # type: ignore
 
-    return elastic_tensor
+    return elastic_tensor, float(MSE)
