@@ -151,7 +151,9 @@ In this example, the Hill yield surface will be fitted with yielding data in mul
 
 See this example [here](Examples/yield_surface.md).
 ## Fitting isotropic elastic matrix components
+In this example, the components of the isotropic elastic matrix will be fitted to simulation data. The elastic data will be acquired by running the nesscecary DAMASK simulations. Two methods will be used for fitting, one with an algebraic approach and one with an regression based approach.
 
+See this example [here](Examples/elastic_tensor.md).
 ## Running a simple loading and unloading load case
 
 # Advanced features
