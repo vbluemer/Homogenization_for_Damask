@@ -68,7 +68,7 @@ The Hill yield surface [[`source`](https://royalsocietypublishing.org/doi/abs/10
 $$ 10^6 + F( \sigma_y - \sigma_z)^2 + G( \sigma_z - \sigma_x)^2 + H( \sigma_x - \sigma_y)^2 + 2L \tau_{yz}^2 + 2M \tau_{zx}^2 + 2N \tau_{xy}^2  = 0 $$ 
 
 dwa
-$\sigma^2 _{xx}$
+$\tau^2 _{xx}$
 Where $F$, $G$, $H$, $L$, $M$ and $N$ are the coefficients fitted by the code, and the stress state in the unit of `MPa`
 #### Cazacu-Plunkett-Barlat
 
