@@ -203,7 +203,9 @@ In this example, the components of the isotropic elastic matrix will be fitted t
 
 See this example [`here`](Examples/elastic_tensor.md).
 ## Running a simple loading and unloading load case
+In this example, a loading and unloading case will be simulated using DAMASK. First, a load is applied in the `x-y` shear direction, then a normal `x-x` direction after which the material is unloaded. The resulting stress and strain at every increment will be the output data.
 
+See this example [`here`](Examples/load_path.md).
 # Advanced features
 Beside the normal operation of this code, some additional features can be used for further research. These additional features are not as straight forwards as adjusting `problem_definition.yaml` and might require some more programming knowledge to apply as some source code might need alteration. 
 
