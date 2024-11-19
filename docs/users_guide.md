@@ -70,23 +70,41 @@ Where $F$, $G$, $H$, $L$, $M$ and $N$ are the coefficients fitted by the code, a
 #### Cazacu-Plunkett-Barlat
 
 The Cazacu-Plunkett-Barlat [[`source`](https://doi.org/10.1016/j.ijplas.2007.07.013)] is fitted to the following equation:
+
+
 $$-10^6 + 
 \left(|\Sigma_1| - k\Sigma_1\right)^a + 
 \left(|\Sigma_2| - k\Sigma_2\right)^a + 
 \left(|\Sigma_3| - k\Sigma_3\right)^a = 0$$
+
+
 Where
+
+
 $$\Sigma^{Voigt} = C \cdot S^{Voigt}$$
+
+
 $S$ is the deviatoric stress matrix, $\Sigma$ is a transformed stress state and $\Sigma_i$ the principle stresses. $C$, $k$ and $a$ are the fitted coefficients returned by the code and the stresses in the deviatoric stress $S$ given in `MPa`.
 
 #### Cazacu-Plunkett-Barlat Extended n
 
 The Cazacu-Plunkett-Barlat Extended n [[`source`](https://doi.org/10.1016/j.ijplas.2007.07.013)] is fitted to the following equation:
+
+
 $$-10^6 + \sum^n_{i=1} f^i(S) = 0$$
+
+
 Where
+
+
 $$f^i(S) = \left(|\Sigma^i_1| - k^i\Sigma^i_1\right)^a + 
 \left(|\Sigma^i_2| - k^i\Sigma^i_2\right)^a + 
 \left(|\Sigma^i_3| - k^i\Sigma^i_3\right)^a$$
+
+
 $$\Sigma^{i,Voigt} = C^i \cdot S^{Voigt}$$
+
+
 $S$ is the deviatoric stress matrix, $\Sigma^i$ is a transformed stress state and $\Sigma^i_j$ the principle stresses. $C^1, C^2, ..., C^n$, $k^1, k^2, ..., k^n$ and $a$ are the fitted coefficients returned by the code and the stresses in the deviatoric stress $S$ given in `MPa`.
 
 ### Load path
