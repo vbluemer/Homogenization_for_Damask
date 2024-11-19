@@ -65,7 +65,7 @@ Whenever the `yield_surface` simulation is completed it will write all the yield
 
 #### Hill
 The Hill yield surface [[`source`](https://royalsocietypublishing.org/doi/abs/10.1098/rspa.1948.0045)] is fitted to the following equation:
-$$ 10^6 + F( \sigma_y - \sigma_z)^2 + G( \sigma_z - \sigma_x)^2 + H( \sigma_x - \sigma_y)^2 + 2L \tau_{yz}^2 + 2M \tau_{zx}^2 + 2N \tau_{xy}^2  = 0 $$ 
+$$10^6 + F( \sigma_y - \sigma_z)^2 + G( \sigma_z - \sigma_x)^2 + H( \sigma_x - \sigma_y)^2 + 2L \tau_{yz}^2 + 2M \tau_{zx}^2 + 2N \tau_{xy}^2  = 0$$ 
 
 dwa
 $\tau^2 _{xx}$
