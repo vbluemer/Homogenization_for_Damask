@@ -63,6 +63,44 @@ Whenever the `yield_point` simulation is completed it will write all the uni-axi
 ### Yield surface
 Whenever the `yield_surface` simulation is completed it will write all the yield points currently stored in the `results_database.yaml` to the `yield_points_yield_surface.csv` file. If any other [`yield_criterion`](problem_definition.md#yield-criterion) then the option `None` was chosen, the fitted yield surface along with the MSE of the fit will be written to the `[yield surface name].csv` and a plot of the yield surface along with the yield data to the `[yield surface name].png`
 
+#### Hill
+The Hill yield surface [[`source`](https://royalsocietypublishing.org/doi/abs/10.1098/rspa.1948.0045)] is fitted to the following equation:
+$$
+10^6 + F(\sigma_y - \sigma_z)^2 + G(\sigma_z - \sigma_x)^2 + H(\sigma_x - \sigma_y)^2 + 2L\tau_{yz}^2 + 2M\tau_{zx}^2 + 2N\tau_{xy}^2  = 0
+$$
+Where $F$, $G$, $H$, $L$, $M$ and $N$ are the coefficients fitted by the code, and the stress state in the unit of `MPa`
+#### Cazacu-Plunkett-Barlat
+
+The Cazacu-Plunkett-Barlat [[`source`](https://doi.org/10.1016/j.ijplas.2007.07.013)] is fitted to the following equation:
+$$
+-10^6 + 
+\left(|\Sigma_1| - k\Sigma_1\right)^a + 
+\left(|\Sigma_2| - k\Sigma_2\right)^a + 
+\left(|\Sigma_3| - k\Sigma_3\right)^a = 0
+$$
+Where
+$$
+\Sigma^{Voigt} = C \cdot S^{Voigt}
+$$
+$S$ is the deviatoric stress matrix, $\Sigma$ is a transformed stress state and $\Sigma_i$ the principle stresses. $C$, $k$ and $a$ are the fitted coefficients returned by the code and the stresses in the deviatoric stress $S$ given in `MPa`.
+
+#### Cazacu-Plunkett-Barlat Extended n
+
+The Cazacu-Plunkett-Barlat Extended n [[`source`](https://doi.org/10.1016/j.ijplas.2007.07.013)] is fitted to the following equation:
+$$
+-10^6 + \sum^n_{i=1} f^i(S) = 0
+$$
+Where
+$$
+ f^i(S) = \left(|\Sigma^i_1| - k^i\Sigma^i_1\right)^a + 
+\left(|\Sigma^i_2| - k^i\Sigma^i_2\right)^a + 
+\left(|\Sigma^i_3| - k^i\Sigma^i_3\right)^a
+$$
+$$
+\Sigma^{i,Voigt} = C^i \cdot S^{Voigt}
+$$
+$S$ is the deviatoric stress matrix, $\Sigma^i$ is a transformed stress state and $\Sigma^i_j$ the principle stresses. $C^1, C^2, ..., C^n$, $k^1, k^2, ..., k^n$ and $a$ are the fitted coefficients returned by the code and the stresses in the deviatoric stress $S$ given in `MPa`.
+
 ### Load path
 The results of a `load_path` simulation type is stored very similarly to the other simulation results in the results folder, however, all the results are concentrated within the subfolder specific to each run `load_path-[date and time]`.
 
@@ -161,9 +199,9 @@ Beside the normal operation of this code, some additional features can be used f
 
 The features that will be discussed are the application of additional yield surfaces and using a regression based approach to fit the constants describing the material properties and to calibrate the components of the elastic matrix to experimental data.
 ## Implementation of an additional yield surface
-For reference on how to add a yield surface, view the tutorial [here](implement_yield_surface.md).
+For reference on how to add a yield surface, view the tutorial [`here`](implement_yield_surface.md).
 ## using the optimizer for experimental data
-A script has been included name `optimize_material_file_for_elastic_tensor.py`, find it [here](../optimize_material_file_for_elastic_tensor.py). The aim of this script is to be an example on how to calibrate the settings of the material properties to to some experimental data of the elastic matrix. 
+A script has been included name `optimize_material_file_for_elastic_tensor.py`, find it [`here`](../optimize_material_file_for_elastic_tensor.py). The aim of this script is to be an example on how to calibrate the settings of the material properties to to some experimental data of the elastic matrix. 
 
 In this example, some dummy values are used to stand in for experimental data. Note however that this script is meant as a demonstration and not as a fine-tuned approach. It shows that the it is possible to read the results of a simulation, adjust the properties in one of the input files and re-run the simulation until the simulations match the experimental data. 
 

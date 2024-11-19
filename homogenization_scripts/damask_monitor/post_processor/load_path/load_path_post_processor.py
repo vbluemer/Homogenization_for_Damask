@@ -84,8 +84,8 @@ class LoadCaseResults:
             increment_data: dict[str, float|int] = dict()
             increment_data["increment"] = increment_counter
             for direction, index in zip(directions, directions_indices):
-                increment_data[f"stress_{direction}"] = stress_vector[index]
-                increment_data[f"strain_{direction}"] = strain_vector[index]
+                increment_data[f"stress_{direction}"] = np.squeeze(stress_vector[index])
+                increment_data[f"strain_{direction}"] = np.squeeze(strain_vector[index])
 
             increment_list.append(increment_data)
         
