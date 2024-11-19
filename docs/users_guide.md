@@ -66,40 +66,27 @@ Whenever the `yield_surface` simulation is completed it will write all the yield
 #### Hill
 The Hill yield surface [[`source`](https://royalsocietypublishing.org/doi/abs/10.1098/rspa.1948.0045)] is fitted to the following equation:
 $$10^6 + F( \sigma_y - \sigma_z)^2 + G( \sigma_z - \sigma_x)^2 + H( \sigma_x - \sigma_y)^2 + 2L \tau_{yz}^2 + 2M \tau_{zx}^2 + 2N \tau_{xy}^2  = 0$$ 
-
-dwa
-$\tau^2 _{xx}$
 Where $F$, $G$, $H$, $L$, $M$ and $N$ are the coefficients fitted by the code, and the stress state in the unit of `MPa`
 #### Cazacu-Plunkett-Barlat
 
 The Cazacu-Plunkett-Barlat [[`source`](https://doi.org/10.1016/j.ijplas.2007.07.013)] is fitted to the following equation:
-$$
--10^6 + 
+$$-10^6 + 
 \left(|\Sigma_1| - k\Sigma_1\right)^a + 
 \left(|\Sigma_2| - k\Sigma_2\right)^a + 
-\left(|\Sigma_3| - k\Sigma_3\right)^a = 0
-$$
+\left(|\Sigma_3| - k\Sigma_3\right)^a = 0$$
 Where
-$$
-\Sigma^{Voigt} = C \cdot S^{Voigt}
-$$
+$$\Sigma^{Voigt} = C \cdot S^{Voigt}$$
 $S$ is the deviatoric stress matrix, $\Sigma$ is a transformed stress state and $\Sigma_i$ the principle stresses. $C$, $k$ and $a$ are the fitted coefficients returned by the code and the stresses in the deviatoric stress $S$ given in `MPa`.
 
 #### Cazacu-Plunkett-Barlat Extended n
 
 The Cazacu-Plunkett-Barlat Extended n [[`source`](https://doi.org/10.1016/j.ijplas.2007.07.013)] is fitted to the following equation:
-$$
--10^6 + \sum^n_{i=1} f^i(S) = 0
-$$
+$$-10^6 + \sum^n_{i=1} f^i(S) = 0$$
 Where
-$$
- f^i(S) = \left(|\Sigma^i_1| - k^i\Sigma^i_1\right)^a + 
+$$f^i(S) = \left(|\Sigma^i_1| - k^i\Sigma^i_1\right)^a + 
 \left(|\Sigma^i_2| - k^i\Sigma^i_2\right)^a + 
-\left(|\Sigma^i_3| - k^i\Sigma^i_3\right)^a
-$$
-$$
-\Sigma^{i,Voigt} = C^i \cdot S^{Voigt}
-$$
+\left(|\Sigma^i_3| - k^i\Sigma^i_3\right)^a$$
+$$\Sigma^{i,Voigt} = C^i \cdot S^{Voigt}$$
 $S$ is the deviatoric stress matrix, $\Sigma^i$ is a transformed stress state and $\Sigma^i_j$ the principle stresses. $C^1, C^2, ..., C^n$, $k^1, k^2, ..., k^n$ and $a$ are the fitted coefficients returned by the code and the stresses in the deviatoric stress $S$ given in `MPa`.
 
 ### Load path
