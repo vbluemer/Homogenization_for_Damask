@@ -66,8 +66,8 @@ Whenever the `yield_surface` simulation is completed it will write all the yield
 #### Hill
 The Hill yield surface [[`source`](https://royalsocietypublishing.org/doi/abs/10.1098/rspa.1948.0045)] is fitted to the following equation:
 $$ 10^6 + F( \sigma_y - \sigma_z)^2 + G( \sigma_z - \sigma_x)^2 + H( \sigma_x - \sigma_y)^2 + 2L \tau_{yz}^2 + 2M \tau_{zx}^2 + 2N \tau_{xy}^2  = 0 $$ 
-$$ \tau_{yz}^2 $$
-$ \tau_{yz}^2 $
+$$ \tau_y_z^2 $$
+$ \tau_y_z^2 $
 Where $F$, $G$, $H$, $L$, $M$ and $N$ are the coefficients fitted by the code, and the stress state in the unit of `MPa`
 #### Cazacu-Plunkett-Barlat
 
