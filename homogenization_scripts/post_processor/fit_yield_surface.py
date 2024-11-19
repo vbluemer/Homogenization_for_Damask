@@ -56,11 +56,13 @@ def fit_yield_surface(yield_surface_name: str, dataset_path: str, output_path: s
 # This is an example yield surface
 def fit_example_yield_surface(dataset_path: str, output_path: str, plot_path: str) -> ExampleYieldSurface:
 
+    # Provide some feedback to the user.
     print("Running example_yield_surface, this does not do much rather then act as a simple example")
 
     data_set = read_yield_points(dataset_path)
     
-    example_yield_surface: ExampleYieldSurface = fit_surface(ExampleYieldSurface(some_constant = 5), data_set) # type: ignore
+    yield_surface_to_fit = ExampleYieldSurface(some_constant = 5)
+    example_yield_surface: ExampleYieldSurface = fit_surface(yield_surface_to_fit, data_set) # type: ignore
 
     print(f"Example yield surface was fitted. some_coefficient = {example_yield_surface.coefficient_1}")
 
