@@ -47,21 +47,18 @@ def modulus_degradation_and_value(
         strain_iteration_1: NDArray[np.float64], 
         stress: NDArray[np.float64],
         strain: NDArray[np.float64]) -> tuple[bool, float]:
-    
-    deformation_stiffness_linear = damask_helper.calculate_linear_modulus(stress_iteration_1, strain_iteration_1)
-    deformation_stiffness = damask_helper.calculate_linear_modulus(stress, strain)
 
-    normalized_linear_deformation_stiffness = deformation_stiffness / deformation_stiffness_linear 
+    damage_value = damask_helper.calculate_damage_value(stress_iteration_1, strain_iteration_1, stress, strain)
 
-    non_linear_deformation_condition = abs(normalized_linear_deformation_stiffness-1) > yield_value
+    yield_condition = abs(damage_value) > yield_value
 
-    if non_linear_deformation_condition:
+    if yield_condition:
         non_linear_stiffness_detected = True
         
     else:
         non_linear_stiffness_detected = False
 
-    return non_linear_stiffness_detected, np.squeeze(abs(normalized_linear_deformation_stiffness-1))
+    return non_linear_stiffness_detected, damage_value
 
 def modulus_degradation(
         yield_value: float, 
@@ -88,42 +85,36 @@ def interpolation_fraction(
     
     # Returns the fraction for interpolation (x): stress_yield = stress_before + x * (stress_after - stress_before)
 
-    stiffness_linear = damask_helper.calculate_linear_modulus(stress_linear, strain_linear)
-    stiffness_before = damask_helper.calculate_linear_modulus(stress_before_yield, strain_before_yield)
-    stiffness_after = damask_helper.calculate_linear_modulus(stress_after_yield, strain_after_yield)
-
-    normalized_stiffness_before = stiffness_before / stiffness_linear
-    normalized_stiffness_after = stiffness_after / stiffness_linear
-
     strain_vector_before = damask_helper.strain_tensor_to_vector_notation(strain_before_yield)
     strain_vector_after = damask_helper.strain_tensor_to_vector_notation(strain_after_yield)
     strain_norm_before = float(np.linalg.norm(strain_vector_before))
     strain_norm_after = float(np.linalg.norm(strain_vector_after))
 
-    slope_stiffness_over_strain = (normalized_stiffness_after - normalized_stiffness_before) / (strain_norm_after - strain_norm_before)
-    if slope_stiffness_over_strain >=0:
-        threshold = 1+yield_value
-    else:
-        threshold = 1-yield_value
-        
-    modulus_linear = damask_helper.calculate_linear_modulus(stress_linear, strain_linear)
+    damage_value_before = damask_helper.calculate_damage_value(stress_linear, strain_linear, stress_before_yield, strain_before_yield)
+    damage_value_after = damask_helper.calculate_damage_value(stress_linear, strain_linear, stress_after_yield, strain_after_yield)
 
+    slope_stiffness_over_strain = (damage_value_after - damage_value_before) / (strain_norm_after - strain_norm_before)
+    if slope_stiffness_over_strain >=0:
+        threshold = yield_value
+    else:
+        threshold = -yield_value
+        
     # Finding the intersection of the yield condition and the interpolated state with a optimizer
     # Due non-linearity involved in the relationship between stress/strain and modulus.
     def objective_function(x: float) -> float:
         stress = stress_before_yield + x*(stress_after_yield - stress_before_yield)
         strain = strain_before_yield + x*(strain_after_yield - strain_before_yield)
-        modulus = damask_helper.calculate_linear_modulus(stress, strain)
 
-        normalized_modulus = modulus / modulus_linear
+        damage = damask_helper.calculate_damage_value(stress_linear, strain_linear, stress, strain)
 
-        objective_value = (normalized_modulus-threshold)**2 
+        objective_value = (damage-threshold)**2 
         return objective_value
 
     optimization_result = scipy.optimize.minimize_scalar(objective_function, options={'disp': False}, method="Golden")
 
+    print(f"DEBUG x value = {optimization_result.x}, damage = {objective_function(optimization_result.x)}")
+
     fraction_for_interpolation = optimization_result.x
-    # fraction_for_interpolation = ( strain_norm_yield - strain_norm_before ) / ( strain_norm_after - strain_norm_before )
 
     return fraction_for_interpolation
     

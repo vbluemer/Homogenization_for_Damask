@@ -258,18 +258,46 @@ def calculate_linear_deformatation_energy(stress_tensor: NDArray[np.float64], st
     stress_vector_transposed = np.transpose(stress_vector)
     strain_vector = strain_tensor_to_vector_notation(strain_tensor)
 
-    linear_deforamtion_energy = 0.5 * np.matmul(stress_vector_transposed, strain_vector)
+    linear_deformation_energy = 0.5 * np.matmul(stress_vector_transposed, strain_vector)
 
-    return linear_deforamtion_energy
+    return np.squeeze(linear_deformation_energy)
 
-def calculate_linear_modulus(stress_tensor: NDArray[np.float64], strain_tensor: NDArray[np.float64]) -> float:
-    # This function calculates the modulus of the material. 
-    # Here, the modulus is the ratio between the linear deformation energy and the absolute strain 
+def calculate_linear_deformatation_energy_undamaged_secant_stiffness(stress_tensor_first_iter: NDArray[np.float64], strain_tensor_first_iter: NDArray[np.float64], strain_tensor: NDArray[np.float64]) -> float:
+    # This function calculates the deformation energy the material has stored, assuming linear deformation (Hooks law)
     
     # The input is the homogonized stress and strain tensors.
+
+    stress_vector_first_iter = stress_tensor_to_vector_notation(stress_tensor_first_iter)
+    strain_vector_first_iter = strain_tensor_to_vector_notation(strain_tensor_first_iter)
+    strain_vector = strain_tensor_to_vector_notation(strain_tensor)
+
+    scale_factors = strain_vector / strain_vector_first_iter
+
+    stress_scaled_first_iter = scale_factors * stress_vector_first_iter
+    stress_scaled_transposed = np.transpose(stress_scaled_first_iter)
+    strain_scaled = scale_factors * strain_vector_first_iter
+
+    linear_deformation_energy_undamaged_scecant = 0.5 * np.matmul(stress_scaled_transposed, strain_scaled)
+
+    return np.squeeze(linear_deformation_energy_undamaged_scecant)
+
+def calculate_damage_value(stress_tensor_first_iter: NDArray[np.float64], strain_tensor_first_iter: NDArray[np.float64], stress_tensor: NDArray[np.float64], strain_tensor: NDArray[np.float64]) -> float:
+
+    deformation_energy_undamaged = calculate_linear_deformatation_energy_undamaged_secant_stiffness(stress_tensor_first_iter, strain_tensor_first_iter, strain_tensor)
+    deformation_energy_damaged_scecant = calculate_linear_deformatation_energy(stress_tensor, strain_tensor)
+
+    damage_value = 1 - deformation_energy_damaged_scecant / deformation_energy_undamaged
+
+    return damage_value
+
+# def calculate_linear_modulus(stress_tensor: NDArray[np.float64], strain_tensor: NDArray[np.float64]) -> float:
+#     # This function calculates the modulus of the material. 
+#     # Here, the modulus is the ratio between the linear deformation energy and the absolute strain 
     
-    deformation_energy: float = calculate_linear_deformatation_energy(stress_tensor, strain_tensor)
-    strain_norm = np.linalg.norm( strain_tensor_to_vector_notation(strain_tensor) )
-    calculate_linear_modulus = float(deformation_energy / strain_norm**2)
-    return calculate_linear_modulus
+#     # The input is the homogonized stress and strain tensors.
+    
+#     deformation_energy: float = calculate_linear_deformatation_energy(stress_tensor, strain_tensor)
+#     strain_norm = np.linalg.norm( strain_tensor_to_vector_notation(strain_tensor) )
+#     calculate_linear_modulus = float(deformation_energy / strain_norm**2)
+#     return calculate_linear_modulus
 

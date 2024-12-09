@@ -39,9 +39,8 @@ class InterpolatedResults:
     strain_linear: NDArray[np.float64]
     strain_norm: float
     strain_norm_first_iteration: float
-    deformation_modulus: float
     deformation_energy: float
-    deformation_modulus_linear: float
+    damage_value: float
     deformation_energy_linear: float
 
     def __init__(self,
@@ -82,11 +81,14 @@ class InterpolatedResults:
         self.strain_norm = float(np.linalg.norm(self.strain))
         self.strain_norm_first_iteration = float(np.linalg.norm(self.strain_linear))
 
-        self.deformation_modulus_linear = damask_helper.calculate_linear_modulus(self.stress_linear, self.strain_linear)
-        self.deformation_energy_linear = damask_helper.calculate_linear_deformatation_energy(self.stress_linear, self.strain_linear)
+        self.strain_norm = float(np.linalg.norm(self.strain))
+        self.strain_norm_first_iteration = float(np.linalg.norm(self.strain_linear))
+
+        self.deformation_energy_undamaged_secant = damask_helper.calculate_linear_deformatation_energy_undamaged_secant_stiffness(self.stress_linear, self.strain_linear, self.strain)
     
-        self.deformation_modulus = damask_helper.calculate_linear_modulus(self.stress, self.strain)
+        self.damage_value = damask_helper.calculate_damage_value(self.stress_linear, self.strain_linear, self.stress, self.strain)
         self.deformation_energy = damask_helper.calculate_linear_deformatation_energy(self.stress, self.strain)
+
 
 
 

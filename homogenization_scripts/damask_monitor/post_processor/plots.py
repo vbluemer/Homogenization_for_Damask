@@ -174,31 +174,29 @@ def plot_modulus_degradation(
 
     if np.shape(abs_deformation)[0] > 0:
 
-        modulus_linear = damask_helper.calculate_linear_modulus(stress_per_increment[1], strain_per_increment[1])
-        modulus: list[float] = []
-        modulus_normalized: list[float] = [1]
-        energy_linear: list[float] = [0]
+        energy_undamaged_secant: list[float] = [0]
+        damage_values: list[float] = [0]
         for i in range(1, len(abs_deformation)):
-            modulus_i = damask_helper.calculate_linear_modulus(stress_per_increment[i], strain_per_increment[i])
-            modulus.append(modulus_i)
-            modulus_normalized.append(modulus_i / modulus_linear)
-            strain_vector = damask_helper.strain_tensor_to_vector_notation(strain_per_increment[i])
-            energy_linear.append( modulus_linear * float(np.linalg.norm(strain_vector)**2))
+            deformation_energy_scecant = damask_helper.calculate_linear_deformatation_energy_undamaged_secant_stiffness(stress_per_increment[1], strain_per_increment[1], strain_per_increment[i])
+            damage_value = damask_helper.calculate_damage_value(stress_per_increment[1], strain_per_increment[1], stress_per_increment[i], strain_per_increment[i])
+            
+            energy_undamaged_secant.append(deformation_energy_scecant)
+            damage_values.append( damage_value )
 
-        linear_elastic_deformation_condition_plus = np.repeat([1+problem_definition.yielding_condition.modulus_degradation_percentage], len(abs_deformation))
-        linear_elastic_deformation_condition_min = np.repeat([1-problem_definition.yielding_condition.modulus_degradation_percentage], len(abs_deformation))
+        linear_elastic_deformation_condition_plus = np.repeat([problem_definition.yielding_condition.modulus_degradation_percentage], len(abs_deformation))
+        linear_elastic_deformation_condition_min = np.repeat([-problem_definition.yielding_condition.modulus_degradation_percentage], len(abs_deformation))
 
         
-        ax[0].plot(abs_deformation, energy_linear, 'r--', label='Linear deformation energy')
+        ax[0].plot(abs_deformation, energy_undamaged_secant, 'r--', label='Deformation energy undamaged scecant')
         ax[0].legend()
 
-        ax[1].plot(abs_deformation, modulus_normalized, '--', marker='x', markersize=8, label="Normalized deformation stiffness")
+        ax[1].plot(abs_deformation, damage_values, '--', marker='x', markersize=8, label="Normalized deformation stiffness")
         ax[1].plot(abs_deformation, linear_elastic_deformation_condition_plus, '--r', label="Yielding threshold")
         ax[1].plot(abs_deformation, linear_elastic_deformation_condition_min, '--r')
-        ax[1].title.set_text('Normalized spring stiffness (E = k * |strain|^2) -> k / k_0')
+        ax[1].title.set_text('Stiffness degradation over strain')
         ax[1].legend()
         ax[1].set_xlabel("|strain| [-]")
-        ax[1].set_ylabel("Normalized linear spring stiffness [-]")
+        ax[1].set_ylabel("Scecant stiffness degradation [-]")
         ax[1].grid()
 
 
@@ -206,8 +204,8 @@ def plot_modulus_degradation(
         ax[0].plot(interpolated_yield.strain_norm, interpolated_yield.deformation_energy, marker='o', markersize=8, color="green", label="Interpolated result")
         ax[0].legend()
         
-        normalized_deformation_stiffness = interpolated_yield.deformation_modulus / modulus_linear
-        ax[1].plot(interpolated_yield.strain_norm, normalized_deformation_stiffness, '', marker='o', markersize=8, color="green", label="Interpolated result")
+        interpolated_damage_value = interpolated_yield.damage_value 
+        ax[1].plot(interpolated_yield.strain_norm, interpolated_damage_value, '', marker='o', markersize=8, color="green", label="Interpolated result")
         ax[1].legend()
     fig.suptitle(plot_title) # type: ignore
     fig.savefig(modulus_degradation_plot_path) # type: ignore
