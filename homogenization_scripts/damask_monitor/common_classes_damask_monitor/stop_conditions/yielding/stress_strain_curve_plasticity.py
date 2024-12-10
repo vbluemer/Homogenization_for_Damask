@@ -80,6 +80,13 @@ def interpolation_fraction(
 
     # returns the the fraction (x) used for interpolation: stress_yield = stress_1 + x*(stress_2 - stress_1)
 
+    stress_linear = abs(stress_linear)
+    strain_linear = abs(strain_linear)
+    stress_before_yield = abs(stress_before_yield)
+    strain_before_yield = abs(strain_before_yield)
+    stress_after_yield = abs(stress_after_yield)
+    strain_after_yield = abs(strain_after_yield)
+
     slope_stress_stain_curve_linear = stress_linear / strain_linear
     slope_stress_strain_interpolation = (stress_after_yield - stress_before_yield) / (strain_after_yield - strain_before_yield)
 

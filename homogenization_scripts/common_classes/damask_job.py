@@ -604,7 +604,10 @@ def create_multiaxial_yield_point_manual_values(problem_definition: ProblemDefin
 
         component_split = component.split("=")
         direction = component_split[0]
-        value = float(component_split[1].replace("-", "."))
+        if component_split[1][0] == '-':
+            value=-1*float(component_split[1][1:].replace("-", "."))
+        else:
+            value = float(component_split[1].replace("-", "."))
 
         match direction:
             case "xx":
