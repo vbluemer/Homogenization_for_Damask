@@ -679,12 +679,12 @@ def create_multiaxial_yield_point_for_yield_locus(problem_definition: ProblemDef
             points_per_quadrant = [0, 0, 0, 0]
             for point in range(points_per_plane):
                 point_index = first_points_ordering[point]
-                points_per_quadrant[point_index] += 1
+                points_per_quadrant[point_index-1] += 1
         else:
             points_per_quadrant_first = [0, 0, 0, 0]
             for point in range(first_points_length):
                 point_index = first_points_ordering[point]
-                points_per_quadrant_first[point_index] += 1
+                points_per_quadrant_first[point_index-1] += 1
 
             full_sets_of_points = int((points_per_plane-first_points_length - (points_per_plane-first_points_length) % 4)/4)
 

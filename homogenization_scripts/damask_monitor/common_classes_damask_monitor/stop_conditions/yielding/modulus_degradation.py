@@ -112,7 +112,6 @@ def interpolation_fraction(
 
     optimization_result = scipy.optimize.minimize_scalar(objective_function, options={'disp': False}, method="Golden")
 
-    print(f"DEBUG x value = {optimization_result.x}, damage = {objective_function(optimization_result.x)}")
 
     fraction_for_interpolation = optimization_result.x
 
