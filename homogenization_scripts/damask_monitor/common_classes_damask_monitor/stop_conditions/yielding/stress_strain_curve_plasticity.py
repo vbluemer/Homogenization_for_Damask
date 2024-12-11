@@ -2,6 +2,7 @@
 import numpy as np
 from numpy.typing import NDArray
 import damask # type: ignore
+import copy 
 
 # Local packages
 from .....common_functions import damask_helper 
@@ -11,6 +12,8 @@ from ....post_processor.interpolate_results import InterpolatedResults
 from .....common_functions import damask_helper
 from ....common_classes_damask_monitor.increment_data import IncrementData
 from ....post_processor.plots import plot_stress_strain_curves, plot_modulus_degradation
+
+
 
 def slope_stress_strain_curve_and_value(
         yield_value: float, 
@@ -80,12 +83,12 @@ def interpolation_fraction(
 
     # returns the the fraction (x) used for interpolation: stress_yield = stress_1 + x*(stress_2 - stress_1)
 
-    stress_linear = abs(stress_linear)
-    strain_linear = abs(strain_linear)
-    stress_before_yield = abs(stress_before_yield)
-    strain_before_yield = abs(strain_before_yield)
-    stress_after_yield = abs(stress_after_yield)
-    strain_after_yield = abs(strain_after_yield)
+    stress_linear = abs(copy.deepcopy(stress_linear))
+    strain_linear = abs(copy.deepcopy(strain_linear))
+    stress_before_yield = abs(copy.deepcopy(stress_before_yield))
+    strain_before_yield = abs(copy.deepcopy(strain_before_yield))
+    stress_after_yield = abs(copy.deepcopy(stress_after_yield))
+    strain_after_yield = abs(copy.deepcopy(strain_after_yield))
 
     slope_stress_stain_curve_linear = stress_linear / strain_linear
     slope_stress_strain_interpolation = (stress_after_yield - stress_before_yield) / (strain_after_yield - strain_before_yield)
