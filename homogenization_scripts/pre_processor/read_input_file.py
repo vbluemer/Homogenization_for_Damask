@@ -195,7 +195,7 @@ def check_yield_surface_settings(problem_definition_dict: dict[str, Any]):
         print("The yield_surface section is missing from the problem_definition.yaml file!")
         return problem_definition_dict, yield_surface_settings_correct
     
-    if isinstance(load_path_settings['stress_x_x'], (int, float)):
+    if isinstance(load_path_settings['manual_stress_x_x'], (int, float)):
         problem_definition_dict['yield_surface']['manual_stress_x_x'] = [problem_definition_dict['yield_surface']['manual_stress_x_x']]
     
     load_steps = len(problem_definition_dict['yield_surface']['manual_stress_x_x'])
