@@ -567,7 +567,7 @@ def create_multiaxial_yield_points_set_names(problem_definition: ProblemDefiniti
     points_per_plane = problem_definition.yield_surface.load_points_per_plane
 
     for point_number in range(points_per_plane):
-        field_name_tension = f"tensile_{plane}_{point_number}"
+        field_name_tension = f"normal_{plane}_{point_number}"
         field_names.append(field_name_tension)
 
     for point_number in range(points_per_plane):
@@ -752,10 +752,10 @@ def create_multiaxial_yield_point_for_yield_locus(problem_definition: ProblemDef
         
         return angle_in_plane
 
-    job_is_tensile = 'tensile' in job_name
+    job_is_tensile = 'normal' in job_name
     if job_is_tensile:
         esitmated_yield = problem_definition.yielding_condition.estimated_tensile_yield
-        type_name = "tensile"
+        type_name = "normal"
         use_amplification = True
     else:
         esitmated_yield = problem_definition.yielding_condition.estimated_shear_yield
@@ -770,9 +770,9 @@ def create_multiaxial_yield_point_for_yield_locus(problem_definition: ProblemDef
         return amplification_factor
     
     # Set the plane of the job
-    is_in_x_y_plane = 'tensile_x_y' in job_name or 'xy_xz' in job_name
-    is_in_x_z_plane = 'tensile_x_z' in job_name or 'xy_yz' in job_name
-    is_in_y_z_plane = 'tensile_y_z' in job_name or 'xz_yz' in job_name
+    is_in_x_y_plane = 'normal_x_y' in job_name or 'xy_xz' in job_name
+    is_in_x_z_plane = 'normal_x_z' in job_name or 'xy_yz' in job_name
+    is_in_y_z_plane = 'normal_y_z' in job_name or 'xz_yz' in job_name
 
     if is_in_x_y_plane:
         if job_is_tensile:
