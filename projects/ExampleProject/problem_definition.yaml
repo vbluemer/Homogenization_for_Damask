@@ -156,12 +156,12 @@ yield_surface:
     load_points_per_plane: 1
 
     ## Manual stress state settings:
-    stress_x_x: [1300e6,      0,      0,     0,     0,     0]
-    stress_x_y: [     0,      0,      0, 700e6,     0,     0]
-    stress_x_z: [     0,      0,      0,     0, 700e6,     0]
-    stress_y_y: [     0, 1300e6,      0,     0,     0,     0]
-    stress_y_z: [     0,      0,      0,     0,     0, 700e6]
-    stress_z_z: [     0,      0, 1300e6,     0,     0,     0]
+    manual_stress_x_x: [1300e6,      0,      0,     0,     0,     0]
+    manual_stress_x_y: [     0,      0,      0, 700e6,     0,     0]
+    manual_stress_x_z: [     0,      0,      0,     0, 700e6,     0]
+    manual_stress_y_y: [     0, 1300e6,      0,     0,     0,     0]
+    manual_stress_y_z: [     0,      0,      0,     0,     0, 700e6]
+    manual_stress_z_z: [     0,      0, 1300e6,     0,     0,     0]
 
     # NOTE: More results then the minimum defined here can accu%%milate in the
     #       stored results (results/results_database.yaml). To make sure only

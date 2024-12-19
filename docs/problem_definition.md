@@ -227,7 +227,7 @@ For `manual` creation, define the loading directions with loading magnitude in t
 
 ### Manual stress states
 
- - stress_x_x, stress_x_y, stress_x_z, stress_y_y, stress_y_z, stress_z_z
+ - manual_stress_x_x, manual_stress_x_y, manual_stress_x_z, manual_stress_y_y, manual_stress_y_z, manual_stress_z_z
 
 (`float [Pa]`, `list(float) [Pa]`) The loading directions with over-exaggerated stress magnitudes to identify yielding in. Can either by single value for each loading direction, or list of equal length in each direction. 
 
