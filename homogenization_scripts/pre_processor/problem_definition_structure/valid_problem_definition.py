@@ -141,7 +141,7 @@ valid_problem_definition_file_scheme = {  # type: ignore
             },
             'simulation_time': {
                 'required': True,
-                'type': 'integer',
+                'type': 'number',
             },
             'monitor_update_cycle': {
                 'required': True,
