@@ -49,7 +49,7 @@ solver:
     eps_abs_curl_F: 1.0e-10          
     eps_rel_curl_F: 5.0e-4           
 
-    simulation_time : 1000         
+    simulation_time : 10e6         
     monitor_update_cycle: 5    
 
 yield_surface:

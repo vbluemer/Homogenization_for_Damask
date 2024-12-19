@@ -100,7 +100,7 @@ solver:
     eps_abs_curl_F: 1.0e-10          # absolute tolerance for fulfillment of strain compatibility. Standard is 1.0e-10
     eps_rel_curl_F: 5.0e-4           # relative tolerance for fulfillment of strain compatibility. Standard is 5.0e-4
 
-    simulation_time : 1000         # length of time increment
+    simulation_time : 10e6         # length of time increment
 
     monitor_update_cycle: 5     # in seconds. Defines how often the DAMASK_grid process is checked for new results
 
