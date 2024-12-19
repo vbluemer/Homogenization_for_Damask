@@ -8,12 +8,12 @@ def read_manual_stress_states(problem_definition: ProblemDefinition) -> dict[str
     required_results: dict[str, dict[str, bool]] = dict()
     required_results["yield_surface"] = dict()
 
-    stress_states_xx = problem_definition.yield_surface.stress_x_x
-    stress_states_yy = problem_definition.yield_surface.stress_y_y
-    stress_states_zz = problem_definition.yield_surface.stress_z_z
-    stress_states_xy = problem_definition.yield_surface.stress_x_y
-    stress_states_xz = problem_definition.yield_surface.stress_x_z
-    stress_states_yz = problem_definition.yield_surface.stress_y_z
+    stress_states_xx = problem_definition.yield_surface.manual_stress_x_x
+    stress_states_yy = problem_definition.yield_surface.manual_stress_y_y
+    stress_states_zz = problem_definition.yield_surface.manual_stress_z_z
+    stress_states_xy = problem_definition.yield_surface.manual_stress_x_y
+    stress_states_xz = problem_definition.yield_surface.manual_stress_x_z
+    stress_states_yz = problem_definition.yield_surface.manual_stress_y_z
 
     for state in range(len(stress_states_xx)):
         stress_xx = stress_states_xx[state]

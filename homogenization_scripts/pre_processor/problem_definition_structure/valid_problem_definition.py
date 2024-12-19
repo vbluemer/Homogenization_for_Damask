@@ -180,32 +180,32 @@ valid_problem_definition_file_scheme = {  # type: ignore
                 'required': True,
                 'type': 'boolean',
             },
-            'stress_x_x': {
+            'manual_stress_x_x': {
                 'required': True,
                 'type': ['number', 'list'],
                 'valuesrules': {'type': 'number'},
             },
-            'stress_x_y': {
+            'manual_stress_x_y': {
                 'required': True,
                 'type': ['number', 'list'],
                 'valuesrules': {'type': 'number'},
             },
-            'stress_x_z': {
+            'manual_stress_x_z': {
                 'required': True,
                 'type': ['number', 'list'],
                 'valuesrules': {'type': 'number'},
             },
-            'stress_y_y': {
+            'manual_stress_y_y': {
                 'required': True,
                 'type': ['number', 'list'],
                 'valuesrules': {'type': 'number'},
             },
-            'stress_y_z': {
+            'manual_stress_y_z': {
                 'required': True,
                 'type': ['number', 'list'],
                 'valuesrules': {'type': 'number'},
             },
-            'stress_z_z': {
+            'manual_stress_z_z': {
                 'required': True,
                 'type': ['number', 'list'],
                 'valuesrules': {'type': 'number'},

@@ -105,12 +105,12 @@ class YieldSurface:
     load_points_per_plane                   : int
     assume_tensile_compressive_symmetry      : bool
     stress_state_creation                   : Literal["manual", "automatic"]
-    stress_x_x                              : list[float]
-    stress_x_y                              : list[float]
-    stress_x_z                              : list[float]
-    stress_y_y                              : list[float]
-    stress_y_z                              : list[float]
-    stress_z_z                              : list[float]
+    manual_stress_x_x                              : list[float]
+    manual_stress_x_y                              : list[float]
+    manual_stress_x_z                              : list[float]
+    manual_stress_y_y                              : list[float]
+    manual_stress_y_z                              : list[float]
+    manual_stress_z_z                              : list[float]
 
 class ElasticTensor:
     material_type                           : Literal["anisotropic",  "monoclinic", "orthotropic", "tetragonal", "cubic", "isotropic"]

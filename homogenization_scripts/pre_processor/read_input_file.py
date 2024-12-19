@@ -196,11 +196,11 @@ def check_yield_surface_settings(problem_definition_dict: dict[str, Any]):
         return problem_definition_dict, yield_surface_settings_correct
     
     if isinstance(load_path_settings['stress_x_x'], (int, float)):
-        problem_definition_dict['yield_surface']['stress_x_x'] = [problem_definition_dict['yield_surface']['stress_x_x']]
+        problem_definition_dict['yield_surface']['manual_stress_x_x'] = [problem_definition_dict['yield_surface']['manual_stress_x_x']]
     
-    load_steps = len(problem_definition_dict['yield_surface']['stress_x_x'])
+    load_steps = len(problem_definition_dict['yield_surface']['manual_stress_x_x'])
 
-    other_directions = ["stress_x_y", "stress_x_z", "stress_y_y", "stress_y_z", "stress_z_z"]
+    other_directions = ["manual_stress_x_y", "manual_stress_x_z", "manual_stress_y_y", "manual_stress_y_z", "manual_stress_z_z"]
 
     for direction in other_directions:
         if isinstance(load_path_settings[direction], (int, float)):
