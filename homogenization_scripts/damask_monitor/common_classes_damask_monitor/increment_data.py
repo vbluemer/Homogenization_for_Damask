@@ -13,6 +13,7 @@ class IncrementData:
     sleep_time                  : float
     stress_averaged_per_increment        : NDArray[np.float64]
     strain_averaged_per_increment        : NDArray[np.float64]
+    plastic_strain_averaged_per_increment: NDArray[np.float64]
     stop_condition_reached      : bool
     run_ended_succesfully       : bool
     stress_tensor_type         : StressTensors
@@ -26,6 +27,7 @@ class IncrementData:
         self.sleep_time = problem_definition.solver.monitor_update_cycle
         self.stress_averaged_per_increment = np.zeros((1,3,3))
         self.strain_averaged_per_increment = np.zeros((1,3,3))
+        self.plastic_strain_averaged_per_increment = np.zeros((1,3,3))
         self.stop_condition_reached = False
         self.run_ended_succesfully = True
         self.stress_tensor_type = problem_definition.general.stress_tensor_type
@@ -36,3 +38,6 @@ class IncrementData:
 
     def add_increment_strain_tensor(self, strain_tensor: NDArray[np.float64]) -> None:
         self.strain_averaged_per_increment = np.append(self.strain_averaged_per_increment, [strain_tensor], axis=0)
+        
+    def add_increment_plastic_strain_tensor(self, plastic_strain_tensor: NDArray[np.float64]) -> None:
+        self.plastic_strain_averaged_per_increment = np.append(self.plastic_strain_averaged_per_increment, [plastic_strain_tensor], axis=0)

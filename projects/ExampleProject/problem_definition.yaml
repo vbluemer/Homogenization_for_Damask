@@ -37,7 +37,7 @@ general:
     # All file paths are relative to the project folder, or absolute (starting with /)
 
     # The grid file needs to be supplied with either a .vti file
-    grid_file           : "input_files/Polycrystal_10_20x20x20.vti"
+    grid_file           : "input_files/Polycrystal_50_50x50x50.vti"
     # All file paths are relative to the project folder, or absolute (starting with /)
 
     # Choose: "PK1", "PK2", "Cauchy". PK stands for order of Piola Kirchoff
@@ -70,7 +70,7 @@ yielding_condition:
     # For energy stiffness:
     modulus_degradation_percentage: 0.15
 
-    plastic_work_threshold: 500000
+    plastic_work_threshold: 10000
 
     # (over)Estimated yield point in uniaxial tension.
     # Must be higher than actual yield point for yielding to be found.

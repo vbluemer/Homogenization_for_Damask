@@ -59,6 +59,8 @@ def store_yield_surface_settings(
                 yield_value = problem_definition.yielding_condition.modulus_degradation_percentage
             case 'stress_strain_curve':
                 yield_value = problem_definition.yielding_condition.plastic_strain_yield
+            case 'plastic_work':
+                yield_value = problem_definition.yielding_condition.plastic_work_threshold
             case _:
                 yield_value = 0
                 warnings.warn(f"storing of setting the yield value for yield condition {problem_definition.yielding_condition.yield_condition} not yet implemented!")

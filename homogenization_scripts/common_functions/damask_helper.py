@@ -109,7 +109,52 @@ def get_strain(damask_result: damask.Result, tensor_type: StrainTensors, display
 
         consolelog.suppress_console_logging()
         # The strain must be added to the result
-        damask_result.add_strain(m=m)
+        damask_result.add_strain(F='F',m=m)
+        strain_dict: get_result_type | None= damask_result.get(tensor_damask_name, flatten=False)
+
+        consolelog.restore_console_logging()
+
+        messages.Status.completed_timer(timer) # type: ignore
+         
+    if strain_dict is None:
+        # Explicit call for strain calculation failed, there must be a problem with the result file.
+        raise Exception("Failed to calculate the Green Lagrange strain tensor!")
+    else:
+        # Format the result into a useable format.
+        strain: NDArray[np.float64] = extract_mechanical_property_per_iteration_per_grid_point_from_results_dict(strain_dict, 
+                                        tensor_damask_name, 
+                                        (0,3,3)) # type: ignore
+        return damask_result, strain
+    
+def get_plastic_strain(damask_result: damask.Result, tensor_type: StrainTensors, display_prefix: str = "")-> tuple[damask.Result, NDArray[np.float64]]:
+    # This function gets the strain values for each grid point for each iteration visible in the damask_result.
+    # The output is of size (n_increments_visible, n_gridpoints, 3, 3) always.
+
+    # Definition of strain to use.
+    match tensor_type:
+        case Tensor.Strain.TrueStrain():
+            tensor_damask_name = 'epsilon_V^0(F_p)'
+            display_name = "true strain"
+            m = 0
+        case Tensor.Strain.GreenLagrange():
+            tensor_damask_name = 'epsilon_V^1(F_p)'
+            display_name = "Green Lagrange strain"
+            m = 1
+        case _: # type: ignore
+            raise Exception(f"Strain tensor {tensor_type} not yet implemented")
+            
+    # Try to get the strain if it is already present, suppress console to override progress reporting
+    consolelog.suppress_console_logging()
+    strain_dict: get_result_type | None = damask_result.get(tensor_damask_name, flatten=False)
+    consolelog.restore_console_logging()
+    
+    if strain_dict is None:
+        timer = datetime.datetime.now()
+        messages.Actions.calculate_field(display_name, prefix=display_prefix) # type: ignore
+
+        consolelog.suppress_console_logging()
+        # The strain must be added to the result
+        damask_result.add_strain(F='F_p',m=m)
         strain_dict: get_result_type | None= damask_result.get(tensor_damask_name, flatten=False)
 
         consolelog.restore_console_logging()
@@ -248,6 +293,18 @@ def get_averaged_strain_per_increment(damask_results: damask.Result, tensor_type
         strain_per_increment = np.append(strain_per_increment, np.array([strain_domain_averaged]), axis=0)
 
     return (damask_results, strain_per_increment)
+
+def get_averaged_plastic_strain_per_increment(damask_results: damask.Result, tensor_type: StrainTensors, display_prefix:str = "") -> tuple[damask.Result, NDArray[np.float64]]:
+    (damask_results, plastic_strain) = get_plastic_strain(damask_results, tensor_type, display_prefix=display_prefix)
+    plastic_strain_per_increment = np.empty((0, 3, 3))
+    # This function calculates the homogonized strain per increment visible in the damask_result.
+
+    # Shape of output is (n_increments_visible, 3, 3) always
+    for increment in range(np.shape(plastic_strain)[0]):
+        strain_domain_averaged = np.mean(plastic_strain[increment],axis=0)
+        plastic_strain_per_increment = np.append(plastic_strain_per_increment, np.array([strain_domain_averaged]), axis=0)
+
+    return (damask_results, plastic_strain_per_increment)
 
 def calculate_linear_deformatation_energy(stress_tensor: NDArray[np.float64], strain_tensor: NDArray[np.float64]) -> float:
     # This function calculates the deformation energy the material has stored, assuming linear deformation (Hooks law)

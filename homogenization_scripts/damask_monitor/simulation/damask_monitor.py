@@ -198,14 +198,17 @@ def calculate_domain_averaged_stress_and_strain(
 
     display_prefix = "  "
 
+    (damask_result_intermediate_pruned, plastic_strain_all) = damask_helper.get_averaged_plastic_strain_per_increment(damask_result_intermediate_pruned, strain_tensor_type, display_prefix=display_prefix)
     (damask_result_intermediate_pruned, strain_all) = damask_helper.get_averaged_strain_per_increment(damask_result_intermediate_pruned, strain_tensor_type, display_prefix=display_prefix)
     (damask_result_intermediate_pruned, stress_all) = damask_helper.get_averaged_stress_per_increment(damask_result_intermediate_pruned, stress_tensor_type, display_prefix=display_prefix)
 
     stress_domain_averaged = np.mean(stress_all,0)
     strain_domain_averaged = np.mean(strain_all,0)
+    plastic_strain_domain_averaged = np.mean(plastic_strain_all,0)
 
     increment_data.add_increment_stress_tensor(stress_domain_averaged)
     increment_data.add_increment_strain_tensor(strain_domain_averaged)
+    increment_data.add_increment_plastic_strain_tensor(plastic_strain_domain_averaged)
 
     return increment_data
 
