@@ -7,6 +7,7 @@ from ...common_classes.problem_definition import ProblemDefinition
 from ...common_classes import messages
 from ...common_functions import damask_helper
 from ..common_classes_damask_monitor.stop_conditions.yielding.modulus_degradation import modulus_degradation_post_process
+from ..common_classes_damask_monitor.stop_conditions.yielding.plastic_work import plastic_work_post_process
 from ..common_classes_damask_monitor.stop_conditions.yielding.stress_strain_curve_plasticity import slope_stress_strain_curve_post_process
 from .load_path.load_path_post_processor import load_path_post_process
 from .interpolate_results import InterpolatedResults
@@ -22,6 +23,8 @@ def yield_point_post_processing(
             interpolated_results = modulus_degradation_post_process(problem_definition, damask_job)
         case 'stress_strain_curve':
             interpolated_results = slope_stress_strain_curve_post_process(problem_definition, damask_job)
+        case 'plastic_work':
+            interpolated_results = plastic_work_post_process(problem_definition, damask_job)
         case _:
             raise Exception(f"Yield point post processing of damask results not yet implemented for {damask_job.stop_condition.yield_condition}")
 

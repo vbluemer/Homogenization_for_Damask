@@ -83,6 +83,8 @@ def define_stop_condition_yielding(problem_definition: ProblemDefinition) -> Sto
         yield_value = problem_definition.yielding_condition.plastic_strain_yield
     elif yield_condition == 'modulus_degradation':
         yield_value = problem_definition.yielding_condition.modulus_degradation_percentage
+    elif yield_condition == 'plastic_work':
+        yield_value = problem_definition.yielding_condition.plastic_work_threshold
     else:
         raise Exception(f"Yield condition {yield_condition} not yet implemented for creating the stopping condition for jobs!")
 
@@ -327,6 +329,7 @@ class       DamaskJob:
         field_name          : str
         general_yield_value_modulus_degradation: float
         general_yield_value_plastic_strain: float
+        general_yield_value_plastic_work: float
         load_steps: int
         reduce_parasitic_stresses: bool
         use_restart_file: bool
@@ -443,6 +446,7 @@ class       DamaskJob:
         simulation_type     : str
         field_name          : str
         general_yield_value_modulus_degradation: float
+        general_yield_value_plastic_work: float
         general_yield_value_plastic_strain: float
         reduce_parasitic_stresses: bool
         use_restart_file: bool
@@ -502,8 +506,11 @@ class       DamaskJob:
                     yield_value = problem_definition.yielding_condition.modulus_degradation_percentage
                     stop_condition = StopCondition.Yielding('modulus_degradation', yield_value)
                 case 'stress_strain_curve':
-                    yield_value = problem_definition.yielding_condition.modulus_degradation_percentage
+                    yield_value = problem_definition.yielding_condition.plastic_strain_yield #???
                     stop_condition = StopCondition.Yielding('stress_strain_curve', yield_value)
+                case 'plastic_work':
+                    yield_value = problem_definition.yielding_condition.plastic_work_threshold
+                    stop_condition = StopCondition.Yielding('plastic_work', yield_value)
                     # raise Exception("The stress-strain curve plastic deformation condition is not useable in yield_surface simulation types")
                 case _: # type: ignore
                     raise Exception(f"The yield condition {problem_definition.yielding_condition.yield_condition} is not yet implememted for yield_surface simulation job creations")
@@ -514,6 +521,7 @@ class       DamaskJob:
             self.field_name = field_name
             self.load_steps = N_increments
             self.general_yield_value_modulus_degradation = problem_definition.yielding_condition.modulus_degradation_percentage
+            self.general_yield_value_plastic_work = problem_definition.yielding_condition.plastic_work_threshold
             self.general_yield_value_plastic_strain = problem_definition.yielding_condition.plastic_strain_yield
             self.reduce_parasitic_stresses = problem_definition.general.reduce_parasitic_stresses
             self.use_restart_number = 0

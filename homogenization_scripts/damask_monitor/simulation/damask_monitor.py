@@ -20,6 +20,7 @@ from ...common_classes import messages
 
 from ..common_classes_damask_monitor.stop_conditions.yielding.stress_strain_curve_plasticity import slope_stress_strain_curve_monitor
 from ..common_classes_damask_monitor.stop_conditions.yielding.modulus_degradation import modulus_degradation_monitor
+from ..common_classes_damask_monitor.stop_conditions.yielding.plastic_work import plastic_work_monitor
 
 from ..post_processor.plots import plot_modulus_degradation_monitor
 from ..post_processor.plots import plot_stress_strain_curves_monitor
@@ -238,6 +239,8 @@ def yielding_conditions(
             yield_detected, yield_value = slope_stress_strain_curve_monitor(damask_job, increment_data)
         case 'modulus_degradation':
             yield_detected, yield_value = modulus_degradation_monitor(damask_job, increment_data)
+        case 'plastic_work':
+            yield_detected, yield_value = plastic_work_monitor(damask_job, increment_data)
         case _: 
             raise Exception(f"The {damask_job.stop_condition} has not yet been implemented in the damask monitor")
     

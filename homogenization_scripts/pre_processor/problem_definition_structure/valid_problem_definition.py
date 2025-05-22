@@ -57,13 +57,17 @@ valid_problem_definition_file_scheme = {  # type: ignore
             'yield_condition': {
                 'required': True,
                 'type': 'string',
-                'allowed': ["stress_strain_curve", "modulus_degradation"],
+                'allowed': ["stress_strain_curve", "modulus_degradation","plastic_work"],
             },
             'plastic_strain_yield': {
                 'required': True,
                 'type': 'number',
             },
             'modulus_degradation_percentage': {
+                'required': True,
+                'type': 'number',
+            },
+            'plastic_work_threshold': {
                 'required': True,
                 'type': 'number',
             },

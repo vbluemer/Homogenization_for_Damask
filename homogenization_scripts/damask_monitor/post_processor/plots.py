@@ -56,6 +56,8 @@ def plot_stress_strain_curves(
             if not interpolated_yield == None:
                 stress_yield = interpolated_yield.stress[i][j]
                 strain_yield = interpolated_yield.strain[i][j]
+                #print(stress_yield)
+                #print(strain_yield)
                 subplot[i][j].plot(strain_yield, stress_yield, 'g', marker='o', markersize=8, label="Interpolated result")
                 subplot[i][j].legend()
 

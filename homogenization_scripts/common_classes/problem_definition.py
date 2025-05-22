@@ -73,9 +73,10 @@ class General:
     strain_tensor_type                      : StrainTensors
 
 class YieldingCondition:
-    yield_condition                         : Literal["stress_strain_curve", "modulus_degradation"]
+    yield_condition                         : Literal["stress_strain_curve", "modulus_degradation", "plastic_work"]
     plastic_strain_yield                    : float
     modulus_degradation_percentage          : float
+    plastic_work_threshold                  : float
     estimated_tensile_yield                 : float
     estimated_shear_yield                   : float
 

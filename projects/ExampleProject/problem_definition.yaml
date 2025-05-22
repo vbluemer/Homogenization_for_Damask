@@ -18,11 +18,11 @@
 general: 
 
     # Choose: yield_point, yield_surface, elastic_tensor, load_path
-    simulation_type     : elastic_tensor
+    simulation_type     : yield_surface
     # Go down to the section asscociated with the type to fill in the other details.
     # The other sections can be kept as is, or kept empty.
 
-    remove_damask_files_after_job_completion: True
+    remove_damask_files_after_job_completion: False
     # The files that are required by damask can be large. These can be removed automatically, however
     # this removes the possibility to do manual post-processing or troubleshoot errors.
     # NOTE: If DAMASK_grid closes with an error the damask_files remain untill replaced.
@@ -37,7 +37,7 @@ general:
     # All file paths are relative to the project folder, or absolute (starting with /)
 
     # The grid file needs to be supplied with either a .vti file
-    grid_file           : "input_files/Polycrystal_50_50x50x50.vti"
+    grid_file           : "input_files/Polycrystal_10_20x20x20.vti"
     # All file paths are relative to the project folder, or absolute (starting with /)
 
     # Choose: "PK1", "PK2", "Cauchy". PK stands for order of Piola Kirchoff
@@ -61,7 +61,7 @@ general:
 
 yielding_condition:
     # Choose: "stress_strain_curve" or "modulus_degradation"
-    yield_condition: modulus_degradation
+    yield_condition: plastic_work
     # Adjust yield criterion below
 
     # For stress strain cruve:
@@ -69,6 +69,8 @@ yielding_condition:
 
     # For energy stiffness:
     modulus_degradation_percentage: 0.15
+
+    plastic_work_threshold: 500000
 
     # (over)Estimated yield point in uniaxial tension.
     # Must be higher than actual yield point for yielding to be found.
@@ -120,7 +122,7 @@ yield_point:
     # Example multiple directions (these will be ran seperatly):
     #     load_direction: ["x-x", "x-y"]   
 
-    load_direction: ['x-y']
+    load_direction: ['x-x']
 
     # For combined load cases use the yield_surface section and set yield_criterion to "None"
 
@@ -156,12 +158,12 @@ yield_surface:
     load_points_per_plane: 1
 
     ## Manual stress state settings:
-    stress_x_x: [1300e6,      0,      0,     0,     0,     0]
-    stress_x_y: [     0,      0,      0, 700e6,     0,     0]
-    stress_x_z: [     0,      0,      0,     0, 700e6,     0]
-    stress_y_y: [     0, 1300e6,      0,     0,     0,     0]
-    stress_y_z: [     0,      0,      0,     0,     0, 700e6]
-    stress_z_z: [     0,      0, 1300e6,     0,     0,     0]
+    stress_x_x: [600e6,      0,      0,     0,     0,     0]
+    stress_x_y: [     0,      0,      0, 400e6,     0,     0]
+    stress_x_z: [     0,      0,      0,     0, 400e6,     0]
+    stress_y_y: [     0, 600e6,      0,     0,     0,     0]
+    stress_y_z: [     0,      0,      0,     0,     0, 400e6]
+    stress_z_z: [     0,      0, 60e6,     0,     0,     0]
 
     # NOTE: More results then the minimum defined here can accu%%milate in the
     #       stored results (results/results_database.yaml). To make sure only
@@ -240,24 +242,24 @@ load_path:
     # All stresses should have the same amount of entries.
     # Even for 2D simulation all fields should be present (2D/3D status is ignored for this simulation type)
 
-    stress_x_x: [    0, 600e6, 0] # Example loading with steps: unloaded -> xy -> xx -> unloaded
-    stress_x_y: [250e6,     0, 0]
-    stress_x_z: [    0,     0, 0]
-    stress_y_y: [    0,     0, 0]
-    stress_y_z: [    0,     0, 0]
-    stress_z_z: [    0,     0, 0]
+    #stress_x_x: [    0, 600e6, 0] # Example loading with steps: unloaded -> xy -> xx -> unloaded
+    #stress_x_y: [250e6,     0, 0]
+    #stress_x_z: [    0,     0, 0]
+    #stress_y_y: [    0,     0, 0]
+    #stress_y_z: [    0,     0, 0]
+    #stress_z_z: [    0,     0, 0]
 
-    # stress_x_x: [    0]
-    # stress_x_y: [250e3]
-    # stress_x_z: [    0]
-    # stress_y_y: [    0]
-    # stress_y_z: [    0]
-    # stress_z_z: [    0]
+    stress_x_x: [600e6]
+    stress_x_y: [    0]
+    stress_x_z: [    0]
+    stress_y_y: [    0]
+    stress_y_z: [    0]
+    stress_z_z: [    0]
 
     # This stress is imposed as the components of the first order Piola-Kirchoff stress tensor.
 
     # Enable yield detection for the simulation.
-    enable_yield_detection: False
+    enable_yield_detection: True
     # Use this feature when DAMASK_grid is getting stuck on plasticising loadcases 
     # (DAMASK_grid does not check for plasticity and can get stuck if loads significantly higher then the yield strength are used.)
 
