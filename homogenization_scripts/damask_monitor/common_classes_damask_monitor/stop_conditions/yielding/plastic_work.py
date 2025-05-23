@@ -56,6 +56,7 @@ def plastic_work_and_value(
     print(stress)
     print("strain")
     print(strain)
+    
     #deformation_stiffness_linear = damask_helper.calculate_linear_modulus(stress_iteration_1, strain_iteration_1)
     #deformation_stiffness = damask_helper.calculate_linear_modulus(stress, strain)
 
@@ -153,6 +154,12 @@ def plastic_work_monitor(damask_job: DamaskJobTypes, increment_data: IncrementDa
 
     #strain_iteration_1: NDArray[np.float64] = increment_data.strain_averaged_per_increment[1]
     plastic_strain_current: NDArray[np.float64] = increment_data.plastic_strain_averaged_per_increment[-1]
+    
+    Wp_current: NDArray[np.float64] = increment_data.Wp_per_increment[-1]
+    
+    
+    print('Wp_current')
+    print(Wp_current)
 
     yield_value = damask_job.stop_condition.yield_value
 
@@ -183,7 +190,10 @@ def plastic_work_post_process(problem_definition: ProblemDefinition, damask_job:
     (damask_results, stress_averaged_per_increment) = damask_helper.get_averaged_stress_per_increment(damask_results, stress_tensor_type, display_prefix=display_prefix)
     (damask_results, strain_averaged_per_increment) = damask_helper.get_averaged_strain_per_increment(damask_results, strain_tensor_type, display_prefix=display_prefix)
     (damask_results, plastic_strain_averaged_per_increment) = damask_helper.get_averaged_plastic_strain_per_increment(damask_results, strain_tensor_type, display_prefix=display_prefix)
-
+    
+    (damask_results, slip_system_xi) = damask_helper.get_slip_system_xi(damask_results, display_prefix=display_prefix)
+    print(slip_system_xi)
+    
     stored_iteration = damask_results.increments_in_range()
 
     stress_iteration_1 = stress_averaged_per_increment[1]

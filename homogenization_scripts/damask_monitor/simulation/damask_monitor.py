@@ -212,6 +212,39 @@ def calculate_domain_averaged_stress_and_strain(
 
     return increment_data
 
+def calculate_slip_system_xi_gamma(
+        updated_damask_results: damask.Result, 
+        increment_data: IncrementData) -> IncrementData:
+    
+    # This function calculates the homogonized stress and strain for the last iteration
+
+    current_iteration = updated_damask_results.increments_in_range()[-1]
+
+    damask_result_intermediate_pruned = updated_damask_results.view(increments=current_iteration)
+
+    # stress_tensor_type = increment_data.stress_tensor_type
+    # strain_tensor_type = increment_data.strain_tensor_type
+
+    display_prefix = "  "
+
+    (damask_result_intermediate_pruned, xi) = damask_helper.get_slip_system_xi(damask_result_intermediate_pruned, display_prefix=display_prefix)
+    (damask_result_intermediate_pruned, gamma) = damask_helper.get_slip_system_gamma(damask_result_intermediate_pruned, display_prefix=display_prefix)
+
+    print('gamma')
+    print(np.mean(gamma))
+    print(np.shape(gamma))
+
+    print('xi')
+    print(np.mean(xi))
+    xi=xi[0]
+    gamma=gamma[0]
+    Wp = np.sum(xi*gamma)
+    Wp = Wp/np.shape(gamma)[0]
+    
+    increment_data.add_increment_Wp(Wp)
+
+    return increment_data
+
 def check_for_stop_conditions(
         damask_job: DamaskJobTypes,
         increment_data: IncrementData) -> IncrementData:
@@ -340,7 +373,7 @@ def run_and_monitor_damask(
 
             # Calcuate the stress and strain values and track it in increment_data
             increment_data = calculate_domain_averaged_stress_and_strain(updated_results, increment_data)
-
+            increment_data = calculate_slip_system_xi_gamma(updated_results, increment_data)
             # Check if stopping conditions (yielding criteria) are met 
             increment_data = check_for_stop_conditions(damask_job, increment_data)
 

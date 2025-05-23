@@ -171,6 +171,42 @@ def get_plastic_strain(damask_result: damask.Result, tensor_type: StrainTensors,
                                         (0,3,3)) # type: ignore
         return damask_result, strain
 
+def get_slip_system_xi(damask_result: damask.Result, display_prefix: str = "")-> tuple[damask.Result, NDArray[np.float64]]:
+    # This function gets the strain values for each grid point for each iteration visible in the damask_result.
+    # The output is of size (n_increments_visible, n_gridpoints, 3, 3) always.
+
+    # Definition of strain to use.
+    tensor_damask_name = 'xi_sl'
+    display_name = "CRSS"
+
+    # Try to get the strain if it is already present, suppress console to override progress reporting
+    consolelog.suppress_console_logging()
+    xi_dict: get_result_type | None = damask_result.get(tensor_damask_name, flatten=False)
+    consolelog.restore_console_logging()
+
+    xi: NDArray[np.float64] = extract_mechanical_property_per_iteration_per_grid_point_from_results_dict(xi_dict, 
+                                    tensor_damask_name, 
+                                    (0,18)) # currently hardcoded to hcp
+    return damask_result, xi
+
+def get_slip_system_gamma(damask_result: damask.Result, display_prefix: str = "")-> tuple[damask.Result, NDArray[np.float64]]:
+    # This function gets the strain values for each grid point for each iteration visible in the damask_result.
+    # The output is of size (n_increments_visible, n_gridpoints, 3, 3) always.
+
+    # Definition of strain to use.
+    tensor_damask_name = 'gamma_sl'
+    display_name = "slip_rate"
+
+    # Try to get the strain if it is already present, suppress console to override progress reporting
+    consolelog.suppress_console_logging()
+    gamma_dict: get_result_type | None = damask_result.get(tensor_damask_name, flatten=False)
+    consolelog.restore_console_logging()
+
+    xi: NDArray[np.float64] = extract_mechanical_property_per_iteration_per_grid_point_from_results_dict(gamma_dict, 
+                                    tensor_damask_name, 
+                                    (0,18)) # currently hardcoded to hcp
+    return damask_result, xi
+    
 def get_stress(damask_result: damask.Result, tensor_type: StressTensors, display_prefix: str = "") -> tuple[damask.Result, NDArray[np.float64]]:
     # This function gets the stress values for each grid point for each iteration visible in the damask_result.
     # The output is of size (n_increments_visible, n_gridpoints, 3, 3) always.

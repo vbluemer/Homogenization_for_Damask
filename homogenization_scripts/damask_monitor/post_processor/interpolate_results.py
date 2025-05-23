@@ -62,22 +62,29 @@ class InterpolatedResults:
         self.stress_linear = stress_averaged_per_increment[1]
         self.strain_linear = strain_averaged_per_increment[1]
 
+
+
         damask_results = damask_results.view(increments=[iteration_1, iteration_2])
 
         (damask_results, stress_averaged_per_increment) = damask_helper.get_averaged_stress_per_increment(damask_results,stress_tensor_type)
         (damask_results, strain_averaged_per_increment) = damask_helper.get_averaged_strain_per_increment(damask_results,strain_tensor_type)
+        (damask_results, plastic_strain_averaged_per_increment) = damask_helper.get_averaged_plastic_strain_per_increment(damask_results,strain_tensor_type)
 
         stress_1: np.float64 = stress_averaged_per_increment[0]
         strain_1: np.float64 = strain_averaged_per_increment[0]
+        plastic_strain_1: np.float64 = plastic_strain_averaged_per_increment[0]
 
         stress_2: np.float64 = stress_averaged_per_increment[1]
         strain_2: np.float64 = strain_averaged_per_increment[1]
+        plastic_strain_2: np.float64 = plastic_strain_averaged_per_increment[1]
 
         stress_interpolated: NDArray[np.float64] = interpolate_values_tensor(interpolation_fraction, stress_1, stress_2)  # type: ignore
         strain_interpolated: NDArray[np.float64] = interpolate_values_tensor(interpolation_fraction, strain_1, strain_2) # type: ignore
+        plastic_strain_interpolated: NDArray[np.float64] = interpolate_values_tensor(interpolation_fraction, plastic_strain_1, plastic_strain_2) # type: ignore
 
         self.stress: NDArray[np.float64] = stress_interpolated
         self.strain: NDArray[np.float64] = strain_interpolated
+        self.plastic_strain: NDArray[np.float64] = plastic_strain_interpolated
 
         self.strain_norm = float(np.linalg.norm(self.strain))
         self.strain_norm_first_iteration = float(np.linalg.norm(self.strain_linear))
