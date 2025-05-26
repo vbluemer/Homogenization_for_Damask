@@ -230,16 +230,7 @@ def calculate_slip_system_xi_gamma(
     (damask_result_intermediate_pruned, xi) = damask_helper.get_slip_system_xi(damask_result_intermediate_pruned, display_prefix=display_prefix)
     (damask_result_intermediate_pruned, gamma) = damask_helper.get_slip_system_gamma(damask_result_intermediate_pruned, display_prefix=display_prefix)
 
-    print('gamma')
-    print(np.mean(gamma))
-    print(np.shape(gamma))
-
-    print('xi')
-    print(np.mean(xi))
-    xi=xi[0]
-    gamma=gamma[0]
-    Wp = np.sum(xi*gamma)
-    Wp = Wp/np.shape(gamma)[0]
+    Wp = np.sum(xi[0]*gamma[0]) / np.shape(gamma[0])[0]
     
     increment_data.add_increment_Wp(Wp)
 

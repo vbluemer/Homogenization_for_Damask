@@ -44,25 +44,14 @@ from ....post_processor.plots import plot_modulus_degradation, plot_stress_strai
 #def modulus_degradation_and_value(
 def plastic_work_and_value(
         yield_value: float, 
-        stress: NDArray[np.float64],
-        strain: NDArray[np.float64]) -> tuple[bool, float]:
-    
-    
-    deformation_energy = damask_helper.calculate_linear_deformatation_energy(stress, strain)
-    deformation_energy = abs(deformation_energy)
-    print("deformation_energy")
-    print(deformation_energy)
-    print("stress")
-    print(stress)
-    print("strain")
-    print(strain)
+        W_p: NDArray[np.float64]) -> tuple[bool, float]:
     
     #deformation_stiffness_linear = damask_helper.calculate_linear_modulus(stress_iteration_1, strain_iteration_1)
     #deformation_stiffness = damask_helper.calculate_linear_modulus(stress, strain)
 
     #normalized_linear_deformation_stiffness = deformation_stiffness / deformation_stiffness_linear 
 
-    non_linear_deformation_condition = deformation_energy > yield_value
+    non_linear_deformation_condition = W_p > yield_value
 
     if non_linear_deformation_condition:
         non_linear_stiffness_detected = True
@@ -70,24 +59,21 @@ def plastic_work_and_value(
     else:
         non_linear_stiffness_detected = False
 
-    return non_linear_stiffness_detected, np.squeeze(deformation_energy)
+    return non_linear_stiffness_detected, np.squeeze(W_p)
 
 def plastic_work(
         yield_value: float, 
-        stress: NDArray[np.float64],
-        strain: NDArray[np.float64]) -> bool:
+        W_p: NDArray[np.float64]) -> bool:
     # This function redirects to the modulus_degradation_and_value function while pruning its output
 
-    yield_deteced, _ = plastic_work_and_value(yield_value, stress, strain)
+    yield_deteced, _ = plastic_work_and_value(yield_value, W_p)
 
     return yield_deteced
 
 def interpolation_fraction(
         yield_value: float, 
-        stress_before_yield: NDArray[np.float64], 
-        strain_before_yield: NDArray[np.float64], 
-        stress_after_yield: NDArray[np.float64],
-        strain_after_yield: NDArray[np.float64]) -> float:
+        Wp_before_yield: NDArray[np.float64], 
+        Wp_after_yield: NDArray[np.float64]) -> float:
     # This function finds to interpolate between the loadstates before and after yield such that the yield condition is met.
     # It is assumed that the yielding actually happens in between the load states
     
@@ -118,17 +104,14 @@ def interpolation_fraction(
     print("threshold")
     print(threshold)
     def objective_function(x: float) -> float:
-        stress = stress_before_yield + x*(stress_after_yield - stress_before_yield)
-        strain = strain_before_yield + x*(strain_after_yield - strain_before_yield)
+        Wp = Wp_before_yield + x*(Wp_after_yield - Wp_before_yield)
+        #strain = strain_before_yield + x*(strain_after_yield - strain_before_yield)
         #modulus = damask_helper.calculate_linear_modulus(stress, strain)
 
-        #normalized_modulus = modulus / modulus_linear
-
-        deformation_energy = damask_helper.calculate_linear_deformatation_energy(stress, strain)
-        deformation_energy = abs(deformation_energy)
-        print("deformation_energy")
-        print(deformation_energy)
-        objective_value = (deformation_energy-threshold)**2 
+        #normalized_modulus = modulus / modulus_linear    
+        print("Wp")
+        print(Wp)
+        objective_value = (Wp-threshold)**2 
         return objective_value
 
     optimization_result = scipy.optimize.minimize_scalar(objective_function, options={'disp': False}, method="Golden")
@@ -153,7 +136,7 @@ def plastic_work_monitor(damask_job: DamaskJobTypes, increment_data: IncrementDa
     stress_current: NDArray[np.float64] = increment_data.stress_averaged_per_increment[-1]
 
     #strain_iteration_1: NDArray[np.float64] = increment_data.strain_averaged_per_increment[1]
-    plastic_strain_current: NDArray[np.float64] = increment_data.plastic_strain_averaged_per_increment[-1]
+    #plastic_strain_current: NDArray[np.float64] = increment_data.plastic_strain_averaged_per_increment[-1]
     
     Wp_current: NDArray[np.float64] = increment_data.Wp_per_increment[-1]
     
@@ -168,8 +151,7 @@ def plastic_work_monitor(damask_job: DamaskJobTypes, increment_data: IncrementDa
         raise Exception("Yield value has not been set for the yielding condition. This should not be possible, please report it if you find this error.")
 
 
-    yield_detected, yield_value = plastic_work_and_value(yield_value,
-                                        stress_current, plastic_strain_current)
+    yield_detected, yield_value = plastic_work_and_value(yield_value, Wp_current)
 
     if yield_detected:
         print(f"Yielding detected in the deformation energy condition")
@@ -191,13 +173,13 @@ def plastic_work_post_process(problem_definition: ProblemDefinition, damask_job:
     (damask_results, strain_averaged_per_increment) = damask_helper.get_averaged_strain_per_increment(damask_results, strain_tensor_type, display_prefix=display_prefix)
     (damask_results, plastic_strain_averaged_per_increment) = damask_helper.get_averaged_plastic_strain_per_increment(damask_results, strain_tensor_type, display_prefix=display_prefix)
     
-    (damask_results, slip_system_xi) = damask_helper.get_slip_system_xi(damask_results, display_prefix=display_prefix)
-    print(slip_system_xi)
+    (damask_results, Wp_per_increment) = damask_helper.get_Wp_per_increment(damask_results, display_prefix=display_prefix)
     
+
     stored_iteration = damask_results.increments_in_range()
 
-    stress_iteration_1 = stress_averaged_per_increment[1]
-    strain_iteration_1 = plastic_strain_averaged_per_increment[1]
+    # stress_iteration_1 = stress_averaged_per_increment[1]
+    # strain_iteration_1 = plastic_strain_averaged_per_increment[1]
 
     yield_value = damask_job.general_yield_value_plastic_work
 
@@ -210,10 +192,10 @@ def plastic_work_post_process(problem_definition: ProblemDefinition, damask_job:
         if iteration == 0:
             continue
 
-        stress = stress_averaged_per_increment[iteration]
-        plastic_strain = plastic_strain_averaged_per_increment[iteration]
+        #stress = stress_averaged_per_increment[iteration]
+        plastic_strain = Wp_per_increment[iteration]
 
-        yield_detected = plastic_work(yield_value,stress, plastic_strain)
+        yield_detected = plastic_work(yield_value, plastic_strain)
         
         if yield_detected:
             iteration_before_yield = iteration - 1
@@ -229,15 +211,15 @@ def plastic_work_post_process(problem_definition: ProblemDefinition, damask_job:
         yield_detected = False
         return None 
     
-    stress_before_yield = stress_averaged_per_increment[iteration_before_yield]
-    strain_before_yield = plastic_strain_averaged_per_increment[iteration_before_yield]
+    Wp_before_yield = Wp_per_increment[iteration_before_yield]
+    #strain_before_yield = plastic_strain_averaged_per_increment[iteration_before_yield]
 
-    stress_after_yield = stress_averaged_per_increment[iteration_after_yield]
-    strain_after_yield = plastic_strain_averaged_per_increment[iteration_after_yield]
+    Wp_after_yield = Wp_per_increment[iteration_after_yield]
+    #strain_after_yield = plastic_strain_averaged_per_increment[iteration_after_yield]
     
     fraction_for_interpolation = interpolation_fraction(yield_value,
-                                                        stress_before_yield, strain_before_yield,
-                                                        stress_after_yield, strain_after_yield)
+                                                        Wp_before_yield,
+                                                        Wp_after_yield,)
 
     # interpolate the yield value
     print("fraction_for_interpolation")

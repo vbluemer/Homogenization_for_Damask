@@ -18,7 +18,7 @@
 general: 
 
     # Choose: yield_point, yield_surface, elastic_tensor, load_path
-    simulation_type     : yield_surface
+    simulation_type     : load_path
     # Go down to the section asscociated with the type to fill in the other details.
     # The other sections can be kept as is, or kept empty.
 
@@ -70,7 +70,7 @@ yielding_condition:
     # For energy stiffness:
     modulus_degradation_percentage: 0.15
 
-    plastic_work_threshold: 10000
+    plastic_work_threshold: 700000
 
     # (over)Estimated yield point in uniaxial tension.
     # Must be higher than actual yield point for yielding to be found.

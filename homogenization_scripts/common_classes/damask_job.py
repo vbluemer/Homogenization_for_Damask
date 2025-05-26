@@ -420,6 +420,7 @@ class       DamaskJob:
             self.field_name = 'load_path'
             self.general_yield_value_modulus_degradation = problem_definition.yielding_condition.modulus_degradation_percentage
             self.general_yield_value_plastic_strain = problem_definition.yielding_condition.plastic_strain_yield
+            self.general_yield_value_plastic_work = problem_definition.yielding_condition.plastic_work_threshold
             self.reduce_parasitic_stresses = problem_definition.general.reduce_parasitic_stresses
             self.use_restart_number = 0
             if not self.reduce_parasitic_stresses:

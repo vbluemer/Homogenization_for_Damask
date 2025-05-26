@@ -33,8 +33,21 @@ def yield_point_post_processing(
 def load_path_post_processing(
         problem_definition: ProblemDefinition, 
         damask_job: DamaskJob.LoadPath) -> bool:
-    
-    process_succesfull = load_path_post_process(problem_definition, damask_job)
+    match damask_job.stop_condition.yield_condition:
+        case 'modulus_degradation':
+            interpolated_results = modulus_degradation_post_process(problem_definition, damask_job)
+            process_succesfull = load_path_post_process(problem_definition, damask_job, interpolated_results)
+        case 'stress_strain_curve':
+            interpolated_results = slope_stress_strain_curve_post_process(problem_definition, damask_job)
+            process_succesfull = load_path_post_process(problem_definition, damask_job, interpolated_results)
+        case 'plastic_work':
+            interpolated_results = plastic_work_post_process(problem_definition, damask_job)
+            process_succesfull = load_path_post_process(problem_definition, damask_job, interpolated_results)
+        case None:
+            process_succesfull = load_path_post_process(problem_definition, damask_job)
+        case _:
+            raise Exception(f"Yield point post processing of damask results not yet implemented for {damask_job.stop_condition.yield_condition}")
+
 
     return process_succesfull
 
@@ -46,7 +59,10 @@ def run_post_processing_job(
     # Job post-processing involves finding certain stress/strain or yield point and storing this 
     # to the results_database for use in the general post post-processing
     messages.Stages.post_processing()
-
+    print('damask_job.stop_condition')
+    #plastic_work
+    #None
+    print(damask_job.stop_condition.yield_condition==None)
     match damask_job:
         case DamaskJob.LoadPath():
             # load_path post-processing saves the homogenized stresses and strains for each iteration

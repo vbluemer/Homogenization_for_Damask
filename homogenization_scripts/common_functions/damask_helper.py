@@ -195,7 +195,7 @@ def get_slip_system_gamma(damask_result: damask.Result, display_prefix: str = ""
 
     # Definition of strain to use.
     tensor_damask_name = 'gamma_sl'
-    display_name = "slip_rate"
+    display_name = "slip"
 
     # Try to get the strain if it is already present, suppress console to override progress reporting
     consolelog.suppress_console_logging()
@@ -341,6 +341,25 @@ def get_averaged_plastic_strain_per_increment(damask_results: damask.Result, ten
         plastic_strain_per_increment = np.append(plastic_strain_per_increment, np.array([strain_domain_averaged]), axis=0)
 
     return (damask_results, plastic_strain_per_increment)
+
+def get_Wp_per_increment(damask_results: damask.Result, display_prefix:str = "") -> tuple[damask.Result, NDArray[np.float64]]:
+    #(damask_results, plastic_strain) = get_plastic_strain(damask_results, tensor_type, display_prefix=display_prefix)
+    (damask_results, xi)    = get_slip_system_xi(damask_results, display_prefix=display_prefix)
+    (damask_results, gamma) = get_slip_system_gamma(damask_results, display_prefix=display_prefix)
+
+    Wp_per_increment = np.empty(0)
+    # This function calculates the homogonized strain per increment visible in the damask_result.
+
+    print('np.shape(xi)')
+    print(np.shape(xi))
+    # Shape of output is (n_increments_visible, 3, 3) always
+    for increment in range(np.shape(xi)[0]):
+        Wp = np.sum(xi[increment]*gamma[increment]) / np.shape(gamma[0])[0]
+
+        Wp_per_increment = np.append(Wp_per_increment, np.array([Wp]), axis=0)
+    print('np.shape(Wp_per_increment)')
+    print(np.shape(Wp_per_increment))
+    return (damask_results, Wp_per_increment)
 
 def calculate_linear_deformatation_energy(stress_tensor: NDArray[np.float64], strain_tensor: NDArray[np.float64]) -> float:
     # This function calculates the deformation energy the material has stored, assuming linear deformation (Hooks law)

@@ -23,7 +23,7 @@ class LoadCaseResults:
     interpolated_yield_value: InterpolatedResults | None
     processed_succesfully: bool
 
-    def __init__(self, problem_definition: ProblemDefinition, damask_job: DamaskJob.LoadPath, results_path : str):
+    def __init__(self, problem_definition: ProblemDefinition, damask_job: DamaskJob.LoadPath, results_path : str, interpolated_yield_value: InterpolatedResults | None = None):
         post_process_succeeded = True
 
         damask_results_file = damask_job.runtime.damask_result_file
@@ -48,12 +48,12 @@ class LoadCaseResults:
         damask_result, stress_homogonized = damask_helper.get_averaged_stress_per_increment(damask_result, stress_tensor_type)
 
         # find yield and interpolate.
-        interpolated_results = None
-        self.interpolated_yield_value = interpolated_results
+        #interpolated_results = None
+        self.interpolated_yield_value = interpolated_yield_value
 
         # plot stress-strain curves and modulus curves
-        plot_stress_strain_curves(problem_definition, damask_job, stress_homogonized, strain_homogonized, interpolated_results, plot_title="Stress strain curves")
-        plot_modulus_degradation(problem_definition, damask_job, stress_homogonized, strain_homogonized, interpolated_results, plot_title="Modulus degradation curves")
+        plot_stress_strain_curves(problem_definition, damask_job, stress_homogonized, strain_homogonized, interpolated_yield_value, plot_title="Stress strain curves")
+        plot_modulus_degradation(problem_definition, damask_job, stress_homogonized, strain_homogonized, interpolated_yield_value, plot_title="Modulus degradation curves")
 
         # create Results structure
 
@@ -114,12 +114,12 @@ class LoadCaseResults:
 
 
 
-def load_path_post_process(problem_definition: ProblemDefinition, damask_job: DamaskJob.LoadPath):
+def load_path_post_process(problem_definition: ProblemDefinition, damask_job: DamaskJob.LoadPath, interpolated_results: InterpolatedResults | None = None):
     results_folder = problem_definition.general.path.results_folder
     readable_results_file = os.path.join(results_folder, 'load_path_results.csv')
     problem_definition.general.path.load_path_csv = readable_results_file
 
-    load_path_results = LoadCaseResults(problem_definition, damask_job, readable_results_file)
+    load_path_results = LoadCaseResults(problem_definition, damask_job, readable_results_file, interpolated_results)
 
     post_process_succeeded = load_path_results.processed_succesfully
     return post_process_succeeded

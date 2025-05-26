@@ -47,9 +47,6 @@ class IncrementData:
         self.plastic_strain_averaged_per_increment = np.append(self.plastic_strain_averaged_per_increment, [plastic_strain_tensor], axis=0)
 
     def add_increment_Wp(self, Wp: NDArray[np.float64]) -> None:
-        print(type(Wp))
-        print(np.shape(Wp))
-        print(Wp)
         self.Wp_per_increment = np.append(self.Wp_per_increment, [Wp], axis=0)
 
     # def add_increment_gamma(self, plastic_strain_tensor: NDArray[np.float64]) -> None:
