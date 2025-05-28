@@ -182,11 +182,14 @@ def get_slip_system_xi(damask_result: damask.Result, display_prefix: str = "")->
     # Try to get the strain if it is already present, suppress console to override progress reporting
     consolelog.suppress_console_logging()
     xi_dict: get_result_type | None = damask_result.get(tensor_damask_name, flatten=False)
+    xi_flat = damask_result.get(tensor_damask_name, flatten=True)
+    dim = np.shape(xi_flat[next(iter(xi_flat))])[-1] if np.shape(xi_flat)==() else np.shape(xi_flat)[-1]
+
     consolelog.restore_console_logging()
 
     xi: NDArray[np.float64] = extract_mechanical_property_per_iteration_per_grid_point_from_results_dict(xi_dict, 
                                     tensor_damask_name, 
-                                    (0,18)) # currently hardcoded to hcp
+                                    (0,dim)) 
     return damask_result, xi
 
 def get_slip_system_gamma(damask_result: damask.Result, display_prefix: str = "")-> tuple[damask.Result, NDArray[np.float64]]:
@@ -200,11 +203,14 @@ def get_slip_system_gamma(damask_result: damask.Result, display_prefix: str = ""
     # Try to get the strain if it is already present, suppress console to override progress reporting
     consolelog.suppress_console_logging()
     gamma_dict: get_result_type | None = damask_result.get(tensor_damask_name, flatten=False)
+    gamma_flat = damask_result.get(tensor_damask_name, flatten=True)
+    dim = np.shape(gamma_flat[next(iter(gamma_flat))])[-1] if np.shape(gamma_flat)==() else np.shape(gamma_flat)[-1]
+
     consolelog.restore_console_logging()
 
     xi: NDArray[np.float64] = extract_mechanical_property_per_iteration_per_grid_point_from_results_dict(gamma_dict, 
                                     tensor_damask_name, 
-                                    (0,18)) # currently hardcoded to hcp
+                                    (0,dim)) 
     return damask_result, xi
     
 def get_stress(damask_result: damask.Result, tensor_type: StressTensors, display_prefix: str = "") -> tuple[damask.Result, NDArray[np.float64]]:
