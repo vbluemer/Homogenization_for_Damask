@@ -2,6 +2,7 @@
 import numpy as np
 from numpy.typing import NDArray
 import matplotlib.pyplot as plt
+from matplotlib.ticker import ScalarFormatter
 import os
 import typing
 
@@ -22,7 +23,10 @@ def plot_stress_strain_curves(
         file_name: str | None = None,
         plot_title: str | None = None):
     
-
+    
+    lw  = 2;
+    min_const = 1e6
+    Pa_unit   = 1e6
     fig = plt.figure(layout='constrained', figsize=(20, 20)) # type: ignore
     subplot = fig.subplots(3,3) # type: ignore
 
@@ -45,24 +49,28 @@ def plot_stress_strain_curves(
 
             stress_piola_kirchoff_values_y = np.squeeze(stress_piola_kirchoff_values_y)
             strain_green_lagrange_values_y = np.squeeze(strain_green_lagrange_values_y)
-            subplot[i][j].plot(strain_green_lagrange_values_y, stress_piola_kirchoff_values_y, '--', marker='x', markersize=8, label='homogonized stress')
+            subplot[i][j].plot(strain_green_lagrange_values_y, stress_piola_kirchoff_values_y/Pa_unit, '--', marker='x', linewidth=lw, markersize=8, label='homogonized stress')
+            
+            if np.max(abs(stress_piola_kirchoff_values_y)) < min_const:
+                subplot[i][j].set_ylim(-min_const/Pa_unit, min_const/Pa_unit)
+            
             subplot[i][j].legend()
 
             subplot[i][j].grid()
 
             subplot[i][j].set_xlabel('strain [-]')
-            subplot[i][j].set_ylabel('stress [Pa]')
+            subplot[i][j].set_ylabel('stress [MPa]')
 
             if not interpolated_yield == None:
                 stress_yield = interpolated_yield.stress[i][j]
                 strain_yield = interpolated_yield.strain[i][j]
                 #print(stress_yield)
                 #print(strain_yield)
-                subplot[i][j].plot(strain_yield, stress_yield, 'g', marker='o', markersize=8, label="Interpolated result")
+                subplot[i][j].plot(strain_yield, stress_yield/Pa_unit, 'g', marker='o', linewidth=lw, markersize=8, label="Interpolated result")
                 subplot[i][j].legend()
 
             if True:
-                subplot[i][j] = stress_strain_curves_plastic_yield_lines(subplot[i][j], i, j, stress_per_increment, strain_per_increment, problem_definition, damask_job)
+                subplot[i][j] = stress_strain_curves_plastic_yield_lines(subplot[i][j], i, j, stress_per_increment/Pa_unit, strain_per_increment, problem_definition, damask_job)
 
     subplot_titles = np.array([
         ["x-x", "x-y", "x-z"], 
@@ -75,9 +83,9 @@ def plot_stress_strain_curves(
             subplot[i][j].set_title(subplot_titles[i][j])
 
     fig.suptitle(plot_title, fontsize='xx-large') # type: ignore
-    
     fig.savefig(stress_strain_plot_path) # type: ignore
-    
+    #breakpoint()
+
     plt.close(fig)
 
 def stress_strain_curves_plastic_yield_lines( # type: ignore
@@ -118,7 +126,7 @@ def stress_strain_curves_plastic_yield_lines( # type: ignore
 
     stress_plot = stress_line(strains_plot, slope_stress_strain_1st)
 
-    subplot.plot(strains_plot, stress_plot, 'r--', scalex=False, scaley=False, label='Yielding threshold') # type: ignore
+    subplot.plot(strains_plot, stress_plot, 'r--', scalex=False, scaley=False, label='0.2% offset') # type: ignore
     subplot.legend() # type: ignore
 
     return subplot # type: ignore
@@ -171,7 +179,7 @@ def plot_modulus_degradation(
     ax[0].title.set_text('Linear deformation energy (E =  k * |strain|^2) -> E')
     ax[0].legend()
     ax[0].set_xlabel("|strain| [-]")
-    ax[0].set_ylabel("Deformation energy [Pa]")
+    ax[0].set_ylabel("Deformation energy [MPa]")
     ax[0].grid()
 
     if np.shape(abs_deformation)[0] > 0:
@@ -195,7 +203,7 @@ def plot_modulus_degradation(
         ax[0].legend()
 
         ax[1].plot(abs_deformation, modulus_normalized, '--', marker='x', markersize=8, label="Normalized deformation stiffness")
-        ax[1].plot(abs_deformation, linear_elastic_deformation_condition_plus, '--r', label="Yielding threshold")
+        ax[1].plot(abs_deformation, linear_elastic_deformation_condition_plus, '--r', label="0.2% offset")
         ax[1].plot(abs_deformation, linear_elastic_deformation_condition_min, '--r')
         ax[1].title.set_text('Normalized spring stiffness (E = k * |strain|^2) -> k / k_0')
         ax[1].legend()

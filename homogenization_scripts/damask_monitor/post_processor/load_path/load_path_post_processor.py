@@ -46,6 +46,7 @@ class LoadCaseResults:
         # Calculate homogonized stress
         damask_result, stress_per_material_point = damask_helper.get_stress(damask_result, stress_tensor_type)
         damask_result, stress_homogonized = damask_helper.get_averaged_stress_per_increment(damask_result, stress_tensor_type)
+        damask_result, Wp_per_increment = damask_helper.get_Wp_per_increment(damask_result)
 
         # find yield and interpolate.
         #interpolated_results = None
@@ -76,32 +77,49 @@ class LoadCaseResults:
         directions: list[str]= ["xx", "yy", "zz", "yz", "xz", "xy"]
         directions_indices: list[int] = [0, 1, 2, 3, 4, 5]
         increment_list: list[dict[str, float|int]] = list()
-
+        
+        buffer = 15
         increment_counter = 0
-        for stress, strain in zip(stress_homogonized, strain_homogonized):
+        for stress, strain, Wp in zip(stress_homogonized, strain_homogonized, Wp_per_increment):
             stress_vector = damask_helper.stress_tensor_to_vector_notation(stress)
             strain_vector = damask_helper.strain_tensor_to_vector_notation(strain)
-            increment_data: dict[str, float|int] = dict()
-            increment_data["increment"] = increment_counter
+            increment_data: dict[str, float|int|str] = dict()
+            increment_data["increment".rjust(buffer)] = f"{increment_counter:{buffer}d}"
             for direction, index in zip(directions, directions_indices):
-                increment_data[f"stress_{direction}"] = np.squeeze(stress_vector[index])
-                increment_data[f"strain_{direction}"] = np.squeeze(strain_vector[index])
+                increment_data[f"stress_{direction}[MPa]".rjust(buffer)] = f"{np.squeeze(np.round(stress_vector[index]/1e6,2)):{buffer}.4f}"
+                increment_data[f"strain_{direction}".rjust(buffer)] = f"{np.squeeze(np.round(strain_vector[index],6)):{buffer}.4f}"
+            increment_data[f"Wp[J/m3]".rjust(buffer)] = f"{Wp:{buffer}.4f}"
 
             increment_list.append(increment_data)
         
             increment_counter += 1
 
-        field_names: list[str] = ["increment"]
+        stress = interpolated_yield_value.stress
+        strain = interpolated_yield_value.strain
+        Wp     = interpolated_yield_value.wp 
+        
+        stress_vector = damask_helper.stress_tensor_to_vector_notation(stress)
+        strain_vector = damask_helper.strain_tensor_to_vector_notation(strain)
+        increment_data["increment".rjust(buffer)] = f"yieldpoint".rjust(buffer)
+        for direction, index in zip(directions, directions_indices):
+            increment_data[f"stress_{direction}[MPa]".rjust(buffer)] = f"{np.squeeze(np.round(stress_vector[index]/1e6,2)):{buffer}.4f}"
+            increment_data[f"strain_{direction}".rjust(buffer)] = f"{np.squeeze(np.round(strain_vector[index],6)):{buffer}.4f}"
+        increment_data[f"Wp[J/m3]".rjust(buffer)] = f"{Wp:{buffer}.4f}"
+            
+        field_names: list[str] = ["increment".rjust(buffer)]
         for direction in directions:
-            field_names.append(f"stress_{direction}")
+            field_names.append(f"stress_{direction}[MPa]".rjust(buffer))
         for direction in directions:
-            field_names.append(f"strain_{direction}")
+            field_names.append(f"strain_{direction}".rjust(buffer))
+        field_names.append(f"Wp[J/m3]".rjust(buffer))
 
         with open(results_path, 'w', newline='') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=field_names)
             writer.writeheader()
             writer.writerows(increment_list)
-
+            
+        #breakpoint()
+        
         self.stress_per_material_point = stress_per_material_point
         self.strain_per_material_point = strain_per_material_point
 
