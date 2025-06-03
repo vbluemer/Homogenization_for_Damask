@@ -6,8 +6,8 @@ import numpy as np
 
 # Dimensions for grid
 size = np.ones(3)*1e-5
-cells = [5, 5, 5]
-N_grains = 5
+cells = [10, 10, 10]
+N_grains = 10
 
 # Material properties to process
 base_material = "example_base_material.yaml"

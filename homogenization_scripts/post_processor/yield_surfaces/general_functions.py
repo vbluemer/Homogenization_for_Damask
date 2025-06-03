@@ -101,11 +101,18 @@ def write_dataset(problem_definition: ProblemDefinition) -> ProblemDefinition:
 
     return problem_definition
 
-def read_yield_points(yield_points_file: str) -> DataFrame:
+def read_yield_points(yield_points_file: str, symmetry: bool) -> DataFrame:
     # This function reads the yield_poitns from .csv (written by write_dataset) to a pandas dataframe
     Messages.YieldSurface.reading_dataset_from(yield_points_file)
     df: DataFrame = pd.read_csv(yield_points_file) # type: ignore
-
+    
+    stress_cols = df.columns.difference(['field_name', 'unit'])
+    df_sym = df.copy()
+    df_sym[stress_cols] = -df_sym[stress_cols]    
+    df_sym['field_name'] = df['field_name'] + '_sym'
+    
+    df = pd.concat([df, df_sym], ignore_index=True)
+    #breakpoint()
     return df
 
 def fit_surface(yield_surface: YieldSurfaces, data_set: DataFrame) -> YieldSurfaces:
@@ -160,7 +167,7 @@ def get_yield_points_form_data_set(data_set: DataFrame, unit_conversion: float) 
     yield_points_pandas = data_set[Voigt_notation]
 
     yield_points: NDArray[np.float64] = yield_points_pandas.to_numpy() * unit_conversion # type: ignore
-    
+    #breakpoint()
     return yield_points
 
 

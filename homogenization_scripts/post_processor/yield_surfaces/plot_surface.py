@@ -13,14 +13,14 @@ from ...messages.messages import Messages
 def make_plot_yield_surface(
         yield_surface: YieldSurfaces,
         data_set: DataFrame,
-        path: str
-        ) -> Figure:
+        path: str,
+        symmetry: bool) -> Figure:
 
     fig, axs = plt.subplots(nrows=2, ncols=3) # type: ignore
     fig.set_size_inches(20,10) 
 
     Messages.YieldSurface.creating_plot_at(yield_surface.display_name(), path)
-    plot_data_points(axs, data_set, yield_surface.unit_conversion()) # type: ignore
+    plot_data_points(axs, data_set, yield_surface.unit_conversion(), symmetry) # type: ignore
     plot_surface(axs, yield_surface) # type: ignore
 
     fig.tight_layout()
@@ -40,7 +40,7 @@ def calculate_value_plot(yield_surface: YieldSurfaces, stress_1: float, stress_2
     return yield_surface_value
 
 
-def plot_data_points(axs, yield_points_pandas: DataFrame, unit_conversion: float)-> None: # type: ignore
+def plot_data_points(axs, yield_points_pandas: DataFrame, unit_conversion: float, symmetry: bool)-> None: # type: ignore
     yield_points = get_yield_points_form_data_set(yield_points_pandas, unit_conversion)
 
     number_data_points = np.shape(yield_points)[0]
@@ -71,23 +71,31 @@ def plot_data_points(axs, yield_points_pandas: DataFrame, unit_conversion: float
         xy_yz_plot = (s_xy_active or s_yz_active) and not s_xz_active
         xz_yz_plot = (s_xz_active or s_yz_active) and not s_xy_active
 
+        ms  = 10
+        mew = 2
+        #breakpoint()
+        if symmetry:
+            cl  = 'r' if data_point < number_data_points/2 else 'b'
+        else:
+            cl  = 'r'
+
         if xx_yy_plot:
-            axs[0][0].plot(s_xx, s_yy, marker='x', color='r') # type: ignore
+            axs[0][0].plot(s_xx, s_yy, marker='x', markersize=ms, mew=mew, color=cl) # type: ignore
         
         if xx_zz_plot:
-            axs[0][1].plot(s_xx, s_zz, marker='x', color='r') # type: ignore
+            axs[0][1].plot(s_xx, s_zz, marker='x', markersize=ms, mew=mew, color=cl) # type: ignore
         
         if yy_zz_plot:
-            axs[0][2].plot(s_yy, s_zz, marker='x', color='r') # type: ignore
+            axs[0][2].plot(s_yy, s_zz, marker='x', markersize=ms, mew=mew, color=cl) # type: ignore
     
         if xy_xz_plot:
-            axs[1][0].plot(s_xy, s_xz, marker='x', color='r') # type: ignore
+            axs[1][0].plot(s_xy, s_xz, marker='x', markersize=ms, mew=mew, color=cl) # type: ignore
         
         if xy_yz_plot:
-            axs[1][1].plot(s_xy, s_yz, marker='x', color='r') # type: ignore
+            axs[1][1].plot(s_xy, s_yz, marker='x', markersize=ms, mew=mew, color=cl) # type: ignore
 
         if xz_yz_plot: 
-            axs[1][2].plot(s_xz, s_yz, marker='x', color='r') # type: ignore
+            axs[1][2].plot(s_xz, s_yz, marker='x', markersize=ms, mew=mew, color=cl) # type: ignore
 
 
 def plot_surface(
@@ -194,7 +202,7 @@ def plot_surface(
                     
                     Z[y_index][x_index] = calculate_value_plot(yield_surface,x[x_index], y[y_index], index_1, index_2)  # type: ignore
             
-            contour = axs[plot_y][plot_x].contour(X, Y, Z, levels=[1], linestyles='dashed') # type: ignore
+            contour = axs[plot_y][plot_x].contour(X, Y, Z, levels=[1], linestyles='dashed', linewidths=2) # type: ignore
 
             axs[plot_y][plot_x].clabel(contour, fmt={1:""})  # type: ignore
 

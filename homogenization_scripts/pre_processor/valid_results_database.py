@@ -36,7 +36,7 @@ valid_results_database_file_scheme = { # type: ignore
             'yield_condition': {
                 'required': True,
                 'type': 'string',
-                'allowed': ["stress_strain_curve", "modulus_degradation"],
+                'allowed': ["stress_strain_curve", "modulus_degradation","plastic_work"],
             },
             'yield_condition_value': {
                 'required': True,
@@ -99,7 +99,7 @@ valid_results_database_file_scheme = { # type: ignore
             'yield_condition': {
                 'required': True,
                 'type': 'string',
-                'allowed': ["stress_strain_curve", "modulus_degradation"],
+                'allowed': ["stress_strain_curve", "modulus_degradation","plastic_work"],
             },
             'yield_condition_value': {
                 'required': True,
