@@ -25,6 +25,8 @@ def compare_yield_point_settings(
                 yield_condition_value = problem_definition.yielding_condition.modulus_degradation_percentage
             case 'stress_strain_curve':
                 yield_condition_value = problem_definition.yielding_condition.plastic_strain_yield
+            case 'plastic_work':
+                yield_condition_value = problem_definition.yielding_condition.plastic_work_threshold
             case _:
                 raise Exception(f"Comparison of the yield value for the {problem_definition.yielding_condition.yield_condition} yield condition is not yet implemented!")
 

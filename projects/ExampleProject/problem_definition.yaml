@@ -33,7 +33,7 @@ general:
     # If 2D: Only generate stress states in the xx-yy and xy-xz plane.
 
     # Material properties in Damask yaml format, use quotes: "input_files/..."
-    material_properties : "input_files/example_material.yaml"
+    material_properties : "input_files/aluminium_assigned.yaml"
     # All file paths are relative to the project folder, or absolute (starting with /)
 
     # The grid file needs to be supplied with either a .vti file
@@ -61,7 +61,7 @@ general:
 
 yielding_condition:
     # Choose: "stress_strain_curve", "modulus_degradation" or "plastic_work"
-    yield_condition: modulus_degradation
+    yield_condition: plastic_work
     # Adjust yield criterion below
 
     # For stress strain cruve:
@@ -74,11 +74,11 @@ yielding_condition:
 
     # (over)Estimated yield point in uniaxial tension.
     # Must be higher than actual yield point for yielding to be found.
-    estimated_tensile_yield: 650e6
+    estimated_tensile_yield: 10e6
 
     # (over)Estimated yield point in pure shear.
     # Must be higher than actual yield point for yielding to be found.
-    estimated_shear_yield: 350e6
+    estimated_shear_yield: 5e6
 
 # Settings used for solver
 # Default settings should be ok in most cases, but can be adapted if needed.

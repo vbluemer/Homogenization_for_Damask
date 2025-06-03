@@ -10,8 +10,8 @@ cells = [10, 10, 10]
 N_grains = 10
 
 # Material properties to process
-base_material = "example_base_material.yaml"
-processed_material = "example_material.yaml"
+base_material = "aluminium.yaml"
+processed_material = base_material.removesuffix(".yaml") + "_assigned.yaml"
 
 # Create a random grid with N_grains unique grains
 seeds = damask.seeds.from_random(size,N_grains,cells)
