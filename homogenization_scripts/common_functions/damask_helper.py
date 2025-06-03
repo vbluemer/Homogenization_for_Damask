@@ -356,15 +356,12 @@ def get_Wp_per_increment(damask_results: damask.Result, display_prefix:str = "")
     Wp_per_increment = np.empty(0)
     # This function calculates the homogonized strain per increment visible in the damask_result.
 
-    print('np.shape(xi)')
-    print(np.shape(xi))
     # Shape of output is (n_increments_visible, 3, 3) always
     for increment in range(np.shape(xi)[0]):
         Wp = np.sum(xi[increment]*gamma[increment]) / np.shape(gamma[0])[0]
 
         Wp_per_increment = np.append(Wp_per_increment, np.array([Wp]), axis=0)
-    print('np.shape(Wp_per_increment)')
-    print(np.shape(Wp_per_increment))
+
     return (damask_results, Wp_per_increment)
 
 def calculate_linear_deformatation_energy(stress_tensor: NDArray[np.float64], strain_tensor: NDArray[np.float64]) -> float:

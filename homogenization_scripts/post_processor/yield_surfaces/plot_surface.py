@@ -73,7 +73,6 @@ def plot_data_points(axs, yield_points_pandas: DataFrame, unit_conversion: float
 
         ms  = 10
         mew = 2
-        #breakpoint()
         if symmetry:
             cl  = 'r' if data_point < number_data_points/2 else 'b'
         else:

@@ -59,10 +59,6 @@ def run_post_processing_job(
     # Job post-processing involves finding certain stress/strain or yield point and storing this 
     # to the results_database for use in the general post post-processing
     messages.Stages.post_processing()
-    print('damask_job.stop_condition')
-    #plastic_work
-    #None
-    print(damask_job.stop_condition.yield_condition==None)
     match damask_job:
         case DamaskJob.LoadPath():
             # load_path post-processing saves the homogenized stresses and strains for each iteration

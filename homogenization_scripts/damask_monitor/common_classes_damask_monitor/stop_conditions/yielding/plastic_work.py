@@ -101,16 +101,12 @@ def interpolation_fraction(
 
     # Finding the intersection of the yield condition and the interpolated state with a optimizer
     # Due non-linearity involved in the relationship between stress/strain and modulus.3
-    print("threshold")
-    print(threshold)
     def objective_function(x: float) -> float:
         Wp = Wp_before_yield + x*(Wp_after_yield - Wp_before_yield)
         #strain = strain_before_yield + x*(strain_after_yield - strain_before_yield)
         #modulus = damask_helper.calculate_linear_modulus(stress, strain)
 
         #normalized_modulus = modulus / modulus_linear    
-        print("Wp")
-        print(Wp)
         objective_value = (Wp-threshold)**2 
         return objective_value
 
@@ -139,10 +135,6 @@ def plastic_work_monitor(damask_job: DamaskJobTypes, increment_data: IncrementDa
     #plastic_strain_current: NDArray[np.float64] = increment_data.plastic_strain_averaged_per_increment[-1]
     
     Wp_current: NDArray[np.float64] = increment_data.Wp_per_increment[-1]
-    
-    
-    print('Wp_current')
-    print(Wp_current)
 
     yield_value = damask_job.stop_condition.yield_value
 
@@ -222,8 +214,6 @@ def plastic_work_post_process(problem_definition: ProblemDefinition, damask_job:
                                                         Wp_after_yield,)
 
     # interpolate the yield value
-    print("fraction_for_interpolation")
-    print(fraction_for_interpolation)
     interpolated_results = InterpolatedResults(fraction_for_interpolation, damask_results, iteration_before_yield, iteration_after_yield,stress_tensor_type, strain_tensor_type)
 
     damask_results = damask_results.view_all()

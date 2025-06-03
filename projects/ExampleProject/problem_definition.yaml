@@ -18,7 +18,7 @@
 general: 
 
     # Choose: yield_point, yield_surface, elastic_tensor, load_path
-    simulation_type     : yield_surface
+    simulation_type     : yield_point
     # Go down to the section asscociated with the type to fill in the other details.
     # The other sections can be kept as is, or kept empty.
 
@@ -61,7 +61,7 @@ general:
 
 yielding_condition:
     # Choose: "stress_strain_curve", "modulus_degradation" or "plastic_work"
-    yield_condition: plastic_work
+    yield_condition: modulus_degradation
     # Adjust yield criterion below
 
     # For stress strain cruve:

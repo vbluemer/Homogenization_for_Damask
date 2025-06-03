@@ -112,7 +112,6 @@ def read_yield_points(yield_points_file: str, symmetry: bool) -> DataFrame:
     df_sym['field_name'] = df['field_name'] + '_sym'
     
     df = pd.concat([df, df_sym], ignore_index=True)
-    #breakpoint()
     return df
 
 def fit_surface(yield_surface: YieldSurfaces, data_set: DataFrame) -> YieldSurfaces:
@@ -167,7 +166,6 @@ def get_yield_points_form_data_set(data_set: DataFrame, unit_conversion: float) 
     yield_points_pandas = data_set[Voigt_notation]
 
     yield_points: NDArray[np.float64] = yield_points_pandas.to_numpy() * unit_conversion # type: ignore
-    #breakpoint()
     return yield_points
 
 
