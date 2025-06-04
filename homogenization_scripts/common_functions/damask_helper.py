@@ -16,12 +16,17 @@ def retry_on_exception(damask_result, func, field, *args, retries=5, delay=5, **
         try:
             return func(*args, **kwargs)
         except PermissionError:
+            consolelog.restore_console_logging()
             print(f"Attempt {attempt+1} at reading results failed.")
+            consolelog.suppress_console_logging()
             if attempt < retries - 1:
                 time.sleep(delay)
             else:
                 raise
         except ValueError:
+            consolelog.restore_console_logging()
+            print("Removing corrupted result field and re-computing.")
+            consolelog.suppress_console_logging()
             damask_result = damask_result.view(protected=False)
             damask_result.remove(field)
                 
@@ -121,7 +126,7 @@ def get_strain(damask_result: damask.Result, tensor_type: StrainTensors, display
         timer = datetime.datetime.now()
         messages.Actions.calculate_field(display_name, prefix=display_prefix) # type: ignore
 
-        #consolelog.suppress_console_logging()
+        consolelog.suppress_console_logging()
         # The strain must be added to the result
         F='F'
         field = f"epsilon_V^{m}({F})"
@@ -169,7 +174,7 @@ def get_plastic_strain(damask_result: damask.Result, tensor_type: StrainTensors,
         timer = datetime.datetime.now()
         messages.Actions.calculate_field(display_name, prefix=display_prefix) # type: ignore
 
-        #consolelog.suppress_console_logging()
+        consolelog.suppress_console_logging()
         # The strain must be added to the result
         #retry_on_exception(damask_result,damask_result.add_strain,F='F_p',m=m)
         F='F_p'
@@ -261,7 +266,7 @@ def get_stress(damask_result: damask.Result, tensor_type: StressTensors, display
         timer = datetime.datetime.now()
         messages.Actions.calculate_field(display_name, prefix=display_prefix) # type: ignore
 
-        #consolelog.suppress_console_logging()
+        consolelog.suppress_console_logging()
 
         # Let damask calculate the stress tensor for each gridpoint
         match tensor_type:
@@ -304,7 +309,7 @@ def get_determinant(damask_result: damask.Result, field_name: str, display_name:
         timer = datetime.datetime.now()
         messages.Actions.calculate_field(display_name, prefix=display_prefix) # type: ignore
 
-        #consolelog.suppress_console_logging()
+        consolelog.suppress_console_logging()
         retry_on_exception(damask_result,damask_result.add_determinant,tensor_damask_name,field_name)
         #damask_result.add_determinant(field_name)
 
