@@ -17,14 +17,37 @@ def make_plot_yield_surface(
         symmetry: bool) -> Figure:
 
     fig, axs = plt.subplots(nrows=2, ncols=3) # type: ignore
-    fig.set_size_inches(20,10) 
-
+    fig.set_size_inches(20,(2/3)*20) 
+        
     Messages.YieldSurface.creating_plot_at(yield_surface.display_name(), path)
     plot_data_points(axs, data_set, yield_surface.unit_conversion(), symmetry) # type: ignore
     plot_surface(axs, yield_surface) # type: ignore
+    
 
+    
+    xlimits = np.empty([6,2])
+    ylimits = np.empty([6,2])
+    for e, ax in enumerate(axs.flat):
+        xlimits[e,:] = ax.get_xlim()
+        ylimits[e,:] = ax.get_ylim()
+    
+    xlimits_normal = xlimits[:3,:]
+    ylimits_normal = ylimits[:3,:]
+    xlimits_shear  = xlimits[3:,:]
+    ylimits_shear  = ylimits[3:,:]
+    
+    for e, ax in enumerate(axs.flat):
+        if e<3:
+            ax.set_xlim(min(xlimits_normal[:,0]),max(xlimits_normal[:,1]))
+            ax.set_ylim(min(ylimits_normal[:,0]),max(ylimits_normal[:,1]))
+        else:
+            ax.set_xlim(min(xlimits_shear[:,0]),max(xlimits_shear[:,1]))
+            ax.set_ylim(min(ylimits_shear[:,0]),max(ylimits_shear[:,1]))
+        ax.set_aspect('equal')
+    
     fig.tight_layout()
     fig.savefig(path) # type: ignore
+    #breakpoint()
     return fig
 
 def calculate_value_plot(yield_surface: YieldSurfaces, stress_1: float, stress_2: float, index_1: list[int], index_2: list[int]) -> float:

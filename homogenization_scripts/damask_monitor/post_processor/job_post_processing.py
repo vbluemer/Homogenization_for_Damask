@@ -17,7 +17,7 @@ from .store_result_to_database import store_result_to_database
 def yield_point_post_processing(
         problem_definition: ProblemDefinition, 
         damask_job: DamaskJob.YieldPointMultiaxial) -> InterpolatedResults | None:
-    
+
     match damask_job.stop_condition.yield_condition:
         case 'modulus_degradation':
             interpolated_results = modulus_degradation_post_process(problem_definition, damask_job)
@@ -59,6 +59,7 @@ def run_post_processing_job(
     # Job post-processing involves finding certain stress/strain or yield point and storing this 
     # to the results_database for use in the general post post-processing
     messages.Stages.post_processing()
+
     match damask_job:
         case DamaskJob.LoadPath():
             # load_path post-processing saves the homogenized stresses and strains for each iteration
@@ -79,6 +80,8 @@ def run_post_processing_job(
                 post_process_succeeded = True
                 value_to_store = interpolated_result.stress
             store_result_to_database(problem_definition, damask_job.simulation_type, damask_job.field_name, value_to_store)
+            process_succesfull = load_path_post_process(problem_definition, damask_job, interpolated_result)
+
         case DamaskJob.ElasticTensor():
             # elastic_tensor jobs store the stress and strains at the strain step.
             value_to_store = dict()

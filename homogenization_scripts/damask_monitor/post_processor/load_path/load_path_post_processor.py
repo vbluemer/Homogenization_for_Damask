@@ -86,8 +86,8 @@ class LoadCaseResults:
             increment_data: dict[str, float|int|str] = dict()
             increment_data["increment".rjust(buffer)] = f"{increment_counter:{buffer}d}"
             for direction, index in zip(directions, directions_indices):
-                increment_data[f"stress_{direction}[MPa]".rjust(buffer)] = f"{np.squeeze(np.round(stress_vector[index]/1e6,2)):{buffer}.4f}"
-                increment_data[f"strain_{direction}".rjust(buffer)] = f"{np.squeeze(np.round(strain_vector[index],6)):{buffer}.4f}"
+                increment_data[f"stress_{direction}[MPa]".rjust(buffer)] = f"{np.squeeze(stress_vector[index]/1e6):{buffer}.2f}"
+                increment_data[f"strain_{direction}".rjust(buffer)] = f"{np.squeeze(strain_vector[index]):{buffer}.6f}"
             increment_data[f"Wp[J/m3]".rjust(buffer)] = f"{Wp:{buffer}.4f}"
 
             increment_list.append(increment_data)
@@ -102,8 +102,8 @@ class LoadCaseResults:
         strain_vector = damask_helper.strain_tensor_to_vector_notation(strain)
         increment_data["increment".rjust(buffer)] = f"yieldpoint".rjust(buffer)
         for direction, index in zip(directions, directions_indices):
-            increment_data[f"stress_{direction}[MPa]".rjust(buffer)] = f"{np.squeeze(np.round(stress_vector[index]/1e6,2)):{buffer}.4f}"
-            increment_data[f"strain_{direction}".rjust(buffer)] = f"{np.squeeze(np.round(strain_vector[index],6)):{buffer}.4f}"
+            increment_data[f"stress_{direction}[MPa]".rjust(buffer)] = f"{np.squeeze(stress_vector[index]/1e6):{buffer}.2f}"
+            increment_data[f"strain_{direction}".rjust(buffer)] = f"{np.squeeze(strain_vector[index]):{buffer}.6f}"
         increment_data[f"Wp[J/m3]".rjust(buffer)] = f"{Wp:{buffer}.4f}"
             
         field_names: list[str] = ["increment".rjust(buffer)]

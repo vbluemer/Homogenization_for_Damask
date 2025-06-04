@@ -764,7 +764,7 @@ def create_multiaxial_yield_point_for_yield_locus(problem_definition: ProblemDef
         type_name = "tensile"
     else:
         esitmated_yield = problem_definition.yielding_condition.estimated_shear_yield
-        type_name = type_name = "shear"
+        type_name = "shear"
 
     # In combined load cases, the total magnitude of the yield stress can be higher then in 
     # a uniaxial load case. Compensate by increasing the maximum applied stress when 
@@ -823,7 +823,7 @@ def create_multiaxial_yield_point_for_yield_locus(problem_definition: ProblemDef
 
     # Finally calculate the stresses
     angle_point = get_load_angle_in_plane(point_number)
-    amplification = amplification_factor(angle_point)
+    amplification = amplification_factor(angle_point) if type_name=="tensile" else 1
     stress_1 = cos(radians(angle_point))*esitmated_yield * amplification
     stress_2 = sin(radians(angle_point))*esitmated_yield * amplification
     

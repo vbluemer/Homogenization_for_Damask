@@ -36,6 +36,8 @@ def store_yield_point_settings(
             yield_value = problem_definition.yielding_condition.modulus_degradation_percentage
         case 'stress_strain_curve':
             yield_value = problem_definition.yielding_condition.plastic_strain_yield
+        case 'plastic_work':
+            yield_value = problem_definition.yielding_condition.plastic_work_threshold
         case _:
             yield_value = 0
             warnings.warn(f"storing of setting the yield value for yield condition {problem_definition.yielding_condition.yield_condition} not yet implemented!")
@@ -130,6 +132,5 @@ def store_result_to_database(problem_definition: ProblemDefinition, simulation_t
         case _:
             results_database[simulation_type][field_name] = value
     
-
     with open(result_database_file, 'w') as results_database_writer:
         yaml.dump(results_database, results_database_writer)
