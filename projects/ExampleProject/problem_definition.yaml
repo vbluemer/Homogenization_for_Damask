@@ -155,7 +155,7 @@ yield_surface:
     # There are three planes, x-y, x-z and y-z.
     # minimum is 1, then only uniaxial loads are applied
     # per extra point, more load paths are added.
-    load_points_per_plane: 8
+    load_points_per_plane: 1
 
     ## Manual stress state settings:
     stress_x_x: [600e6,      0,      0,     0,     0,     0]
@@ -198,7 +198,7 @@ elastic_tensor:
     # Define the symmetry that should be assumed for the elastic tensor:
     # Supported kinds:
     # anisotropic,  monoclinic, orthotropic, tetragonal, cubic, isotropic
-    material_type: isotropic
+    material_type: anisotropic
 
     # Strain to use for strain step:
     strain_step: 1e-7

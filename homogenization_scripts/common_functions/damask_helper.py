@@ -4,13 +4,27 @@ from typing import Dict, Any
 import numpy as np
 from numpy.typing import NDArray
 import damask # type: ignore
-
+import time
 
 # Local packages
 from  ..common_classes import messages
 import homogenization_scripts.common_functions.consolelog as consolelog
 from ..common_classes.problem_definition import Tensor, StrainTensors, StressTensors
 
+def retry_on_exception(damask_result, func, field, *args, retries=5, delay=5, **kwargs):
+    for attempt in range(retries):
+        try:
+            return func(*args, **kwargs)
+        except PermissionError:
+            print(f"Attempt {attempt+1} at reading results failed.")
+            if attempt < retries - 1:
+                time.sleep(delay)
+            else:
+                raise
+        except ValueError:
+            damask_result = damask_result.view(protected=False)
+            damask_result.remove(field)
+                
 def strain_tensor_to_vector_notation(tensor: NDArray[np.float64]):
     # Transform the strain tensor to vector Voigt notation.
     tensor = np.squeeze(tensor)
@@ -107,9 +121,12 @@ def get_strain(damask_result: damask.Result, tensor_type: StrainTensors, display
         timer = datetime.datetime.now()
         messages.Actions.calculate_field(display_name, prefix=display_prefix) # type: ignore
 
-        consolelog.suppress_console_logging()
+        #consolelog.suppress_console_logging()
         # The strain must be added to the result
-        damask_result.add_strain(F='F',m=m)
+        F='F'
+        field = f"epsilon_V^{m}({F})"
+        retry_on_exception(damask_result,damask_result.add_strain,field,F=F,m=m)
+        #damask_result.add_strain(F='F',m=m)
         strain_dict: get_result_type | None= damask_result.get(tensor_damask_name, flatten=False)
 
         consolelog.restore_console_logging()
@@ -152,9 +169,13 @@ def get_plastic_strain(damask_result: damask.Result, tensor_type: StrainTensors,
         timer = datetime.datetime.now()
         messages.Actions.calculate_field(display_name, prefix=display_prefix) # type: ignore
 
-        consolelog.suppress_console_logging()
+        #consolelog.suppress_console_logging()
         # The strain must be added to the result
-        damask_result.add_strain(F='F_p',m=m)
+        #retry_on_exception(damask_result,damask_result.add_strain,F='F_p',m=m)
+        F='F_p'
+        field = f"epsilon_V^{m}({F})"
+        retry_on_exception(damask_result,damask_result.add_strain,field,F=F,m=m)
+        #damask_result.add_strain(F='F_p',m=m)
         strain_dict: get_result_type | None= damask_result.get(tensor_damask_name, flatten=False)
 
         consolelog.restore_console_logging()
@@ -240,16 +261,18 @@ def get_stress(damask_result: damask.Result, tensor_type: StressTensors, display
         timer = datetime.datetime.now()
         messages.Actions.calculate_field(display_name, prefix=display_prefix) # type: ignore
 
-        consolelog.suppress_console_logging()
+        #consolelog.suppress_console_logging()
 
         # Let damask calculate the stress tensor for each gridpoint
         match tensor_type:
             case Tensor.Stress.PK1():
                 pass
             case Tensor.Stress.PK2():
-                damask_result.add_stress_second_Piola_Kirchhoff()
+                retry_on_exception(damask_result,damask_result.add_stress_second_Piola_Kirchhoff,tensor_damask_name)
+                #damask_result.add_stress_second_Piola_Kirchhoff()
             case Tensor.Stress.Cauchy():
-                damask_result.add_stress_Cauchy()
+                retry_on_exception(damask_result,damask_result.add_stress_Cauchy,tensor_damask_name)
+                #damask_result.add_stress_Cauchy()
             case _: # type: ignore
                 raise Exception(f"Stress tensor {tensor_type} not yet implemented")
         
@@ -281,8 +304,9 @@ def get_determinant(damask_result: damask.Result, field_name: str, display_name:
         timer = datetime.datetime.now()
         messages.Actions.calculate_field(display_name, prefix=display_prefix) # type: ignore
 
-        consolelog.suppress_console_logging()
-        damask_result.add_determinant(field_name)
+        #consolelog.suppress_console_logging()
+        retry_on_exception(damask_result,damask_result.add_determinant,tensor_damask_name,field_name)
+        #damask_result.add_determinant(field_name)
 
         determinant_dict = damask_result.get(tensor_damask_name, flatten=False)
 

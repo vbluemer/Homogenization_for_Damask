@@ -80,7 +80,7 @@ def run_post_processing_job(
                 post_process_succeeded = True
                 value_to_store = interpolated_result.stress
             store_result_to_database(problem_definition, damask_job.simulation_type, damask_job.field_name, value_to_store)
-            process_succesfull = load_path_post_process(problem_definition, damask_job, interpolated_result)
+            #process_succesfull = load_path_post_process(problem_definition, damask_job, interpolated_result)
 
         case DamaskJob.ElasticTensor():
             # elastic_tensor jobs store the stress and strains at the strain step.
