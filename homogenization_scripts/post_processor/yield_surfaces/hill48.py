@@ -84,25 +84,28 @@ class Hill:
         return penalty
 
     def write_to_file(self, path:str, MSE: float | None = None) -> None:
+        
         coefficient_names: list[str] = [
-            "F", "G", "H", "L", "M", "N"
-        ]
+            "F", "G", "H", "L", "M", "N","unit_stress"]
+
+        result_vals: list[float] = [
+            self.f, self.g, self.h, self.l, self.m, self.n, self.unit_name()]
+        
+        if not MSE == None:
+            coefficient_names = coefficient_names + ["MSE"]
+            result_vals = result_vals + [MSE]
+
+        coefficient_names = [f"{item:>12}" for item in coefficient_names]
+        result_vals = [
+            f"{item:12.6f}" if isinstance(item, float) else f"{item:>12s}"
+            for item in result_vals
+            ]
 
         result_dict: list[dict[str, float|str]] = [dict()]
 
-        result_dict[0]["F"] = self.f
-        result_dict[0]["G"] = self.g
-        result_dict[0]["H"] = self.h
-        result_dict[0]["L"] = self.l
-        result_dict[0]["M"] = self.m
-        result_dict[0]["N"] = self.n
+        for name, value in zip(coefficient_names, result_vals):
+            result_dict[0][name] = value
 
-        coefficient_names = coefficient_names + ["unit_stress"]
-        result_dict[0]["unit_stress"] = self.unit_name()
-
-        if not MSE == None:
-            result_dict[0]["MSE"] = MSE
-            coefficient_names = coefficient_names + ["MSE"]
 
         Messages.YieldSurface.writing_results(self.display_name(), path)
         with open(path, 'w', newline='') as csvfile:

@@ -140,7 +140,7 @@ yield_surface:
     #   "Cazacu-Plunkett-Barlat_extended_n", # replace n with any positive integer
     #   "example_yield_surface", # dummy yield surface to act as example for how to add another yield_surface
     #   "..."
-    yield_criterion: Hill
+    yield_criterion: Cazacu-Plunkett-Barlat_extended_2
     # NOTE: this field is not spelling checked. This simplifies adding custom yield sufaces.
     # See end of this section for formulation of fitted equations.
 
@@ -155,7 +155,9 @@ yield_surface:
     # There are three planes, x-y, x-z and y-z.
     # minimum is 1, then only uniaxial loads are applied
     # per extra point, more load paths are added.
-    load_points_per_plane: 4
+    # Select 3 for bi-axial tests, when assume_tensile_compressive_symmetry == True
+    # Select 6 for bi-axial tests, when assume_tensile_compressive_symmetry == False
+    load_points_per_plane: 6
 
     ## Manual stress state settings:
     stress_x_x: [600e6,      0,      0,     0,     0,     0]

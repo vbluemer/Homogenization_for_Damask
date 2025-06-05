@@ -127,9 +127,22 @@ class CazacuPlunkettBarlat:
             result_dict[0]["MSE"] = MSE
             component_names_flat_all = component_names_flat_all + ["MSE"]
         
+        for i, row in enumerate(result_dict):
+            formatted_row = {}
+            for key, value in row.items():
+                formatted_key = f"{key:>12s}"
+                if isinstance(value, float):
+                    formatted_value = f"{value:12.6f}"
+                elif isinstance(value, str):
+                    formatted_value = f"{value:>12s}"
+                else:
+                    formatted_value = str(value).rjust(12)
+                formatted_row[formatted_key] = formatted_value
+            result_dict[i] = formatted_row
+                        
         Messages.YieldSurface.writing_results(self.display_name(), path)
         with open(path, 'w', newline='') as csvfile:
-            writer = csv.DictWriter(csvfile, fieldnames=component_names_flat_all)
+            writer = csv.DictWriter(csvfile, fieldnames=result_dict[0].keys())
             writer.writeheader()
             writer.writerows(result_dict)
         return

@@ -717,10 +717,7 @@ def create_multiaxial_yield_point_for_yield_locus(problem_definition: ProblemDef
     # Further logic to prevent redundant stress states
     problem_definition.yield_surface.assume_tensile_compressive_symmetry
     if problem_definition.general.dimensions == '3D':
-        if problem_definition.yield_surface.assume_tensile_compressive_symmetry:
-            quadrant_use_0_axis = [True, False, True, False]
-        else:
-            quadrant_use_0_axis = [True, True, True, True]
+        quadrant_use_0_axis = [True, False, True, False]
     else:
         quadrant_use_0_axis = [True, True, True, True]
 
