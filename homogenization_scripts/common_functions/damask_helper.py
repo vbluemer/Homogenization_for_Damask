@@ -128,10 +128,7 @@ def get_strain(damask_result: damask.Result, tensor_type: StrainTensors, display
 
         consolelog.suppress_console_logging()
         # The strain must be added to the result
-        F='F'
-        field = f"epsilon_V^{m}({F})"
-        retry_on_exception(damask_result,damask_result.add_strain,field,F=F,m=m)
-        #damask_result.add_strain(F='F',m=m)
+        retry_on_exception(damask_result,damask_result.add_strain,tensor_damask_name,F='F',m=m)
         strain_dict: get_result_type | None= damask_result.get(tensor_damask_name, flatten=False)
 
         consolelog.restore_console_logging()
@@ -176,11 +173,7 @@ def get_plastic_strain(damask_result: damask.Result, tensor_type: StrainTensors,
 
         consolelog.suppress_console_logging()
         # The strain must be added to the result
-        #retry_on_exception(damask_result,damask_result.add_strain,F='F_p',m=m)
-        F='F_p'
-        field = f"epsilon_V^{m}({F})"
-        retry_on_exception(damask_result,damask_result.add_strain,field,F=F,m=m)
-        #damask_result.add_strain(F='F_p',m=m)
+        retry_on_exception(damask_result,damask_result.add_strain,tensor_damask_name,F='F_p',m=m)
         strain_dict: get_result_type | None= damask_result.get(tensor_damask_name, flatten=False)
 
         consolelog.restore_console_logging()
@@ -203,7 +196,6 @@ def get_slip_system_xi(damask_result: damask.Result, display_prefix: str = "")->
 
     # Definition of strain to use.
     tensor_damask_name = 'xi_sl'
-    display_name = "CRSS"
 
     # Try to get the strain if it is already present, suppress console to override progress reporting
     consolelog.suppress_console_logging()
@@ -224,7 +216,6 @@ def get_slip_system_gamma(damask_result: damask.Result, display_prefix: str = ""
 
     # Definition of strain to use.
     tensor_damask_name = 'gamma_sl'
-    display_name = "slip"
 
     # Try to get the strain if it is already present, suppress console to override progress reporting
     consolelog.suppress_console_logging()

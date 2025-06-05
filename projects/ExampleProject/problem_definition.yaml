@@ -18,7 +18,7 @@
 general: 
 
     # Choose: yield_point, yield_surface, elastic_tensor, load_path
-    simulation_type     : yield_point
+    simulation_type     : yield_surface
     # Go down to the section asscociated with the type to fill in the other details.
     # The other sections can be kept as is, or kept empty.
 
@@ -150,12 +150,12 @@ yield_surface:
 
     ## Automatic stress state settings:
     # Asume that the tensile and compressive yield values are the same.
-    assume_tensile_compressive_symmetry: True
+    assume_tensile_compressive_symmetry: False
 
     # There are three planes, x-y, x-z and y-z.
     # minimum is 1, then only uniaxial loads are applied
     # per extra point, more load paths are added.
-    load_points_per_plane: 1
+    load_points_per_plane: 4
 
     ## Manual stress state settings:
     stress_x_x: [600e6,      0,      0,     0,     0,     0]

@@ -146,7 +146,7 @@ def plastic_work_monitor(damask_job: DamaskJobTypes, increment_data: IncrementDa
     yield_detected, yield_value = plastic_work_and_value(yield_value, Wp_current)
 
     if yield_detected:
-        print(f"Yielding detected in the deformation energy condition")
+        print(f"Yielding detected in the plastic work condition")
     
     return yield_detected, yield_value
 

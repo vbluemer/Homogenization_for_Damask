@@ -668,7 +668,7 @@ def create_multiaxial_yield_point_for_yield_locus(problem_definition: ProblemDef
             first_points_ordering = []
     else:
         if problem_definition.general.dimensions == '3D':
-            first_points_ordering = [1, 3, 1, 3, 2, 4]
+            first_points_ordering = [1, 3, 1, 3, 2, 4, 2, 4]
         else:
             first_points_ordering = []
     first_points_length = len(first_points_ordering)
@@ -684,33 +684,43 @@ def create_multiaxial_yield_point_for_yield_locus(problem_definition: ProblemDef
         else:
             points_per_quadrant: list[int] = [int((points_per_plane-1)/2+1),int((points_per_plane-1)/2),0,0]
     else:
-        if points_per_plane < first_points_length:
-            points_per_quadrant = [0, 0, 0, 0]
-            for point in range(points_per_plane):
-                point_index = first_points_ordering[point]
-                points_per_quadrant[point_index] += 1
+        number_of_points_is_even = points_per_plane % 2 == 0
+        points_per_plane = np.max([points_per_plane,4])
+        if number_of_points_is_even:
+            points_per_quadrant: list[int] = [int(points_per_plane/4),int(points_per_plane/4),int(points_per_plane/4),int(points_per_plane/4)]
         else:
-            points_per_quadrant_first = [0, 0, 0, 0]
-            for point in range(first_points_length):
-                point_index = first_points_ordering[point]
-                points_per_quadrant_first[point_index] += 1
+            points_per_quadrant: list[int] = [int((points_per_plane-1)/4+1),int((points_per_plane-1)/4),int((points_per_plane-1)/4),int((points_per_plane-1)/4)]
+        # if points_per_plane < first_points_length:
+        #     points_per_quadrant = [0, 0, 0, 0]
+        #     for point in range(points_per_plane):
+        #         point_index = first_points_ordering[point]
+        #         points_per_quadrant[point_index] += 1
+        # else:
+        #     points_per_quadrant_first = [0, 0, 0, 0]
+        #     for point in range(first_points_length):
+        #         point_index = first_points_ordering[point]
+        #         points_per_quadrant_first[point_index] += 1
 
-            full_sets_of_points = int((points_per_plane-first_points_length - (points_per_plane-first_points_length) % 4)/4)
+        #     full_sets_of_points = int((points_per_plane-first_points_length - (points_per_plane-first_points_length) % 4)/4)
 
-            points_per_quadrant: list[int] = [
-                full_sets_of_points+points_per_quadrant_first[0],
-                full_sets_of_points+points_per_quadrant_first[1],
-                full_sets_of_points+points_per_quadrant_first[2],
-                full_sets_of_points+points_per_quadrant_first[3],
-            ]
-            for remaining_points in range((points_per_plane-first_points_length) % 4):
-                points_per_quadrant[remaining_points] += 1
+        #     points_per_quadrant: list[int] = [
+        #         full_sets_of_points+points_per_quadrant_first[0],
+        #         full_sets_of_points+points_per_quadrant_first[1],
+        #         full_sets_of_points+points_per_quadrant_first[2],
+        #         full_sets_of_points+points_per_quadrant_first[3],
+        #     ]
+        #     for remaining_points in range((points_per_plane-first_points_length) % 4):
+        #         points_per_quadrant[remaining_points] += 1
 
     points_already_in_quadrant = [0,0,0,0]
     
     # Further logic to prevent redundant stress states
+    problem_definition.yield_surface.assume_tensile_compressive_symmetry
     if problem_definition.general.dimensions == '3D':
-        quadrant_use_0_axis = [True, False, True, False]
+        if problem_definition.yield_surface.assume_tensile_compressive_symmetry:
+            quadrant_use_0_axis = [True, False, True, False]
+        else:
+            quadrant_use_0_axis = [True, True, True, True]
     else:
         quadrant_use_0_axis = [True, True, True, True]
 
@@ -755,7 +765,6 @@ def create_multiaxial_yield_point_for_yield_locus(problem_definition: ProblemDef
         angle_in_plane = angle + 90*(quadrant-1)
 
         points_already_in_quadrant[quadrant-1] += 1
-        
         return angle_in_plane
 
     job_is_tensile = 'tensile' in job_name
@@ -809,6 +818,8 @@ def create_multiaxial_yield_point_for_yield_locus(problem_definition: ProblemDef
         raise Exception(f"Could not detect what plane job is in (name = {job_name})")
 
     point_number = int(re.findall(r'\d+', job_name)[0])
+
+    #breakpoint()
 
     # Run get_load_angle_in_plane enough times to get the right angle:
     for point_number_dummy in range(point_number):
