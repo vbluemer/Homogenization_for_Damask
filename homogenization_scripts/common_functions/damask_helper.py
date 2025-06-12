@@ -373,15 +373,29 @@ def get_Wp_per_increment(damask_results: damask.Result, display_prefix:str = "")
     (damask_results, xi)    = get_slip_system_xi(damask_results, display_prefix=display_prefix)
     (damask_results, gamma) = get_slip_system_gamma(damask_results, display_prefix=display_prefix)
 
-    Wp_per_increment = np.empty(0)
-    # This function calculates the homogonized strain per increment visible in the damask_result.
+    # Wp_per_increment = np.empty(0)
+    # # This function calculates the homogonized strain per increment visible in the damask_result.
 
-    # Shape of output is (n_increments_visible, 3, 3) always
-    for increment in range(np.shape(xi)[0]):
-        Wp = np.sum(xi[increment]*gamma[increment]) / np.shape(gamma[0])[0]
+    # # Shape of output is (n_increments_visible, 3, 3) always
+    # N_matpoints = np.shape(gamma[0])[0]
+    # N_incs      = np.shape(xi)[0]
+    # for increment in range(N_incs):
+    #     Wp = np.sum(xi[increment]*gamma[increment]) / N_matpoints
 
-        Wp_per_increment = np.append(Wp_per_increment, np.array([Wp]), axis=0)
-
+    #     Wp_per_increment = np.append(Wp_per_increment, np.array([Wp]), axis=0)
+    N_incs      = np.shape(gamma)[0]
+    Wp_per_increment = np.zeros(N_incs)
+    N_matpoints = np.shape(gamma[0])[0]
+    gamma_delta = np.zeros_like(gamma)
+    
+    for e,inc in enumerate(damask_results.increments):
+        if e>0:
+            gamma_delta[e,:,:] = (gamma[e,:,:]-gamma[e-1,:,:]) 
+            
+            Wp_upto = np.sum(gamma_delta * xi) / N_matpoints
+            Wp_per_increment[e] = Wp_upto
+    
+    #breakpoint()
     return (damask_results, Wp_per_increment)
 
 def calculate_linear_deformatation_energy(stress_tensor: NDArray[np.float64], strain_tensor: NDArray[np.float64]) -> float:

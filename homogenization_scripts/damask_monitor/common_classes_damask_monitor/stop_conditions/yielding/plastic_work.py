@@ -198,7 +198,7 @@ def plastic_work_post_process(problem_definition: ProblemDefinition, damask_job:
 
     
     if not yield_found:
-        plot_stress_strain_curves(problem_definition, damask_job, stress_averaged_per_increment,plastic_strain_averaged_per_increment)
+        plot_stress_strain_curves(problem_definition, damask_job, stress_averaged_per_increment,strain_averaged_per_increment)
         #plot_plastic_work(problem_definition, damask_job, stress_averaged_per_increment,strain_averaged_per_increment)
         yield_detected = False
         return None 

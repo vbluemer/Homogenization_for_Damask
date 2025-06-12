@@ -18,7 +18,7 @@
 general: 
 
     # Choose: yield_point, yield_surface, elastic_tensor, load_path
-    simulation_type     : yield_surface
+    simulation_type     : load_path
     # Go down to the section asscociated with the type to fill in the other details.
     # The other sections can be kept as is, or kept empty.
 

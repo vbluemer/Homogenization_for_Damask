@@ -220,20 +220,28 @@ def calculate_slip_system_xi_gamma(
 
     current_iteration = updated_damask_results.increments_in_range()[-1]
 
-    damask_result_intermediate_pruned = updated_damask_results.view(increments=current_iteration)
+    #damask_result_intermediate_pruned = updated_damask_results.view(increments=current_iteration)
 
     # stress_tensor_type = increment_data.stress_tensor_type
     # strain_tensor_type = increment_data.strain_tensor_type
 
     display_prefix = "  "
 
-    (damask_result_intermediate_pruned, xi) = damask_helper.get_slip_system_xi(damask_result_intermediate_pruned, display_prefix=display_prefix)
-    (damask_result_intermediate_pruned, gamma) = damask_helper.get_slip_system_gamma(damask_result_intermediate_pruned, display_prefix=display_prefix)
+    (updated_damask_results, xi) = damask_helper.get_slip_system_xi(updated_damask_results, display_prefix=display_prefix)
+    (updated_damask_results, gamma) = damask_helper.get_slip_system_gamma(updated_damask_results, display_prefix=display_prefix)
 
-    Wp = np.sum(xi[0]*gamma[0]) / np.shape(gamma[0])[0]
+    N_matpoints = np.shape(gamma[0])[0]
+    #t = updated_damask_results.times
+    gamma_delta = np.zeros_like(gamma)
+    for e,inc in enumerate(updated_damask_results.increments):
+        if e>0:
+            gamma_delta[e,:,:] = (gamma[e,:,:]-gamma[e-1,:,:]) 
+            
+    Wp_sum = np.sum(gamma_delta * xi) / N_matpoints
     
-    increment_data.add_increment_Wp(Wp)
-
+    
+    increment_data.add_increment_Wp(Wp_sum)
+    #breakpoint()
     return increment_data
 
 def check_for_stop_conditions(
