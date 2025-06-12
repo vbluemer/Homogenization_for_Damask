@@ -2,7 +2,8 @@
 import numpy as np
 from numpy.typing import NDArray
 import matplotlib.pyplot as plt
-from matplotlib.ticker import ScalarFormatter
+from matplotlib.ticker import MaxNLocator
+
 import os
 import typing
 
@@ -10,6 +11,7 @@ import typing
 from ...common_functions import damask_helper
 from ...common_classes.problem_definition import ProblemDefinition
 from ...common_classes.damask_job import DamaskJobTypes, DamaskJob
+from ...common_classes.figure_style import FigureStyle
 from ...damask_monitor.common_classes_damask_monitor.increment_data import IncrementData
 from ..post_processor.interpolate_results import InterpolatedResults
 
@@ -23,8 +25,12 @@ def plot_stress_strain_curves(
         file_name: str | None = None,
         plot_title: str | None = None):
     
-    
-    lw  = 2;
+    style = FigureStyle(linewidth=3, 
+                        markersize=12,
+                        markeredgewidth = 2,
+                        fontsize=20)
+
+
     min_const = 1e6
     Pa_unit   = 1e6
     fig = plt.figure(layout='constrained', figsize=(20, 20)) # type: ignore
@@ -46,32 +52,43 @@ def plot_stress_strain_curves(
         for j in range(3):
             stress_piola_kirchoff_values_y = np.take(stress_piola_kirchoff_values_x, indices=[j], axis=2)
             strain_green_lagrange_values_y = np.take(strain_green_lagrange_values_x, indices=[j], axis=2)
-
+    
             stress_piola_kirchoff_values_y = np.squeeze(stress_piola_kirchoff_values_y)
             strain_green_lagrange_values_y = np.squeeze(strain_green_lagrange_values_y)
-            subplot[i][j].plot(strain_green_lagrange_values_y, stress_piola_kirchoff_values_y/Pa_unit, '--', marker='x', linewidth=lw, markersize=8, label='homogonized stress')
+            subplot[i][j].plot(strain_green_lagrange_values_y, 
+                               stress_piola_kirchoff_values_y/Pa_unit, '--', 
+                               marker='x', 
+                               linewidth=style.lw, 
+                               markersize=style.ms, 
+                               markeredgewidth = style.mew, 
+                               label='homogonized stress',
+                               zorder=2)
             
             if np.max(abs(stress_piola_kirchoff_values_y)) < min_const:
                 subplot[i][j].set_ylim(-min_const/Pa_unit, min_const/Pa_unit)
             
             subplot[i][j].legend()
-
+    
             subplot[i][j].grid()
-
+            subplot[i][j].xaxis.set_major_locator(MaxNLocator(nbins=6))
+            
             subplot[i][j].set_xlabel('strain [-]')
             subplot[i][j].set_ylabel('stress [MPa]')
-
+    
             if not interpolated_yield == None:
                 stress_yield = interpolated_yield.stress[i][j]
                 strain_yield = interpolated_yield.strain[i][j]
                 #print(stress_yield)
                 #print(strain_yield)
-                subplot[i][j].plot(strain_yield, stress_yield/Pa_unit, 'g', marker='o', linewidth=lw, markersize=8, label="Interpolated result")
+                subplot[i][j].plot(strain_yield, stress_yield/Pa_unit, 'g', marker='o', linewidth=style.lw, markersize=style.ms, label="Interpolated result",zorder=3)
                 subplot[i][j].legend()
-
+    
             if True:
-                subplot[i][j] = stress_strain_curves_plastic_yield_lines(subplot[i][j], i, j, stress_per_increment/Pa_unit, strain_per_increment, problem_definition, damask_job)
-
+                subplot[i][j] = stress_strain_curves_plastic_yield_lines(subplot[i][j], i, j, stress_per_increment/Pa_unit, strain_per_increment, problem_definition, damask_job, style)
+                
+            if not damask_job.loaded_directions[0][i][j]:
+                subplot[i][j].ticklabel_format(axis='x', style='sci', scilimits=(-2, 2)) 
+    
     subplot_titles = np.array([
         ["x-x", "x-y", "x-z"], 
         ["y-x", "y-y", "y-z"], 
@@ -81,8 +98,13 @@ def plot_stress_strain_curves(
     for i in range(3):
         for j in range(3):
             subplot[i][j].set_title(subplot_titles[i][j])
-
+    
     fig.suptitle(plot_title, fontsize='xx-large') # type: ignore
+    
+    for text in fig.findobj(match=plt.Text):
+        text.set_fontsize(style.fs)
+    
+    
     fig.savefig(stress_strain_plot_path) # type: ignore
     #breakpoint()
 
@@ -94,9 +116,12 @@ def stress_strain_curves_plastic_yield_lines( # type: ignore
         stress_piola_kirchoff_per_increment: NDArray[np.float64], 
         strain_green_lagrange_per_increment: NDArray[np.float64], 
         problem_definition: ProblemDefinition, 
-        damask_job: DamaskJobTypes): 
+        damask_job: DamaskJobTypes,
+        style: FigureStyle | None = None): 
     
-
+    if not style:
+        style = FigureStyle()
+        
     direction_is_loaded = damask_job.loaded_directions[0][i][j]
 
 
@@ -126,7 +151,7 @@ def stress_strain_curves_plastic_yield_lines( # type: ignore
 
     stress_plot = stress_line(strains_plot, slope_stress_strain_1st)
 
-    subplot.plot(strains_plot, stress_plot, 'r--', scalex=False, scaley=False, label='0.2% offset') # type: ignore
+    subplot.plot(strains_plot, stress_plot, 'r--', scalex=False, scaley=False, linewidth = style.lw, label='0.2% offset', zorder=1) # type: ignore
     subplot.legend() # type: ignore
 
     return subplot # type: ignore

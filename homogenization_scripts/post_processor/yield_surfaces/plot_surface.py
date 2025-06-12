@@ -5,6 +5,8 @@ from math import sin, cos, radians
 import scipy # type: ignore
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
+from ...common_classes.figure_style import FigureStyle
+
 
 # Local packages
 from .general_functions import YieldSurfaces, get_yield_points_form_data_set
@@ -16,12 +18,17 @@ def make_plot_yield_surface(
         path: str,
         symmetry: bool) -> Figure:
 
+    style = FigureStyle(linewidth=3, 
+                        markersize=12,
+                        markeredgewidth = 2,
+                        fontsize=20)
+    
     fig, axs = plt.subplots(nrows=2, ncols=3) # type: ignore
     fig.set_size_inches(20,(2/3)*20) 
         
     Messages.YieldSurface.creating_plot_at(yield_surface.display_name(), path)
-    plot_data_points(axs, data_set, yield_surface.unit_conversion(), symmetry) # type: ignore
-    plot_surface(axs, yield_surface) # type: ignore
+    plot_data_points(axs, data_set, yield_surface.unit_conversion(), symmetry, style) # type: ignore
+    plot_surface(axs, yield_surface, style) # type: ignore
     
 
     
@@ -45,6 +52,9 @@ def make_plot_yield_surface(
             ax.set_ylim(min(ylimits_shear[:,0]),max(ylimits_shear[:,1]))
         ax.set_aspect('equal')
     
+    for text in fig.findobj(match=plt.Text):
+        text.set_fontsize(style.fs)
+    
     fig.tight_layout()
     fig.savefig(path) # type: ignore
     #breakpoint()
@@ -63,7 +73,7 @@ def calculate_value_plot(yield_surface: YieldSurfaces, stress_1: float, stress_2
     return yield_surface_value
 
 
-def plot_data_points(axs, yield_points_pandas: DataFrame, unit_conversion: float, symmetry: bool)-> None: # type: ignore
+def plot_data_points(axs, yield_points_pandas: DataFrame, unit_conversion: float, symmetry: bool, style: FigureStyle | None = None)-> None: # type: ignore
     yield_points = get_yield_points_form_data_set(yield_points_pandas, unit_conversion)
 
     number_data_points = np.shape(yield_points)[0]
@@ -94,35 +104,34 @@ def plot_data_points(axs, yield_points_pandas: DataFrame, unit_conversion: float
         xy_yz_plot = (s_xy_active or s_yz_active) and not s_xz_active
         xz_yz_plot = (s_xz_active or s_yz_active) and not s_xy_active
 
-        ms  = 10
-        mew = 2
         if symmetry:
             cl  = 'r' if data_point < number_data_points/2 else 'b'
         else:
             cl  = 'r'
 
         if xx_yy_plot:
-            axs[0][0].plot(s_xx, s_yy, marker='x', markersize=ms, mew=mew, color=cl) # type: ignore
+            axs[0][0].plot(s_xx, s_yy, marker='x', markersize=style.ms, mew=style.mew, color=cl, zorder=3) # type: ignore
         
         if xx_zz_plot:
-            axs[0][1].plot(s_xx, s_zz, marker='x', markersize=ms, mew=mew, color=cl) # type: ignore
+            axs[0][1].plot(s_xx, s_zz, marker='x', markersize=style.ms, mew=style.mew, color=cl, zorder=3) # type: ignore
         
         if yy_zz_plot:
-            axs[0][2].plot(s_yy, s_zz, marker='x', markersize=ms, mew=mew, color=cl) # type: ignore
+            axs[0][2].plot(s_yy, s_zz, marker='x', markersize=style.ms, mew=style.mew, color=cl, zorder=3) # type: ignore
     
         if xy_xz_plot:
-            axs[1][0].plot(s_xy, s_xz, marker='x', markersize=ms, mew=mew, color=cl) # type: ignore
+            axs[1][0].plot(s_xy, s_xz, marker='x', markersize=style.ms, mew=style.mew, color=cl, zorder=3) # type: ignore
         
         if xy_yz_plot:
-            axs[1][1].plot(s_xy, s_yz, marker='x', markersize=ms, mew=mew, color=cl) # type: ignore
+            axs[1][1].plot(s_xy, s_yz, marker='x', markersize=style.ms, mew=style.mew, color=cl, zorder=3) # type: ignore
 
         if xz_yz_plot: 
-            axs[1][2].plot(s_xz, s_yz, marker='x', markersize=ms, mew=mew, color=cl) # type: ignore
+            axs[1][2].plot(s_xz, s_yz, marker='x', markersize=style.ms, mew=style.mew, color=cl, zorder=3) # type: ignore
 
 
 def plot_surface(
         axs, # type: ignore
-        yield_surface: YieldSurfaces):
+        yield_surface: YieldSurfaces,
+        style: FigureStyle | None = None):
     
     plot_contour_resolution = 200
 
@@ -224,7 +233,7 @@ def plot_surface(
                     
                     Z[y_index][x_index] = calculate_value_plot(yield_surface,x[x_index], y[y_index], index_1, index_2)  # type: ignore
             
-            contour = axs[plot_y][plot_x].contour(X, Y, Z, levels=[1], linestyles='dashed', linewidths=2) # type: ignore
+            contour = axs[plot_y][plot_x].contour(X, Y, Z, levels=[1], linestyles='dashed', linewidths=style.lw) # type: ignore
 
             axs[plot_y][plot_x].clabel(contour, fmt={1:""})  # type: ignore
 
