@@ -454,6 +454,7 @@ class       DamaskJob:
         increment_data: IncrementData
         job_number: int
         total_jobs: int
+        angle_in_plane: float
 
         def __init__(self, problem_definition: ProblemDefinition, target_stress_input: list[list[float | str]], field_name: str):
             # From the settings recieved, complete the DamaskJob
@@ -842,6 +843,7 @@ def create_multiaxial_yield_point_for_yield_locus(problem_definition: ProblemDef
 
     job_list: list[DamaskJob.YieldPointMultiaxial] = []
     job = DamaskJob.YieldPointMultiaxial(problem_definition, target_stress, field_name=field_name)
+    job.angle_in_plane = angle_point
     job_list.append(job)
 
     return job_list

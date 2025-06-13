@@ -94,7 +94,9 @@ def summarize_yield_surface_job(job: DamaskJob.YieldPointMultiaxial):
     [[{target_stress_step[0][0]}, {target_stress_step[0][1]}, {target_stress_step[0][2]}],
     [{target_stress_step[1][0]}, {target_stress_step[1][1]}, {target_stress_step[1][2]}],
     [{target_stress_step[2][0]}, {target_stress_step[2][1]}, {target_stress_step[2][2]}]]""")
+    print(f"    Angle in plane: {job.angle_in_plane}°")
     print(textwrap.fill(f"    {job.stop_condition}",width=80))
+
 
 def summarize_load_path_job(job: DamaskJob.LoadPath):
     print("    Job type: load_path")
