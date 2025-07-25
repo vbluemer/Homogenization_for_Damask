@@ -21,15 +21,16 @@ def fit_yield_surface_problem_definition(problem_definition: ProblemDefinition) 
     dataset_path = problem_definition.general.path.yield_points_csv
 
     yield_criterion = problem_definition.yield_surface.yield_criterion
+    yield_stress_ref = problem_definition.yield_surface.yield_stress_ref
     symmetry = problem_definition.yield_surface.assume_tensile_compressive_symmetry
 
     output_path = os.path.join(problem_definition.general.path.results_folder, f"{yield_criterion}.csv")
     plot_path = os.path.join(problem_definition.general.path.results_folder, f"{yield_criterion}.png")
     
     #breakpoint()
-    fit_yield_surface(yield_criterion, dataset_path, output_path, plot_path, symmetry)
+    fit_yield_surface(yield_criterion, yield_stress_ref, dataset_path, output_path, plot_path, symmetry)
 
-def fit_yield_surface(yield_surface_name: str, dataset_path: str, output_path: str, plot_path: str, symmetry: bool) -> YieldSurfaces:
+def fit_yield_surface(yield_surface_name: str, yield_stress_ref: float, dataset_path: str, output_path: str, plot_path: str, symmetry: bool) -> YieldSurfaces:
     # This function takes the name of a yield surface and the yield points it should be fitted to.
     # The coefficients are stored to a file and plots of the fit are shown.
     
@@ -44,11 +45,11 @@ def fit_yield_surface(yield_surface_name: str, dataset_path: str, output_path: s
         case "None":
             return None # type: ignore
         case 'Hill':
-            return fit_hill(dataset_path, output_path, plot_path, symmetry)
+            return fit_hill(yield_stress_ref, dataset_path, output_path, plot_path, symmetry)
         case "Cazacu-Plunkett-Barlat":
-            return fit_cazacu_plunkett_barlat(dataset_path, output_path, plot_path, symmetry, use_extended=False)
+            return fit_cazacu_plunkett_barlat(yield_stress_ref, dataset_path, output_path, plot_path, symmetry, use_extended=False)
         case "Cazacu-Plunkett-Barlat_extended":
-            return fit_cazacu_plunkett_barlat(dataset_path, output_path, plot_path, symmetry, use_extended=n) # type: ignore
+            return fit_cazacu_plunkett_barlat(yield_stress_ref, dataset_path, output_path, plot_path, symmetry, use_extended=n) # type: ignore
         case "example_yield_surface":
             return fit_example_yield_surface(dataset_path, output_path, plot_path, symmetry)
         case _:
@@ -75,11 +76,11 @@ def fit_example_yield_surface(dataset_path: str, output_path: str, plot_path: st
     return example_yield_surface
 
 
-def fit_hill(dataset_path: str, output_path: str, plot_path: str, symmetry: bool) -> Hill:
+def fit_hill(yield_stress_ref: float, dataset_path: str, output_path: str, plot_path: str, symmetry: bool) -> Hill:
 
     data_set = read_yield_points(dataset_path, symmetry)
     
-    hill: Hill = fit_surface(Hill(), data_set) # type: ignore
+    hill: Hill = fit_surface(Hill(), data_set, yield_stress_ref) # type: ignore
 
     Messages.YieldSurface.show_hill_fit(hill) # type: ignore
 
@@ -90,7 +91,7 @@ def fit_hill(dataset_path: str, output_path: str, plot_path: str, symmetry: bool
     return hill
 
 
-def fit_cazacu_plunkett_barlat(dataset_path: str, output_path: str, plot_path: str, symmetry: bool, use_extended: bool | int) -> CazacuPlunkettBarlat:
+def fit_cazacu_plunkett_barlat(yield_stress_ref: float, dataset_path: str, output_path: str, plot_path: str, symmetry: bool, use_extended: bool | int) -> CazacuPlunkettBarlat:
 
     data_set = read_yield_points(dataset_path, symmetry)
 
@@ -108,9 +109,9 @@ def fit_cazacu_plunkett_barlat(dataset_path: str, output_path: str, plot_path: s
     for index in range(len(a_coeff_test_values)):
 
         if use_extended == False:
-            cazacu_plunkett_barlat_fit = fit_surface(CazacuPlunkettBarlat(a = a_coeff_test_values[index]), data_set)
+            cazacu_plunkett_barlat_fit = fit_surface(CazacuPlunkettBarlat(a = a_coeff_test_values[index]), data_set, yield_stress_ref)
         else:
-            cazacu_plunkett_barlat_fit = fit_surface(CazacuPlunkettBarlatExtendedN(a = a_coeff_test_values[index], n=use_extended), data_set)
+            cazacu_plunkett_barlat_fit = fit_surface(CazacuPlunkettBarlatExtendedN(a = a_coeff_test_values[index], n=use_extended), data_set, yield_stress_ref)
 
         fitted_cazacu_plunkett_barlat_list.append(cazacu_plunkett_barlat_fit) # type: ignore
         MSE = cazacu_plunkett_barlat_fit.get_and_set_MSE(data_set)

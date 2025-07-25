@@ -114,7 +114,7 @@ def read_yield_points(yield_points_file: str, symmetry: bool) -> DataFrame:
     df = pd.concat([df, df_sym], ignore_index=True)
     return df
 
-def fit_surface(yield_surface: YieldSurfaces, data_set: DataFrame) -> YieldSurfaces:
+def fit_surface(yield_surface: YieldSurfaces, data_set: DataFrame, yield_stress_ref: float) -> YieldSurfaces:
     # This function takes a generic yield surface and data_set of yield points and fits the coefficients to the data_set.
     # For a yield surface to be fitted by this function it must implement the function defined in YieldSurfaces (yield_surface_template.py)
 
@@ -130,6 +130,7 @@ def fit_surface(yield_surface: YieldSurfaces, data_set: DataFrame) -> YieldSurfa
 
         yield_surface_objective = copy.deepcopy(yield_surface)
 
+        yield_surface_objective.set_yield_stress_ref(yield_stress_ref)
         yield_surface_objective.set_coefficients_from_list(coefficients)
 
         mean_square_error_yield = 0
@@ -153,6 +154,7 @@ def fit_surface(yield_surface: YieldSurfaces, data_set: DataFrame) -> YieldSurfa
     optimized_coefficients: list[float] = optimization_result.x # type: ignore
 
     yield_surface_fitted = copy.deepcopy(yield_surface)
+    yield_surface_fitted.set_yield_stress_ref(yield_stress_ref)
     yield_surface_fitted.set_coefficients_from_list(optimized_coefficients) # type: ignore
 
     mean_square_error_stress = yield_surface_fitted.get_MSE(data_set)

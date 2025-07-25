@@ -20,6 +20,9 @@ class CazacuPlunkettBarlatExtendedN:
         self.n = n
         self.a = a
 
+    def set_yield_stress_ref(self, yield_stress_ref: float):
+        self.yield_stress_ref = yield_stress_ref
+        
     def set_coefficients_from_list(self, coefficients_list: list[float]) -> None:
         c: list[NDArray[np.float64]] = list()
         k: list[float] = list()
@@ -49,7 +52,7 @@ class CazacuPlunkettBarlatExtendedN:
         return
 
     def display_name(self) -> str:
-        display_name= f"Cazacu-Plunkett-Barlat ex. {self.n} (a = {self.a})"
+        display_name= f"CPB ex. {self.n} (a = {self.a})"
         return display_name
     
     def unit_conversion(self) -> float:
@@ -72,8 +75,10 @@ class CazacuPlunkettBarlatExtendedN:
         for i in range(3):
             deviatoric_stress_Voigt[i] = deviatoric_stress_Voigt[i] - hydrostatic_pressure
         
-        unit_conversion = self.unit_conversion()
-        cazacu_plunkett_barlat_value = -1/(unit_conversion)
+        #unit_conversion = self.unit_conversion()
+        #cazacu_plunkett_barlat_value = -1/(unit_conversion)
+        a = self.a
+        cazacu_plunkett_barlat_value = - (self.yield_stress_ref/1e6)**a
 
         for n_i in range(self.n):
             Sigma_Voigt = np.matmul(self.c[n_i], deviatoric_stress_Voigt)
@@ -93,7 +98,6 @@ class CazacuPlunkettBarlatExtendedN:
             p3 = principle_stresses[2]
 
             k = self.k[n_i]
-            a = self.a
 
             cazacu_plunkett_barlat_value +=  (abs(p1) - k*p1)**a + (abs(p2) - k*p2)**a + (abs(p3) - k*p3)**a
 

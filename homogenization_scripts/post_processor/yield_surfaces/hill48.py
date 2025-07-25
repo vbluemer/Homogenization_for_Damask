@@ -22,6 +22,9 @@ class Hill:
     def __init__(self) -> None:
         pass
 
+    def set_yield_stress_ref(self, yield_stress_ref: float):
+        self.yield_stress_ref = yield_stress_ref
+        
     def set_coefficients_from_list(self, coefficients_list: list[float]) -> None:
         self.f = coefficients_list[0]
         self.g = coefficients_list[1]
@@ -63,10 +66,11 @@ class Hill:
         s_xz = stress_Voigt[4]
         s_xy = stress_Voigt[5]
         
-        unit_conversion = self.unit_conversion()
+        #unit_conversion = self.unit_conversion()
 
-        hill_value = -1/(unit_conversion) + f*(s_yy-s_zz)**2 + g*(s_zz-s_xx)**2 + h*(s_xx-s_yy)**2 + 2*l*(s_yz)**2 + 2*m*(s_xz)**2 + 2*n*(s_xy)**2
-
+        #hill_value = -1/(unit_conversion) + f*(s_yy-s_zz)**2 + g*(s_zz-s_xx)**2 + h*(s_xx-s_yy)**2 + 2*l*(s_yz)**2 + 2*m*(s_xz)**2 + 2*n*(s_xy)**2
+        hill_value = f*(s_yy-s_zz)**2 + g*(s_zz-s_xx)**2 + h*(s_xx-s_yy)**2 + 2*l*(s_yz)**2 + 2*m*(s_xz)**2 + 2*n*(s_xy)**2 - (self.yield_stress_ref/1e6) **2
+        
         return hill_value 
 
     def penalty_sum(self) -> float:

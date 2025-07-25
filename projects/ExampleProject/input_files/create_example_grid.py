@@ -6,7 +6,7 @@ import numpy as np
 
 # Dimensions for grid
 size = np.ones(3)*1e-5
-cells = [10, 10, 10]
+cells = [32, 32, 32]
 N_grains = 10
 
 # Material properties to process
@@ -33,3 +33,4 @@ O_A = damask.Rotation.from_random(shape=N_grains)
 # Store the grain properties to the file.
 config_material = config_material.material_add(homogenization='dummy',phase='A',O=O_A)
 config_material.save(processed_material)
+

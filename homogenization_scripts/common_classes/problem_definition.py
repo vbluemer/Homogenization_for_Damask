@@ -103,6 +103,7 @@ class YieldPoint:
 
 class YieldSurface:
     yield_criterion                         : str
+    yield_stress_ref                        : float
     load_points_per_plane                   : int
     assume_tensile_compressive_symmetry      : bool
     stress_state_creation                   : Literal["manual", "automatic"]

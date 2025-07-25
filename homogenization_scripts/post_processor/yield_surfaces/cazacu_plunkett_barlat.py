@@ -17,7 +17,10 @@ class CazacuPlunkettBarlat:
 
     def __init__(self, a: int) -> None:
         self.a = a
-
+    
+    def set_yield_stress_ref(self, yield_stress_ref: float):
+        self.yield_stress_ref = yield_stress_ref
+        
     def set_coefficients_from_list(self, coefficients_list: list[float]) -> None:
         k: float = coefficients_list[0]
         c = np.zeros((6,6))
@@ -40,7 +43,7 @@ class CazacuPlunkettBarlat:
         return
 
     def display_name(self) -> str:
-        display_name= f"Cazacu-Plunkett-Barlat (a = {self.a})"
+        display_name= f"CPB (a = {self.a})"
         return display_name
     
     def unit_conversion(self) -> float:
@@ -81,10 +84,11 @@ class CazacuPlunkettBarlat:
 
         k = self.k
         a = self.a
+        yield_stress_ref = self.yield_stress_ref
+        # = self.unit_conversion()
 
-        unit_conversion = self.unit_conversion()
-
-        cazacu_plunkett_barlat_value: float = -1/(unit_conversion) + (abs(p1) - k*p1)**a + (abs(p2) - k*p2)**a + (abs(p3) - k*p3)**a
+        #cazacu_plunkett_barlat_value: float = -1/(unit_conversion) + (abs(p1) - k*p1)**a + (abs(p2) - k*p2)**a + (abs(p3) - k*p3)**a
+        cazacu_plunkett_barlat_value: float = (abs(p1) - k*p1)**a + (abs(p2) - k*p2)**a + (abs(p3) - k*p3)**a - (yield_stress_ref/1e6)**a
 
         return cazacu_plunkett_barlat_value
     
