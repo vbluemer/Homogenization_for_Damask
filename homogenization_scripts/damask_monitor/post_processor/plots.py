@@ -106,7 +106,6 @@ def plot_stress_strain_curves(
     
     
     fig.savefig(stress_strain_plot_path) # type: ignore
-    #breakpoint()
 
     plt.close(fig)
 

@@ -57,7 +57,7 @@ def make_plot_yield_surface(
     
     fig.tight_layout()
     fig.savefig(path) # type: ignore
-    #breakpoint()
+
     return fig
 
 def calculate_value_plot(yield_surface: YieldSurfaces, stress_1: float, stress_2: float, index_1: list[int], index_2: list[int]) -> float:

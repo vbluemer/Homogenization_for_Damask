@@ -94,17 +94,18 @@ class LoadCaseResults:
         
             increment_counter += 1
 
-        stress = interpolated_yield_value.stress
-        strain = interpolated_yield_value.strain
-        Wp     = interpolated_yield_value.wp 
+        if interpolated_yield_value:
+            stress = interpolated_yield_value.stress
+            strain = interpolated_yield_value.strain
+            Wp     = interpolated_yield_value.wp 
         
-        stress_vector = damask_helper.stress_tensor_to_vector_notation(stress)
-        strain_vector = damask_helper.strain_tensor_to_vector_notation(strain)
-        increment_data["increment".rjust(buffer)] = f"yieldpoint".rjust(buffer)
-        for direction, index in zip(directions, directions_indices):
-            increment_data[f"stress_{direction}[MPa]".rjust(buffer)] = f"{np.squeeze(stress_vector[index]/1e6):{buffer}.2f}"
-            increment_data[f"strain_{direction}".rjust(buffer)] = f"{np.squeeze(strain_vector[index]):{buffer}.6f}"
-        increment_data[f"Wp[J/m3]".rjust(buffer)] = f"{Wp:{buffer}.4f}"
+            stress_vector = damask_helper.stress_tensor_to_vector_notation(stress)
+            strain_vector = damask_helper.strain_tensor_to_vector_notation(strain)
+            increment_data["increment".rjust(buffer)] = f"yieldpoint".rjust(buffer)
+            for direction, index in zip(directions, directions_indices):
+                increment_data[f"stress_{direction}[MPa]".rjust(buffer)] = f"{np.squeeze(stress_vector[index]/1e6):{buffer}.2f}"
+                increment_data[f"strain_{direction}".rjust(buffer)] = f"{np.squeeze(strain_vector[index]):{buffer}.6f}"
+            increment_data[f"Wp[J/m3]".rjust(buffer)] = f"{Wp:{buffer}.4f}"
             
         field_names: list[str] = ["increment".rjust(buffer)]
         for direction in directions:
@@ -117,9 +118,7 @@ class LoadCaseResults:
             writer = csv.DictWriter(csvfile, fieldnames=field_names)
             writer.writeheader()
             writer.writerows(increment_list)
-            
-        #breakpoint()
-        
+                    
         self.stress_per_material_point = stress_per_material_point
         self.strain_per_material_point = strain_per_material_point
 

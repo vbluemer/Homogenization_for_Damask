@@ -1,0 +1,392 @@
+solver: {mechanical: spectral_basic}
+loadstep:
+- boundary_conditions:
+    mechanical:
+      F:
+      - [x, x, x]
+      - [0, x, x]
+      - [0, 0, x]
+      P:
+      - [30000000.0, 0.0, 0.0]
+      - [x, 0.0, 0.0]
+      - [x, x, 0.0]
+  discretization: {t: 1000, N: 1}
+  f_out: 1
+  f_restart: 1
+- boundary_conditions:
+    mechanical:
+      F:
+      - [x, x, x]
+      - [0, x, x]
+      - [0, 0, x]
+      P:
+      - [60000000.0, 0.0, 0.0]
+      - [x, 0.0, 0.0]
+      - [x, x, 0.0]
+  discretization: {t: 1000, N: 1}
+  f_out: 1
+  f_restart: 1
+- boundary_conditions:
+    mechanical:
+      F:
+      - [x, x, x]
+      - [0, x, x]
+      - [0, 0, x]
+      P:
+      - [90000000.0, 0.0, 0.0]
+      - [x, 0.0, 0.0]
+      - [x, x, 0.0]
+  discretization: {t: 1000, N: 1}
+  f_out: 1
+  f_restart: 1
+- boundary_conditions:
+    mechanical:
+      F:
+      - [x, x, x]
+      - [0, x, x]
+      - [0, 0, x]
+      P:
+      - [120000000.0, 0.0, 0.0]
+      - [x, 0.0, 0.0]
+      - [x, x, 0.0]
+  discretization: {t: 1000, N: 1}
+  f_out: 1
+  f_restart: 1
+- boundary_conditions:
+    mechanical:
+      F:
+      - [x, x, x]
+      - [0, x, x]
+      - [0, 0, x]
+      P:
+      - [149999999.99999994, 0.0, 0.0]
+      - [x, 0.0, 0.0]
+      - [x, x, 0.0]
+  discretization: {t: 1000, N: 1}
+  f_out: 1
+  f_restart: 1
+- boundary_conditions:
+    mechanical:
+      F:
+      - [x, x, x]
+      - [0, x, x]
+      - [0, 0, x]
+      P:
+      - [180000000.0, 0.0, 0.0]
+      - [x, 0.0, 0.0]
+      - [x, x, 0.0]
+  discretization: {t: 1000, N: 1}
+  f_out: 1
+  f_restart: 1
+- boundary_conditions:
+    mechanical:
+      F:
+      - [x, x, x]
+      - [0, x, x]
+      - [0, 0, x]
+      P:
+      - [210000000.0, 0.0, 0.0]
+      - [x, 0.0, 0.0]
+      - [x, x, 0.0]
+  discretization: {t: 1000, N: 1}
+  f_out: 1
+  f_restart: 1
+- boundary_conditions:
+    mechanical:
+      F:
+      - [x, x, x]
+      - [0, x, x]
+      - [0, 0, x]
+      P:
+      - [240000000.0, 0.0, 0.0]
+      - [x, 0.0, 0.0]
+      - [x, x, 0.0]
+  discretization: {t: 1000, N: 1}
+  f_out: 1
+  f_restart: 1
+- boundary_conditions:
+    mechanical:
+      F:
+      - [x, x, x]
+      - [0, x, x]
+      - [0, 0, x]
+      P:
+      - [270000000.0, 0.0, 0.0]
+      - [x, 0.0, 0.0]
+      - [x, x, 0.0]
+  discretization: {t: 1000, N: 1}
+  f_out: 1
+  f_restart: 1
+- boundary_conditions:
+    mechanical:
+      F:
+      - [x, x, x]
+      - [0, x, x]
+      - [0, 0, x]
+      P:
+      - [300000000.0, 0.0, 0.0]
+      - [x, 0.0, 0.0]
+      - [x, x, 0.0]
+  discretization: {t: 1000, N: 1}
+  f_out: 1
+  f_restart: 1
+- boundary_conditions:
+    mechanical:
+      F:
+      - [x, x, x]
+      - [0, x, x]
+      - [0, 0, x]
+      P:
+      - [330000000.0, 0.0, 0.0]
+      - [x, 0.0, 0.0]
+      - [x, x, 0.0]
+  discretization: {t: 1000, N: 1}
+  f_out: 1
+  f_restart: 1
+- boundary_conditions:
+    mechanical:
+      F:
+      - [x, x, x]
+      - [0, x, x]
+      - [0, 0, x]
+      P:
+      - [360000000.0, 0.0, 0.0]
+      - [x, 0.0, 0.0]
+      - [x, x, 0.0]
+  discretization: {t: 1000, N: 1}
+  f_out: 1
+  f_restart: 1
+- boundary_conditions:
+    mechanical:
+      F:
+      - [x, x, x]
+      - [0, x, x]
+      - [0, 0, x]
+      P:
+      - [390000000.0, 0.0, 0.0]
+      - [x, 0.0, 0.0]
+      - [x, x, 0.0]
+  discretization: {t: 1000, N: 1}
+  f_out: 1
+  f_restart: 1
+- boundary_conditions:
+    mechanical:
+      F:
+      - [x, x, x]
+      - [0, x, x]
+      - [0, 0, x]
+      P:
+      - [420000000.0, 0.0, 0.0]
+      - [x, 0.0, 0.0]
+      - [x, x, 0.0]
+  discretization: {t: 1000, N: 1}
+  f_out: 1
+  f_restart: 1
+- boundary_conditions:
+    mechanical:
+      F:
+      - [x, x, x]
+      - [0, x, x]
+      - [0, 0, x]
+      P:
+      - [450000000.0, 0.0, 0.0]
+      - [x, 0.0, 0.0]
+      - [x, x, 0.0]
+  discretization: {t: 1000, N: 1}
+  f_out: 1
+  f_restart: 1
+- boundary_conditions:
+    mechanical:
+      F:
+      - [x, x, x]
+      - [0, x, x]
+      - [0, 0, x]
+      P:
+      - [420000000.0, 0.0, 0.0]
+      - [x, 0.0, 0.0]
+      - [x, x, 0.0]
+  discretization: {t: 1000, N: 1}
+  f_out: 1
+  f_restart: 1
+- boundary_conditions:
+    mechanical:
+      F:
+      - [x, x, x]
+      - [0, x, x]
+      - [0, 0, x]
+      P:
+      - [390000000.0, 0.0, 0.0]
+      - [x, 0.0, 0.0]
+      - [x, x, 0.0]
+  discretization: {t: 1000, N: 1}
+  f_out: 1
+  f_restart: 1
+- boundary_conditions:
+    mechanical:
+      F:
+      - [x, x, x]
+      - [0, x, x]
+      - [0, 0, x]
+      P:
+      - [360000000.0, 0.0, 0.0]
+      - [x, 0.0, 0.0]
+      - [x, x, 0.0]
+  discretization: {t: 1000, N: 1}
+  f_out: 1
+  f_restart: 1
+- boundary_conditions:
+    mechanical:
+      F:
+      - [x, x, x]
+      - [0, x, x]
+      - [0, 0, x]
+      P:
+      - [330000000.0, 0.0, 0.0]
+      - [x, 0.0, 0.0]
+      - [x, x, 0.0]
+  discretization: {t: 1000, N: 1}
+  f_out: 1
+  f_restart: 1
+- boundary_conditions:
+    mechanical:
+      F:
+      - [x, x, x]
+      - [0, x, x]
+      - [0, 0, x]
+      P:
+      - [300000000.00000006, 0.0, 0.0]
+      - [x, 0.0, 0.0]
+      - [x, x, 0.0]
+  discretization: {t: 1000, N: 1}
+  f_out: 1
+  f_restart: 1
+- boundary_conditions:
+    mechanical:
+      F:
+      - [x, x, x]
+      - [0, x, x]
+      - [0, 0, x]
+      P:
+      - [270000000.0, 0.0, 0.0]
+      - [x, 0.0, 0.0]
+      - [x, x, 0.0]
+  discretization: {t: 1000, N: 1}
+  f_out: 1
+  f_restart: 1
+- boundary_conditions:
+    mechanical:
+      F:
+      - [x, x, x]
+      - [0, x, x]
+      - [0, 0, x]
+      P:
+      - [240000000.0, 0.0, 0.0]
+      - [x, 0.0, 0.0]
+      - [x, x, 0.0]
+  discretization: {t: 1000, N: 1}
+  f_out: 1
+  f_restart: 1
+- boundary_conditions:
+    mechanical:
+      F:
+      - [x, x, x]
+      - [0, x, x]
+      - [0, 0, x]
+      P:
+      - [210000000.0, 0.0, 0.0]
+      - [x, 0.0, 0.0]
+      - [x, x, 0.0]
+  discretization: {t: 1000, N: 1}
+  f_out: 1
+  f_restart: 1
+- boundary_conditions:
+    mechanical:
+      F:
+      - [x, x, x]
+      - [0, x, x]
+      - [0, 0, x]
+      P:
+      - [180000000.0, 0.0, 0.0]
+      - [x, 0.0, 0.0]
+      - [x, x, 0.0]
+  discretization: {t: 1000, N: 1}
+  f_out: 1
+  f_restart: 1
+- boundary_conditions:
+    mechanical:
+      F:
+      - [x, x, x]
+      - [0, x, x]
+      - [0, 0, x]
+      P:
+      - [150000000.00000003, 0.0, 0.0]
+      - [x, 0.0, 0.0]
+      - [x, x, 0.0]
+  discretization: {t: 1000, N: 1}
+  f_out: 1
+  f_restart: 1
+- boundary_conditions:
+    mechanical:
+      F:
+      - [x, x, x]
+      - [0, x, x]
+      - [0, 0, x]
+      P:
+      - [120000000.00000003, 0.0, 0.0]
+      - [x, 0.0, 0.0]
+      - [x, x, 0.0]
+  discretization: {t: 1000, N: 1}
+  f_out: 1
+  f_restart: 1
+- boundary_conditions:
+    mechanical:
+      F:
+      - [x, x, x]
+      - [0, x, x]
+      - [0, 0, x]
+      P:
+      - [89999999.99999999, 0.0, 0.0]
+      - [x, 0.0, 0.0]
+      - [x, x, 0.0]
+  discretization: {t: 1000, N: 1}
+  f_out: 1
+  f_restart: 1
+- boundary_conditions:
+    mechanical:
+      F:
+      - [x, x, x]
+      - [0, x, x]
+      - [0, 0, x]
+      P:
+      - [59999999.999999985, 0.0, 0.0]
+      - [x, 0.0, 0.0]
+      - [x, x, 0.0]
+  discretization: {t: 1000, N: 1}
+  f_out: 1
+  f_restart: 1
+- boundary_conditions:
+    mechanical:
+      F:
+      - [x, x, x]
+      - [0, x, x]
+      - [0, 0, x]
+      P:
+      - [29999999.999999993, 0.0, 0.0]
+      - [x, 0.0, 0.0]
+      - [x, x, 0.0]
+  discretization: {t: 1000, N: 1}
+  f_out: 1
+  f_restart: 1
+- boundary_conditions:
+    mechanical:
+      F:
+      - [x, x, x]
+      - [0, x, x]
+      - [0, 0, x]
+      P:
+      - [0.0, 0.0, 0.0]
+      - [x, 0.0, 0.0]
+      - [x, x, 0.0]
+  discretization: {t: 1000, N: 1}
+  f_out: 1
+  f_restart: 1

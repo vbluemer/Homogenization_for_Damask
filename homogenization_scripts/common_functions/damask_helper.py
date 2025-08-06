@@ -395,7 +395,6 @@ def get_Wp_per_increment(damask_results: damask.Result, display_prefix:str = "")
             Wp_upto = np.sum(gamma_delta * xi) / N_matpoints
             Wp_per_increment[e] = Wp_upto
     
-    #breakpoint()
     return (damask_results, Wp_per_increment)
 
 def calculate_linear_deformatation_energy(stress_tensor: NDArray[np.float64], strain_tensor: NDArray[np.float64]) -> float:

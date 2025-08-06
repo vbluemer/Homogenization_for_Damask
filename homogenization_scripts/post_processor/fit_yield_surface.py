@@ -27,7 +27,6 @@ def fit_yield_surface_problem_definition(problem_definition: ProblemDefinition) 
     output_path = os.path.join(problem_definition.general.path.results_folder, f"{yield_criterion}.csv")
     plot_path = os.path.join(problem_definition.general.path.results_folder, f"{yield_criterion}.png")
     
-    #breakpoint()
     fit_yield_surface(yield_criterion, yield_stress_ref, dataset_path, output_path, plot_path, symmetry)
 
 def fit_yield_surface(yield_surface_name: str, yield_stress_ref: float, dataset_path: str, output_path: str, plot_path: str, symmetry: bool) -> YieldSurfaces:

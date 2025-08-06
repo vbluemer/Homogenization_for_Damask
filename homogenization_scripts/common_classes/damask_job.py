@@ -33,6 +33,9 @@ class RunTime:
     def set_material_properties_file(self, material_properties_file: str) -> None:
         self.material_properties_file = material_properties_file
     
+    def set_restart_file(self, restart_file: str) -> None:
+        self.restart_file = restart_file
+        
     def set_loadcase_file(self, loadcase_file: str) -> None:
         self.loadcase_file = loadcase_file
 
@@ -816,8 +819,6 @@ def create_multiaxial_yield_point_for_yield_locus(problem_definition: ProblemDef
         raise Exception(f"Could not detect what plane job is in (name = {job_name})")
 
     point_number = int(re.findall(r'\d+', job_name)[0])
-
-    #breakpoint()
 
     # Run get_load_angle_in_plane enough times to get the right angle:
     for point_number_dummy in range(point_number):

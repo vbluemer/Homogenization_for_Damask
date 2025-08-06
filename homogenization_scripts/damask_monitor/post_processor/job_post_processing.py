@@ -60,6 +60,9 @@ def run_post_processing_job(
     # to the results_database for use in the general post post-processing
     messages.Stages.post_processing()
 
+    # if problem_definition.general.path.restart_file_path:
+    #     damask_results       = damask.Result(damask_job.runtime.damask_result_file)
+        
     match damask_job:
         case DamaskJob.LoadPath():
             # load_path post-processing saves the homogenized stresses and strains for each iteration

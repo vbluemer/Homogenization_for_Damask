@@ -4,6 +4,7 @@ import damask # type: ignore
 import numpy as np
 import shutil
 import yaml
+import gc
 
 
 # Local packages
@@ -61,7 +62,35 @@ class PrepareFile:
         damask_job.runtime.set_material_properties_file(material_properties_file)
 
         return (problem_definition, damask_job)
+    
+    def restart_file(problem_definition: ProblemDefinition, damask_job: DamaskJob) -> tuple[ProblemDefinition, DamaskJob]: # type: ignore
+        restart_file_pth            = '/'.join([problem_definition.general.path.project_path, problem_definition.general.path.restart_file_path])
+        
+        existing_results_pth        = restart_file_pth.replace('_restart', '')
+        existing_results            = damask.Result(existing_results_pth)
+        existing_results            = existing_results.view(protected=False)
+        all_existing_result_fields  = existing_results.get()
+        all_keys                    = list(all_existing_result_fields['increment_0']['phase'].keys())
+        standard_output             = ['F', 'P', 'F_e', 'F_p', 'L_p', 'O','xi_sl', 'gamma_sl']
+        keys_to_remove              = [item for item in all_keys if item not in standard_output]
+        damask_job.runtime.restart_file_incs = len(existing_results.increments)
 
+        for key_remove in keys_to_remove:
+            existing_results.remove(key_remove)
+                
+            
+        existing_status_pth = existing_results_pth.replace('.hdf5', '.sta')
+        #source2 = '/'.join([problem_definition.general.path.project_path, existing_results_pth])
+        #source3 = '/'.join([problem_definition.general.path.project_path, existing_status_pth])
+        #dst = problem_definition.general.path.damask_files_folder
+        dst = damask_job.runtime.damask_files
+
+        shutil.copy(restart_file_pth, dst)
+        shutil.copy(existing_results_pth, dst)
+        shutil.copy(existing_status_pth, dst)
+        restart_file_path = problem_definition.general.path.restart_file_path
+        damask_job.runtime.set_restart_file(restart_file_path)
+        return (problem_definition, damask_job)
 
     def grid_and_dimensions_file(
             problem_definition: ProblemDefinition,  # type: ignore
@@ -105,6 +134,12 @@ class PrepareFile:
         solver = {'mechanical':problem_definition.solver.solver_type}
         
         loadsteps = [] # type: ignore
+        if problem_definition.general.path.restart_file_path:
+            lc_hist_path = '/'.join([problem_definition.general.path.project_path,problem_definition.general.path.history_loadcase_path])
+            with open(lc_hist_path, 'r') as file:
+                lc = yaml.safe_load(file)
+                loadsteps = lc['loadstep']
+            
         for load_step_number in range(len(damask_job.stress_tensor)):
             loadstep    = { # type: ignore
                 'boundary_conditions':{

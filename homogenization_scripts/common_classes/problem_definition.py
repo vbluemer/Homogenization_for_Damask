@@ -59,6 +59,8 @@ class Path:
     elastic_tensor_csv                      : str
     yield_points_csv                        : str
     load_path_csv                           : str
+    restart_file_path                       : str
+
 
 
 class General:

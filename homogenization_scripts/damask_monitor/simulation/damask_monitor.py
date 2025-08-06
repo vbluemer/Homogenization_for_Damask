@@ -54,19 +54,23 @@ def create_launch_command(problem_definition: ProblemDefinition, damask_job: Dam
     numerics = [f"--numerics", f"{damask_job.runtime.numerics_file}"]
     jobname = [f"--jobname", f"{problem_definition.general.project_name}"]
     work_directory = [f"--workingdirectory", f"{damask_job.runtime.damask_files}"]
-
+    
     launch_command = executable
-    args = grid + loadcase + material + numerics + jobname + work_directory
+    arguments = grid + loadcase + material + numerics + jobname + work_directory
 
-    if damask_job.use_restart_file:
-        restart = [f"--restart", f"{damask_job.use_restart_number}"]
-        launch_command = launch_command + restart
+    if problem_definition.general.path.restart_file_path:
+        restart = [f"--restart", f"{damask_job.runtime.restart_file_incs-1}"]
+        arguments = grid + loadcase + material + numerics + jobname + work_directory + restart
+
+    # if damask_job.use_restart_file:
+    #     restart = [f"--restart", f"{damask_job.use_restart_number}"]
+    #     launch_command = launch_command + restart
 
     env = os.environ.copy()
     if not problem_definition.solver.cpu_cores == 0:
         env["OMP_NUM_THREADS"] = f"{problem_definition.solver.cpu_cores}"
 
-    return launch_command + args, env
+    return launch_command + arguments, env
 
 def check_if_damask_result_file_exists(damask_job: DamaskJobTypes, sleep_time: float) -> bool:
     file_exists = os.path.isfile(damask_job.runtime.damask_result_file)
@@ -239,9 +243,7 @@ def calculate_slip_system_xi_gamma(
             
     Wp_sum = np.sum(gamma_delta * xi) / N_matpoints
     
-    
     increment_data.add_increment_Wp(Wp_sum)
-    #breakpoint()
     return increment_data
 
 def check_for_stop_conditions(
@@ -301,7 +303,9 @@ def run_and_monitor_damask(
         increment_data = damask_job.increment_data
     else: 
         increment_data = IncrementData(problem_definition)
-
+        #increment_data.increment_last_update = damask_job.runtime.restart_file_incs-1
+    
+    print(launch_command)
     with open(damask_job.runtime.log_file, 'a') as f:
         # Run the command and redirect both stdout and stderr (console messages and errors) to the log file
         damask_grid_process = subprocess.Popen(args=launch_command, env=env, text=True,
@@ -369,7 +373,7 @@ def run_and_monitor_damask(
 
             messages.Status.current_iteration(increment_data.increment_last_update) # type: ignore
             messages.Status.tracking_stress_strain()
-
+            
             # Calcuate the stress and strain values and track it in increment_data
             increment_data = calculate_domain_averaged_stress_and_strain(updated_results, increment_data)
             increment_data = calculate_slip_system_xi_gamma(updated_results, increment_data)

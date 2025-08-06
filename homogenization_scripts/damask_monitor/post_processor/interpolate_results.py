@@ -70,7 +70,6 @@ class InterpolatedResults:
         (damask_results, strain_averaged_per_increment) = damask_helper.get_averaged_strain_per_increment(damask_results,strain_tensor_type)
         (damask_results, plastic_strain_averaged_per_increment) = damask_helper.get_averaged_plastic_strain_per_increment(damask_results,strain_tensor_type)
         
-        #breakpoint()
         damask_results = damask_results.view(increments=[idu for idu in range(iteration_2+1)])
         (damask_results, Wp_per_increment) = damask_helper.get_Wp_per_increment(damask_results)
         Wp_per_increment = Wp_per_increment[-2:]
