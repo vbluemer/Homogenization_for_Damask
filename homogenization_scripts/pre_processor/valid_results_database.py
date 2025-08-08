@@ -117,7 +117,7 @@ valid_results_database_file_scheme = { # type: ignore
                 'required': True,
                 'type': 'number',
             },
-            'points_per_plane': {
+            'points_per_quadrant': {
                 'required': True,
                 'type': 'number',
             },

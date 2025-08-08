@@ -10,6 +10,7 @@ import gc
 # Local packages
 from ...common_classes.damask_job import DamaskJob, DamaskJobTypes
 from ...common_classes.problem_definition import ProblemDefinition
+import homogenization_scripts.common_functions.consolelog as consolelog
 
 class PrepareFile:
 
@@ -64,8 +65,10 @@ class PrepareFile:
         return (problem_definition, damask_job)
     
     def restart_file(problem_definition: ProblemDefinition, damask_job: DamaskJob) -> tuple[ProblemDefinition, DamaskJob]: # type: ignore
-        restart_file_pth            = '/'.join([problem_definition.general.path.project_path, problem_definition.general.path.restart_file_path])
+        print('Copying restart file to target location...')
         
+        consolelog.suppress_console_logging()
+        restart_file_pth            = '/'.join([problem_definition.general.path.project_path, problem_definition.general.path.restart_file_path])
         existing_results_pth        = restart_file_pth.replace('_restart', '')
         existing_results            = damask.Result(existing_results_pth)
         existing_results            = existing_results.view(protected=False)
@@ -90,6 +93,10 @@ class PrepareFile:
         shutil.copy(existing_status_pth, dst)
         restart_file_path = problem_definition.general.path.restart_file_path
         damask_job.runtime.set_restart_file(restart_file_path)
+        consolelog.restore_console_logging()
+        print('Copying completed.')
+
+
         return (problem_definition, damask_job)
 
     def grid_and_dimensions_file(

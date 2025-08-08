@@ -577,26 +577,46 @@ def create_multiaxial_yield_points_set_names(problem_definition: ProblemDefiniti
     # if an automatic stress_state_generation is automatic
     
     field_names: list[str] = []
-    points_per_plane = problem_definition.yield_surface.load_points_per_plane
+    
+    points_per_quadrant  = problem_definition.yield_surface.load_points_per_quadrant
+    compressive_symmetry = problem_definition.yield_surface.assume_tensile_compressive_symmetry
+    
+    if compressive_symmetry:
+        number_of_quadrants = 2
+        # redundant_xz = [0*points_per_quadrant]
+        # redundant_yz = [0*points_per_quadrant,1*points_per_quadrant]
+    else:
+        number_of_quadrants = 4
+        # redundant_xz = [0*points_per_quadrant,2*points_per_quadrant]
+        # redundant_yz = [0*points_per_quadrant,1*points_per_quadrant,2*points_per_quadrant,3*points_per_quadrant]
+    
+    for quadrant_number in range(number_of_quadrants):
+        for point_number in range(points_per_quadrant):
+            if plane == 'x_z' and quadrant_number in [0,2] and point_number==0:
+                continue
+            if plane == 'y_z' and quadrant_number in [0,1,2,3] and point_number==0:
+                continue
+            field_name_tension = f"tensile_{plane}_q{quadrant_number}_{point_number}"
+            field_names.append(field_name_tension)
 
-    for point_number in range(points_per_plane):
-        field_name_tension = f"tensile_{plane}_{point_number}"
-        field_names.append(field_name_tension)
-
-    for point_number in range(points_per_plane):
-        match plane:
-            case 'x_y':
-                shear_name = "xy_xz"
-            case 'x_z':
-                shear_name = "xy_yz"
-            case 'y_z':
-                shear_name = "xz_yz"
-            case _:
-                raise Exception(f"Plane {plane} not yet implemented for multiaxial yield point job creation.")
-            
-        field_name_shear = f"shear_{shear_name}_{point_number}"
-        field_names.append(field_name_shear)
-
+    for quadrant_number in range(number_of_quadrants):
+        for point_number in range(points_per_quadrant):
+            match plane:
+                case 'x_y':
+                    shear_name = "xy_xz"
+                case 'x_z':
+                    if quadrant_number in [0,2] and point_number==0:
+                        continue
+                    shear_name = "xy_yz"
+                case 'y_z':
+                    if quadrant_number in [0,1,2,3] and point_number==0:
+                        continue
+                    shear_name = "xz_yz"
+                case _:
+                    raise Exception(f"Plane {plane} not yet implemented for multiaxial yield point job creation.")
+                
+            field_name_shear = f"shear_{shear_name}_q{quadrant_number}_{point_number}"
+            field_names.append(field_name_shear)
     return field_names
 
 def create_multiaxial_yield_point_manual_values(problem_definition: ProblemDefinition, job_name: str, required_results: list[str]) -> list[DamaskJob.YieldPointMultiaxial]:
@@ -648,7 +668,6 @@ def create_multiaxial_yield_point_for_yield_locus(problem_definition: ProblemDef
     # First, the number of stress states in a plane (i.e. xx-yy) is devided over 
     # the quadrants (i.e.positive xx and yy, positive xx and negative yy, etc). Then, the 
     # job is given a certain position within the quadrant.
-
     job_is_required = job_name in required_results
     if not job_is_required:
         return []
@@ -658,115 +677,115 @@ def create_multiaxial_yield_point_for_yield_locus(problem_definition: ProblemDef
         job_list = create_multiaxial_yield_point_manual_values(problem_definition, job_name, required_results)
         return job_list
 
-    compressive_symmetry = problem_definition.yield_surface.assume_tensile_compressive_symmetry
-    points_per_plane = problem_definition.yield_surface.load_points_per_plane
+    # compressive_symmetry = problem_definition.yield_surface.assume_tensile_compressive_symmetry
+    # points_per_plane = problem_definition.yield_surface.load_points_per_quadrant
 
-    first_points_ordering: list[int]
+    # first_points_ordering: list[int]
 
-    # The ordering of the first few stress states have a defined order to prevent 
-    # redundant stress states.
-    if compressive_symmetry:
-        if problem_definition.general.dimensions == '3D':
-            first_points_ordering = [1,1,2,2]
-        else:
-            first_points_ordering = []
-    else:
-        if problem_definition.general.dimensions == '3D':
-            first_points_ordering = [1, 3, 1, 3, 2, 4, 2, 4]
-        else:
-            first_points_ordering = []
-    first_points_length = len(first_points_ordering)
+    # # The ordering of the first few stress states have a defined order to prevent 
+    # # redundant stress states.
+    # if compressive_symmetry:
+    #     if problem_definition.general.dimensions == '3D':
+    #         first_points_ordering = [1,1,2,2]
+    #     else:
+    #         first_points_ordering = []
+    # else:
+    #     if problem_definition.general.dimensions == '3D':
+    #         first_points_ordering = [1, 3, 1, 3, 2, 4, 2, 4]
+    #     else:
+    #         first_points_ordering = []
+    # first_points_length = len(first_points_ordering)
 
-    # Define if half the plane or the entire plane must be used.
-    if compressive_symmetry:
-        number_of_points_is_even = points_per_plane % 2 == 0
-        number_of_points_is_two = points_per_plane == 2
-        if number_of_points_is_two:
-            points_per_quadrant = [2,0,0,0]
-        elif number_of_points_is_even:
-            points_per_quadrant: list[int] = [int(points_per_plane/2),int(points_per_plane/2),0,0]
-        else:
-            points_per_quadrant: list[int] = [int((points_per_plane-1)/2+1),int((points_per_plane-1)/2),0,0]
-    else:
-        number_of_points_is_even = points_per_plane % 2 == 0
-        points_per_plane = np.max([points_per_plane,4])
-        if number_of_points_is_even:
-            points_per_quadrant: list[int] = [int(points_per_plane/4),int(points_per_plane/4),int(points_per_plane/4),int(points_per_plane/4)]
-        else:
-            points_per_quadrant: list[int] = [int((points_per_plane-1)/4+1),int((points_per_plane-1)/4),int((points_per_plane-1)/4),int((points_per_plane-1)/4)]
-        # if points_per_plane < first_points_length:
-        #     points_per_quadrant = [0, 0, 0, 0]
-        #     for point in range(points_per_plane):
-        #         point_index = first_points_ordering[point]
-        #         points_per_quadrant[point_index] += 1
-        # else:
-        #     points_per_quadrant_first = [0, 0, 0, 0]
-        #     for point in range(first_points_length):
-        #         point_index = first_points_ordering[point]
-        #         points_per_quadrant_first[point_index] += 1
+    # # Define if half the plane or the entire plane must be used.
+    # if compressive_symmetry:
+    #     number_of_points_is_even = points_per_plane % 2 == 0
+    #     number_of_points_is_two = points_per_plane == 2
+    #     if number_of_points_is_two:
+    #         points_per_quadrant = [2,0,0,0]
+    #     elif number_of_points_is_even:
+    #         points_per_quadrant: list[int] = [int(points_per_plane/2),int(points_per_plane/2),0,0]
+    #     else:
+    #         points_per_quadrant: list[int] = [int((points_per_plane-1)/2+1),int((points_per_plane-1)/2),0,0]
+    # else:
+    #     number_of_points_is_even = points_per_plane % 2 == 0
+    #     points_per_plane = np.max([points_per_plane,4])
+    #     if number_of_points_is_even:
+    #         points_per_quadrant: list[int] = [int(points_per_plane/4),int(points_per_plane/4),int(points_per_plane/4),int(points_per_plane/4)]
+    #     else:
+    #         points_per_quadrant: list[int] = [int((points_per_plane-1)/4+1),int((points_per_plane-1)/4),int((points_per_plane-1)/4),int((points_per_plane-1)/4)]
+    #     # if points_per_plane < first_points_length:
+    #     #     points_per_quadrant = [0, 0, 0, 0]
+    #     #     for point in range(points_per_plane):
+    #     #         point_index = first_points_ordering[point]
+    #     #         points_per_quadrant[point_index] += 1
+    #     # else:
+    #     #     points_per_quadrant_first = [0, 0, 0, 0]
+    #     #     for point in range(first_points_length):
+    #     #         point_index = first_points_ordering[point]
+    #     #         points_per_quadrant_first[point_index] += 1
 
-        #     full_sets_of_points = int((points_per_plane-first_points_length - (points_per_plane-first_points_length) % 4)/4)
+    #     #     full_sets_of_points = int((points_per_plane-first_points_length - (points_per_plane-first_points_length) % 4)/4)
 
-        #     points_per_quadrant: list[int] = [
-        #         full_sets_of_points+points_per_quadrant_first[0],
-        #         full_sets_of_points+points_per_quadrant_first[1],
-        #         full_sets_of_points+points_per_quadrant_first[2],
-        #         full_sets_of_points+points_per_quadrant_first[3],
-        #     ]
-        #     for remaining_points in range((points_per_plane-first_points_length) % 4):
-        #         points_per_quadrant[remaining_points] += 1
+    #     #     points_per_quadrant: list[int] = [
+    #     #         full_sets_of_points+points_per_quadrant_first[0],
+    #     #         full_sets_of_points+points_per_quadrant_first[1],
+    #     #         full_sets_of_points+points_per_quadrant_first[2],
+    #     #         full_sets_of_points+points_per_quadrant_first[3],
+    #     #     ]
+    #     #     for remaining_points in range((points_per_plane-first_points_length) % 4):
+    #     #         points_per_quadrant[remaining_points] += 1
 
-    points_already_in_quadrant = [0,0,0,0]
+    # points_already_in_quadrant = [0,0,0,0]
     
-    # Further logic to prevent redundant stress states
-    problem_definition.yield_surface.assume_tensile_compressive_symmetry
-    if problem_definition.general.dimensions == '3D':
-        quadrant_use_0_axis = [True, False, True, False]
-    else:
-        quadrant_use_0_axis = [True, True, True, True]
+    # # Further logic to prevent redundant stress states
+    # problem_definition.yield_surface.assume_tensile_compressive_symmetry
+    # if problem_definition.general.dimensions == '3D':
+    #     quadrant_use_0_axis = [True, False, True, False]
+    # else:
+    #     quadrant_use_0_axis = [True, True, True, True]
 
-    # Function that tracks the already existing stress states and what angle the next
-    # stress state should be placed within the plane.
-    def get_load_angle_in_plane(point_number: int) -> float:
-        if point_number < first_points_length:
-            quadrant = first_points_ordering[point_number]
-        else:
-            if compressive_symmetry:
-                match point_number % 2: # type: ignore
-                    case 0:
-                        quadrant = 1
-                    case 1:
-                        quadrant = 2
-                    case _:
-                        raise Exception("Logical error! Remainder after division by 2 larger then 2!")
-            else:
-                match (point_number-first_points_length) % 4: # type: ignore
-                    case 0:
-                        quadrant = 1
-                    case 1:
-                        quadrant = 2     
-                    case 2:
-                        quadrant = 3
-                    case 3:
-                        quadrant = 4
-                    case _:
-                        raise Exception("Logical error! Remainder after division by 4 larger then 4!")
+    # # Function that tracks the already existing stress states and what angle the next
+    # # stress state should be placed within the plane.
+    # def get_load_angle_in_plane(point_number: int) -> float:
+    #     if point_number < first_points_length:
+    #         quadrant = first_points_ordering[point_number]
+    #     else:
+    #         if compressive_symmetry:
+    #             match point_number % 2: # type: ignore
+    #                 case 0:
+    #                     quadrant = 1
+    #                 case 1:
+    #                     quadrant = 2
+    #                 case _:
+    #                     raise Exception("Logical error! Remainder after division by 2 larger then 2!")
+    #         else:
+    #             match (point_number-first_points_length) % 4: # type: ignore
+    #                 case 0:
+    #                     quadrant = 1
+    #                 case 1:
+    #                     quadrant = 2     
+    #                 case 2:
+    #                     quadrant = 3
+    #                 case 3:
+    #                     quadrant = 4
+    #                 case _:
+    #                     raise Exception("Logical error! Remainder after division by 4 larger then 4!")
         
-        already_in_quadrant = points_already_in_quadrant[quadrant-1]
-        points_this_quadrant = points_per_quadrant[quadrant-1]
-        use_0_axis = quadrant_use_0_axis[quadrant-1]
+    #     already_in_quadrant = points_already_in_quadrant[quadrant-1]
+    #     points_this_quadrant = points_per_quadrant[quadrant-1]
+    #     use_0_axis = quadrant_use_0_axis[quadrant-1]
 
-        if use_0_axis:
-            arc_per_point = 90 / points_this_quadrant
-            angle = arc_per_point * already_in_quadrant
-        else:
-            arc_per_point = 90 / (points_this_quadrant +1)
-            angle = arc_per_point * (already_in_quadrant+1)
+    #     if use_0_axis:
+    #         arc_per_point = 90 / points_this_quadrant
+    #         angle = arc_per_point * already_in_quadrant
+    #     else:
+    #         arc_per_point = 90 / (points_this_quadrant +1)
+    #         angle = arc_per_point * (already_in_quadrant+1)
         
-        angle_in_plane = angle + 90*(quadrant-1)
+    #     angle_in_plane = angle + 90*(quadrant-1)
 
-        points_already_in_quadrant[quadrant-1] += 1
-        return angle_in_plane
+    #     points_already_in_quadrant[quadrant-1] += 1
+    #     return angle_in_plane
 
     job_is_tensile = 'tensile' in job_name
     if job_is_tensile:
@@ -818,21 +837,25 @@ def create_multiaxial_yield_point_for_yield_locus(problem_definition: ProblemDef
     else:
         raise Exception(f"Could not detect what plane job is in (name = {job_name})")
 
-    point_number = int(re.findall(r'\d+', job_name)[0])
+    #point_number = int(re.findall(r'\d+', job_name)[0])
+    quadrant_number = int(re.search(r'q(\d+)', job_name).group(1))
+    point_number = int(re.search(r'_(\d+)', job_name).group(1))
+    
+    points_per_quadrant = problem_definition.yield_surface.load_points_per_quadrant
 
+    angle_point = point_number * 90/points_per_quadrant + 90*quadrant_number
     # Run get_load_angle_in_plane enough times to get the right angle:
-    for point_number_dummy in range(point_number):
-        _ = get_load_angle_in_plane(point_number_dummy)
+    # for point_number_dummy in range(point_number):
+    #     _ = get_load_angle_in_plane(point_number_dummy)
 
     target_stress: list[list[float | str]] = [
         [0, 0, 0],
         ['x', 0, 0],
         ['x', 'x', 0]]
 
-    field_name = f"{type_name}_{load_name}_{point_number}"
-
+    field_name = f"{type_name}_{load_name}_{quadrant_number}_{point_number}"
     # Finally calculate the stresses
-    angle_point = get_load_angle_in_plane(point_number)
+    #angle_point = get_load_angle_in_plane(point_number)
     amplification = amplification_factor(angle_point) if type_name=="tensile" else 1
     stress_1 = cos(radians(angle_point))*esitmated_yield * amplification
     stress_2 = sin(radians(angle_point))*esitmated_yield * amplification
@@ -846,7 +869,6 @@ def create_multiaxial_yield_point_for_yield_locus(problem_definition: ProblemDef
     job = DamaskJob.YieldPointMultiaxial(problem_definition, target_stress, field_name=field_name)
     job.angle_in_plane = angle_point
     job_list.append(job)
-
     return job_list
 
     

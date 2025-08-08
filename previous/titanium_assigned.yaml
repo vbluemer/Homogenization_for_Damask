@@ -1,0 +1,92 @@
+homogenization:
+  dummy:
+    N_constituents: 1
+    mechanical: {type: pass}
+phase:
+  A:
+    references: ['https://www.totalmateria.com/page.aspx?ID=CheckArticle&site=ktn&NM=221', 'https://en.wikipedia.org/wiki/Titanium']
+    lattice: hP
+    c/a: 1.587
+    rho: 4506.0
+    mechanical:
+      output: [F, P, F_e, F_p, L_p, O]
+      elastic:
+        type: Hooke
+        references: ['E.S. Fisher and C.J. Renken, Physical Review 135(2A):A482-A494, 1964, https://doi.org/10.1103/PhysRev.135.A482, fit to Tab. IV (T_min=77K, T_max=923K)']
+        C_11: 162500000000.0
+        C_11,T: -59150000.0
+        C_11,T^2: 11560.0
+        C_12: 91800000000.0
+        C_12,T: 21920000.0
+        C_12,T^2: -16210.0
+        C_44: 46800000000.0
+        C_44,T: -18570000.0
+        C_44,T^2: -3745.0
+        C_33: 180600000000.0
+        C_33,T: -41100000.0
+        C_33,T^2: 7330.0
+        C_13: 68900000000.0
+        T_ref: 293.15
+      plastic:
+        type: phenopowerlaw
+        references: ['C. Zambaldi et al., Journal of Materials Research 27(1):356-367, 2021, https://doi.org/10.1557/jmr.2011.334', 'L. Wang et al., Acta Materialia 132:598-610, 2017, https://doi.org/10.1016/j.actamat.2017.05.015']
+        output: [xi_sl, gamma_sl]
+        N_sl: [3, 3, 0, 12]
+        dot_gamma_0_sl: [0.001, 0.001, 0.0, 0.001]
+        n_sl: [20, 20, 1, 20]
+        a_sl: [2.0, 2.0, 1.0, 2.0]
+        xi_0_sl: [349000000.0, 150000000.0, 0.0, 1107000000.0]
+        xi_inf_sl: [568000000.0, 1500000000.0, 0.0, 3420000000.0]
+        h_0_sl-sl: [200000000.0, 200000000.0, 0.0, 200000000.0]
+        h_sl-sl: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+material:
+- constituents:
+  - phase: A
+    O: [0.2862038097535798, -0.4750421603628661, -0.7207521823862125, -0.41585889042538166]
+    v: 1.0
+  homogenization: dummy
+- constituents:
+  - phase: A
+    O: [0.10212488745113871, -0.05092813279147446, -0.04619603651606058, -0.992392441962187]
+    v: 1.0
+  homogenization: dummy
+- constituents:
+  - phase: A
+    O: [0.08067240851467944, -0.520521837546233, -0.6295508954018668, 0.5711520368874133]
+    v: 1.0
+  homogenization: dummy
+- constituents:
+  - phase: A
+    O: [0.5437380326060915, 0.6354263781426115, -0.17011006592734398, 0.5211955826063902]
+    v: 1.0
+  homogenization: dummy
+- constituents:
+  - phase: A
+    O: [0.09398861173817956, -0.540404631237266, 0.03629177409337324, -0.8353513527456574]
+    v: 1.0
+  homogenization: dummy
+- constituents:
+  - phase: A
+    O: [0.6260310411970446, 0.7193810779524594, 0.04024542562466061, -0.2982554372647576]
+    v: 1.0
+  homogenization: dummy
+- constituents:
+  - phase: A
+    O: [0.31240252407608265, 0.8553353956990951, 0.406810314959155, -0.07287929375342517]
+    v: 1.0
+  homogenization: dummy
+- constituents:
+  - phase: A
+    O: [0.11423753260680591, -0.3990804705752416, 0.7152587274464968, -0.562218389027761]
+    v: 1.0
+  homogenization: dummy
+- constituents:
+  - phase: A
+    O: [0.3369327836102837, 0.6574516785297991, -0.373341457593265, -0.5611147349420721]
+    v: 1.0
+  homogenization: dummy
+- constituents:
+  - phase: A
+    O: [0.13757535069770294, 0.24927876826653084, 0.3395984272166622, -0.8964407547651404]
+    v: 1.0
+  homogenization: dummy

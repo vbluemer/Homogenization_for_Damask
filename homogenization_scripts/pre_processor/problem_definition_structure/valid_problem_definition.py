@@ -176,7 +176,7 @@ valid_problem_definition_file_scheme = {  # type: ignore
                 'required': True,
                 'type': 'string',
             },
-            'load_points_per_plane': {
+            'load_points_per_quadrant': {
                 'required': True,
                 'type': 'integer',
             },

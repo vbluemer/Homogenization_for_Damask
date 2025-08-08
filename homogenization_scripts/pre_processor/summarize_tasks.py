@@ -167,6 +167,13 @@ def summarize_tasks(problem_definition: ProblemDefinition, jobs_list: list[Damas
 
         job_counter+=1
     print("")
+    if problem_definition.general.path.restart_file_path:
+        print("--------------------------------")
+        print("|       Restart files          |")
+        print("--------------------------------")
+        print(f"Restarting simulations from file: {problem_definition.general.path.restart_file_path}")
+        print(f"With history loadcase: {problem_definition.general.path.history_loadcase_path}")
+        print("")
     print("--------------------------------")
     print("|       Reuse of results       |")
     print("--------------------------------")

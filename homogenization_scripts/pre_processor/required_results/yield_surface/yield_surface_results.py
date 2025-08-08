@@ -7,13 +7,13 @@ from .manual_stress_state_creation import read_manual_stress_states
 def required_results_yield_surface(problem_definition: ProblemDefinition) -> dict[str, dict[str, bool]]:
    
     if problem_definition.yield_surface.stress_state_creation == "automatic":
-        required_fields = required_results(problem_definition)
+        required_fields = compile_required_results(problem_definition)
     else:
         required_fields = read_manual_stress_states(problem_definition)
 
     return required_fields
 
-def required_results(problem_definition: ProblemDefinition) -> dict[str, dict[str, bool]]:
+def compile_required_results(problem_definition: ProblemDefinition) -> dict[str, dict[str, bool]]:
 
     required_results: dict[str, dict[str, bool]] = dict()
     required_results['yield_surface'] = dict()
