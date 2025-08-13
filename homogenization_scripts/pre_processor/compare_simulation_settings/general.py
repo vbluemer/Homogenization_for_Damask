@@ -31,5 +31,4 @@ def compare_general_settings(
     if not existing_general_settings['strain_tensor_type'] == problem_definition.general.strain_tensor_type.str():
         differences_detected = True
         reasons.append("strain_tensor_type changed")
-
     return differences_detected, reasons

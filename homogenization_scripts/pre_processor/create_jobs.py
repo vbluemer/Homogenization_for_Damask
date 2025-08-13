@@ -31,7 +31,6 @@ def reduce_required_results_list(
             removed_fields_list.append(result_name)
 
             fields_removed = True
-    
     return required_results_simulation_type, fields_removed, removed_fields_list
 
 def define_required_results(problem_definition: ProblemDefinition):
@@ -117,7 +116,6 @@ def define_required_results(problem_definition: ProblemDefinition):
         # This function compares all the settings in the problem_definition with those in the results_database and flags 
         # wether the results are compatible with the existing results
         (general_settings_match, reasons_general_mismatch, compatible_fields, incompatible_fields, compatible_settings) = compare_simulation_settings(problem_definition, required_results, existing_results)
-
         original_full_results_database = copy.deepcopy(existing_results)
 
         # If the general settings do not match, move results to backup folder.
@@ -221,7 +219,6 @@ def define_required_results(problem_definition: ProblemDefinition):
         reused_results = ReusedResults(False)
 
     problem_definition.add_reused_results_information(reused_results)
-
     return (problem_definition, required_results)
 
 def create_jobs(problem_definition: ProblemDefinition) -> tuple[ProblemDefinition, list[DamaskJobTypes]]:

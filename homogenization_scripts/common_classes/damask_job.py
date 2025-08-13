@@ -592,7 +592,8 @@ def create_multiaxial_yield_points_set_names(problem_definition: ProblemDefiniti
     
     for quadrant_number in range(number_of_quadrants):
         for point_number in range(points_per_quadrant):
-            if plane == 'x_z' and quadrant_number in [0,2] and point_number==0:
+            #if plane == 'x_z' and quadrant_number in [0,2] and point_number==0:
+            if plane == 'x_z' and quadrant_number in [1,3] and point_number==0:
                 continue
             if plane == 'y_z' and quadrant_number in [0,1,2,3] and point_number==0:
                 continue
@@ -605,7 +606,8 @@ def create_multiaxial_yield_points_set_names(problem_definition: ProblemDefiniti
                 case 'x_y':
                     shear_name = "xy_xz"
                 case 'x_z':
-                    if quadrant_number in [0,2] and point_number==0:
+                    #if quadrant_number in [0,2] and point_number==0:
+                    if quadrant_number in [1,3] and point_number==0:
                         continue
                     shear_name = "xy_yz"
                 case 'y_z':
@@ -843,17 +845,24 @@ def create_multiaxial_yield_point_for_yield_locus(problem_definition: ProblemDef
     
     points_per_quadrant = problem_definition.yield_surface.load_points_per_quadrant
 
-    angle_point = point_number * 90/points_per_quadrant + 90*quadrant_number
+    #angle_point = point_number * 90/points_per_quadrant + 90*quadrant_number
     # Run get_load_angle_in_plane enough times to get the right angle:
     # for point_number_dummy in range(point_number):
     #     _ = get_load_angle_in_plane(point_number_dummy)
+    def angle_in_quadrant(P, i):
+        # reverse bits
+        bits = P.bit_length() - 1
+        rev = int(f"{i:0{bits}b}"[::-1], 2)
+        return rev * 90 / P
 
+    angle_point = angle_in_quadrant(points_per_quadrant, point_number) + 90*quadrant_number
+    
     target_stress: list[list[float | str]] = [
         [0, 0, 0],
         ['x', 0, 0],
         ['x', 'x', 0]]
 
-    field_name = f"{type_name}_{load_name}_{quadrant_number}_{point_number}"
+    field_name = f"{type_name}_{load_name}_q{quadrant_number}_{point_number}"
     # Finally calculate the stresses
     #angle_point = get_load_angle_in_plane(point_number)
     amplification = amplification_factor(angle_point) if type_name=="tensile" else 1

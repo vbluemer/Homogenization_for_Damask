@@ -6,6 +6,9 @@ class FigureStyle:
                  markeredgewidth    =2,
                  fontsize           =12,
                  paperformat        = False,
+                 pt_color           = '#0072BD',
+                 sym_pt_color       = 'r',
+                 ln_color           = '#440154',
                  ):
         
         self.lw = linewidth
@@ -13,3 +16,6 @@ class FigureStyle:
         self.mew = markeredgewidth
         self.fs = fontsize
         self.pf = paperformat
+        self.pt_color = pt_color
+        self.sym_pt_color =sym_pt_color
+        self.ln_color = ln_color

@@ -41,9 +41,9 @@ def compare_yield_surface_settings(
         differences_detected = True
         reasons.append("estimated estimated shear yield strength changed")
     
-    if not existing_settings['points_per_quadrant'] == problem_definition.yield_surface.load_points_per_quadrant:
-        differences_detected = True
-        reasons.append("Number of load points per quadrant have changed")
+    # if not existing_settings['points_per_quadrant'] == problem_definition.yield_surface.load_points_per_quadrant:
+    #     differences_detected = True
+    #     reasons.append("Number of load points per quadrant have changed")
 
     if not existing_settings['stress_state_creation'] == problem_definition.yield_surface.stress_state_creation:
         differences_detected = True

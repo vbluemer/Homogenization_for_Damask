@@ -31,7 +31,7 @@ def write_dataset(problem_definition: ProblemDefinition) -> ProblemDefinition:
     data_set_no_yield: list[list[list[str]]] = []
     data_names_no_yield: list[str] = []
 
-    setting_field_names = ["N_increments", "assume_tensile_compressive_symmetry", "estimated_shear_yield", "estimated_tensile_yield", "points_per_plane", "yield_condition", "yield_condition_value", "stress_state_creation"]
+    setting_field_names = ["N_increments", "assume_tensile_compressive_symmetry", "estimated_shear_yield", "estimated_tensile_yield", "points_per_quadrant", "yield_condition", "yield_condition_value", "stress_state_creation"]
     for keyname in results_database[simulation_type]:
         is_setting_field = keyname in setting_field_names
         if is_setting_field:
@@ -106,12 +106,12 @@ def read_yield_points(yield_points_file: str, symmetry: bool) -> DataFrame:
     Messages.YieldSurface.reading_dataset_from(yield_points_file)
     df: DataFrame = pd.read_csv(yield_points_file) # type: ignore
     
-    stress_cols = df.columns.difference(['field_name', 'unit'])
-    df_sym = df.copy()
-    df_sym[stress_cols] = -df_sym[stress_cols]    
-    df_sym['field_name'] = df['field_name'] + '_sym'
-    
-    df = pd.concat([df, df_sym], ignore_index=True)
+    if symmetry:
+        stress_cols = df.columns.difference(['field_name', 'unit'])
+        df_sym = df.copy()
+        df_sym[stress_cols] = -df_sym[stress_cols]    
+        df_sym['field_name'] = df['field_name'] + '_sym'    
+        df = pd.concat([df, df_sym], ignore_index=True)
     return df
 
 def fit_surface(yield_surface: YieldSurfaces, data_set: DataFrame, yield_stress_ref: float) -> YieldSurfaces:

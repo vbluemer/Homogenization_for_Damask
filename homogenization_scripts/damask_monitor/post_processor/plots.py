@@ -3,6 +3,7 @@ import numpy as np
 from numpy.typing import NDArray
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
+from matplotlib.legend import Legend
 
 import os
 import typing
@@ -98,14 +99,15 @@ def plot_stress_strain_curves(
     for i in range(3):
         for j in range(3):
             subplot[i][j].set_title(subplot_titles[i][j])
-    
+            leg = subplot[i][j].legend()
+            leg.set_visible(False)
+            
     fig.suptitle(plot_title, fontsize='xx-large') # type: ignore
     
     for text in fig.findobj(match=plt.Text):
         text.set_fontsize(style.fs)
-    
-    
-    fig.savefig(stress_strain_plot_path) # type: ignore
+
+    fig.savefig(stress_strain_plot_path, dpi=600) # type: ignore
 
     plt.close(fig)
 
@@ -150,7 +152,7 @@ def stress_strain_curves_plastic_yield_lines( # type: ignore
 
     stress_plot = stress_line(strains_plot, slope_stress_strain_1st)
 
-    subplot.plot(strains_plot, stress_plot, 'r--', scalex=False, scaley=False, linewidth = style.lw, label='0.2% offset', zorder=1) # type: ignore
+    subplot.plot(strains_plot, stress_plot, 'r--', scalex=False, scaley=False, linewidth = style.lw, label='offset', zorder=1) # type: ignore
     subplot.legend() # type: ignore
 
     return subplot # type: ignore

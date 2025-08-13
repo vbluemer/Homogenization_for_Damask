@@ -105,9 +105,9 @@ def plot_data_points(axs, yield_points_pandas: DataFrame, unit_conversion: float
         xz_yz_plot = (s_xz_active or s_yz_active) and not s_xy_active
 
         if symmetry:
-            cl  = 'r' if data_point < number_data_points/2 else 'b'
+            cl  = style.pt_color if data_point < number_data_points/2 else style.sym_pt_color
         else:
-            cl  = 'r'
+            cl  = style.pt_color
 
         if xx_yy_plot:
             axs[0][0].plot(s_xx, s_yy, marker='x', markersize=style.ms, mew=style.mew, color=cl, zorder=3) # type: ignore
@@ -233,7 +233,7 @@ def plot_surface(
                     
                     Z[y_index][x_index] = calculate_value_plot(yield_surface,x[x_index], y[y_index], index_1, index_2)  # type: ignore
             
-            contour = axs[plot_y][plot_x].contour(X, Y, Z, levels=[1], linestyles='dashed', linewidths=style.lw) # type: ignore
+            contour = axs[plot_y][plot_x].contour(X, Y, Z, levels=[1], linestyles='dashed', linewidths=style.lw, colors=[style.ln_color]) # type: ignore
 
             axs[plot_y][plot_x].clabel(contour, fmt={1:""})  # type: ignore
 

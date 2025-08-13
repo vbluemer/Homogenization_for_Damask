@@ -17,7 +17,7 @@ def compare_simulation_settings(
 
     # Check the entries in the general section.
     (differences_in_general_settings, reasons_general) = compare_general_settings(problem_definition, existing_results)
-
+    
     if differences_in_general_settings:
         general_settings_match = False
         # No point in continuing if the general settings dont even match.

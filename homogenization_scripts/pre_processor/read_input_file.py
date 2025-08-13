@@ -4,6 +4,7 @@ import yaml
 import re
 import cerberus  # type: ignore
 import warnings
+import math
 from typing import Literal
 class DamaskWarning(UserWarning):
     pass
@@ -188,8 +189,18 @@ def check_yield_surface_settings(problem_definition_dict: dict[str, Any]):
     # This function makes sure that for all stress states all stresses are defined.
     
     yield_surface_settings_correct = True
-
     load_path_settings = problem_definition_dict.get('yield_surface')
+    
+    def is_power_of_two(x):
+        if x <= 0:
+            return False
+        return math.log2(x).is_integer()
+
+    if not is_power_of_two(load_path_settings['load_points_per_quadrant']):
+        yield_surface_settings_correct = False
+        print("Load points per quadrant is not a power of 2!")
+        return problem_definition_dict, yield_surface_settings_correct
+
     if load_path_settings is None:
         yield_surface_settings_correct = False
         print("The yield_surface section is missing from the problem_definition.yaml file!")
