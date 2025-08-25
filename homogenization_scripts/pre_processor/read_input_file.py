@@ -167,22 +167,45 @@ def check_load_path_settings(problem_definition_dict: dict[str, Any]):
         print("The load_path section is missing from the problem_definition.yaml file!")
         return problem_definition_dict, load_path_settings_correct
     
-    if isinstance(load_path_settings['stress_x_x'], (int, float)):
-        problem_definition_dict['load_path']['stress_x_x'] = [problem_definition_dict['load_path']['stress_x_x']]
+    if "stress_x_x" in load_path_settings and "F_x_x" in load_path_settings:
+        load_path_settings_correct = False
+        print("Overlapping definitions for load path through P and F!")
+        return problem_definition_dict, load_path_settings_correct
+
+    if "stress_x_x" in load_path_settings:      
+        if isinstance(load_path_settings['stress_x_x'], (int, float)):
+            problem_definition_dict['load_path']['stress_x_x'] = [problem_definition_dict['load_path']['stress_x_x']]
+        
+        load_steps = len(problem_definition_dict['load_path']['stress_x_x'])
     
-    load_steps = len(problem_definition_dict['load_path']['stress_x_x'])
+        other_directions = ["stress_x_y", "stress_x_z", "stress_y_y", "stress_y_z", "stress_z_z"]
+    
+        for direction in other_directions:
+            if isinstance(load_path_settings[direction], (int, float)):
+                problem_definition_dict['load_path'][direction] = [problem_definition_dict['load_path'][direction]]
+    
+            if not len(problem_definition_dict['load_path'][direction]) == load_steps:
+                load_path_settings_correct = False
+                print("Not all load directions have the same amount of load steps.")
+                return problem_definition_dict, load_path_settings_correct
 
-    other_directions = ["stress_x_y", "stress_x_z", "stress_y_y", "stress_y_z", "stress_z_z"]
-
-    for direction in other_directions:
-        if isinstance(load_path_settings[direction], (int, float)):
-            problem_definition_dict['load_path'][direction] = [problem_definition_dict['load_path'][direction]]
-
-        if not len(problem_definition_dict['load_path'][direction]) == load_steps:
-            load_path_settings_correct = False
-            print("Not all load directions have the same amount of load steps.")
-            return problem_definition_dict, load_path_settings_correct
-
+    if "F_x_x" in load_path_settings:      
+        if isinstance(load_path_settings['F_x_x'], (int, float)):
+            problem_definition_dict['load_path']['F_x_x'] = [problem_definition_dict['load_path']['F_x_x']]
+        
+        load_steps = len(problem_definition_dict['load_path']['F_x_x'])
+    
+        other_directions = ["F_x_y", "F_x_z", "F_y_y", "F_y_z", "F_z_z"]
+    
+        for direction in other_directions:
+            if isinstance(load_path_settings[direction], (int, float)):
+                problem_definition_dict['load_path'][direction] = [problem_definition_dict['load_path'][direction]]
+    
+            if not len(problem_definition_dict['load_path'][direction]) == load_steps:
+                load_path_settings_correct = False
+                print("Not all load directions have the same amount of load steps.")
+                return problem_definition_dict, load_path_settings_correct
+            
     return problem_definition_dict, load_path_settings_correct
 
 def check_yield_surface_settings(problem_definition_dict: dict[str, Any]):

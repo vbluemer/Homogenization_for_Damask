@@ -100,20 +100,35 @@ def summarize_yield_surface_job(job: DamaskJob.YieldPointMultiaxial):
 
 def summarize_load_path_job(job: DamaskJob.LoadPath):
     print("    Job type: load_path")
-    number_of_load_steps = len(job.target_stress)
-    if not job.reduce_parasitic_stresses:
-        message = "1st Piola-Kirchoff stress"
+    breakpoint()
+    if job.prescribed_stress:
+        number_of_load_steps = len(job.target_stress)
+        if not job.reduce_parasitic_stresses:
+            message = "1st Piola-Kirchoff stress"
+        else:
+            message = "Cauchy stress (itterative)"
+    
+        target_stress_step = job.target_stress[-1]
+        print("")
+        print(f"""    Increasing {message} boundary condition with {number_of_load_steps} steps to:
+            [{target_stress_step[0][0]}, {target_stress_step[0][1]}, {target_stress_step[0][2]}],
+            [{target_stress_step[1][0]}, {target_stress_step[1][1]}, {target_stress_step[1][2]}],
+            [{target_stress_step[2][0]}, {target_stress_step[2][1]}, {target_stress_step[2][2]}]""")
+    
+        print(textwrap.fill(f"    {job.stop_condition}",width=80))
     else:
-        message = "Cauchy stress (itterative)"
-
-    target_stress_step = job.target_stress[-1]
-    print("")
-    print(f"""    Increasing {message} boundary condition with {number_of_load_steps} steps to:
-        [{target_stress_step[0][0]}, {target_stress_step[0][1]}, {target_stress_step[0][2]}],
-        [{target_stress_step[1][0]}, {target_stress_step[1][1]}, {target_stress_step[1][2]}],
-        [{target_stress_step[2][0]}, {target_stress_step[2][1]}, {target_stress_step[2][2]}]""")
-
-    print(textwrap.fill(f"    {job.stop_condition}",width=80))
+        number_of_load_steps = len(job.target_F)
+        
+        message = "deformation gradient"
+    
+        target_F_step = job.target_F[-1]
+        print("")
+        print(f"""    Increasing {message} boundary condition with {number_of_load_steps} steps to:
+            [{target_F_step[0][0]}, {target_F_step[0][1]}, {target_F_step[0][2]}],
+            [{target_F_step[1][0]}, {target_F_step[1][1]}, {target_F_step[1][2]}],
+            [{target_F_step[2][0]}, {target_F_step[2][1]}, {target_F_step[2][2]}]""")
+    
+        print(textwrap.fill(f"    {job.stop_condition}",width=80))
 
 def summarize_tasks(problem_definition: ProblemDefinition, jobs_list: list[DamaskJobTypes]):
     print("")

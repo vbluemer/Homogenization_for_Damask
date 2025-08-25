@@ -248,37 +248,67 @@ valid_problem_definition_file_scheme = {  # type: ignore
         'type': 'dict',
         'schema': {
             'stress_x_x': {
-                'required': True,
+                'required': False,
                 'type': ['number', 'list'],
                 'valuesrules': {'type': 'number'},
             },
             'stress_x_y': {
-                'required': True,
+                'required': False,
                 'type': ['number', 'list'],
                 'valuesrules': {'type': 'number'},
             },
             'stress_x_z': {
-                'required': True,
+                'required': False,
                 'type': ['number', 'list'],
                 'valuesrules': {'type': 'number'},
             },
             'stress_y_y': {
-                'required': True,
+                'required': False,
                 'type': ['number', 'list'],
                 'valuesrules': {'type': 'number'},
             },
             'stress_y_z': {
-                'required': True,
+                'required': False,
                 'type': ['number', 'list'],
                 'valuesrules': {'type': 'number'},
             },
             'stress_z_z': {
-                'required': True,
+                'required': False,
+                'type': ['number', 'list'],
+                'valuesrules': {'type': 'number'},
+            },
+            'F_x_x': {
+                'required': False,
+                'type': ['number', 'list'],
+                'valuesrules': {'type': 'number'},
+            },
+            'F_x_y': {
+                'required': False,
+                'type': ['number', 'list'],
+                'valuesrules': {'type': 'number'},
+            },
+            'F_x_z': {
+                'required': False,
+                'type': ['number', 'list'],
+                'valuesrules': {'type': 'number'},
+            },
+            'F_y_y': {
+                'required': False,
+                'type': ['number', 'list'],
+                'valuesrules': {'type': 'number'},
+            },
+            'F_y_z': {
+                'required': False,
+                'type': ['number', 'list'],
+                'valuesrules': {'type': 'number'},
+            },
+            'F_z_z': {
+                'required': False,
                 'type': ['number', 'list'],
                 'valuesrules': {'type': 'number'},
             },
             'enable_yield_detection': {
-                'required': True,
+                'required': False,
                 'type': 'boolean',
             },
         },
