@@ -79,7 +79,7 @@ def main_loop(project_name_input: str, scripts_folder: str, skip_checks: bool = 
         else:
             # Pre-process files needed to run DAMASK_grid per job
             (problem_definition, damask_job) = pre_process_damask_files(problem_definition, damask_job)
-            breakpoint()
+
             # Run the job
             run_ended_succesfully, damask_job = run_and_monitor_damask(problem_definition, damask_job)
         if not run_ended_succesfully:

@@ -100,7 +100,6 @@ def summarize_yield_surface_job(job: DamaskJob.YieldPointMultiaxial):
 
 def summarize_load_path_job(job: DamaskJob.LoadPath):
     print("    Job type: load_path")
-    breakpoint()
     if job.prescribed_stress:
         number_of_load_steps = len(job.target_stress)
         if not job.reduce_parasitic_stresses:

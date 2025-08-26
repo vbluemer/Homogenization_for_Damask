@@ -178,7 +178,6 @@ class PrepareFile:
 
         load_case.save(load_case_path) # type: ignore
         damask_job.runtime.set_loadcase_file(load_case_path)
-        breakpoint()
         # damask_job: DamaskJobTypes = damask_job # type: ignore
 
         return problem_definition, damask_job

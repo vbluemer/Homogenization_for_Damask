@@ -482,7 +482,6 @@ class       DamaskJob:
                 target_stress.append(copy.deepcopy(unloaded_stress_increment))
             self.target_stress = target_stress
             self.target_F      = target_F
-            breakpoint()
 
             self.stress_tensor = copy.deepcopy(self.target_stress)
             #self.deformation_gradient_tensor = create_unconstrained_tensor(number_states*N_increments)
@@ -513,7 +512,6 @@ class       DamaskJob:
             #     self.stress_tensor = []
             #     self.deformation_gradient_tensor = []
             #     self.use_restart_file = True
-            breakpoint()
 
 
     class YieldPointMultiaxial:
