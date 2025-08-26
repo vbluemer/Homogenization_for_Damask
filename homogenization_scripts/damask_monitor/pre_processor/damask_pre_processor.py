@@ -95,7 +95,7 @@ def pre_process_damask_files(
     (problem_definition, damask_job) = PrepareFile.load_case_file(problem_definition, damask_job) # type: ignore
     (problem_definition, damask_job) = PrepareFile.numerics_file(problem_definition, damask_job) # type: ignore
 
-    if problem_definition.general.path.restart_file_path:
+    if getattr(problem_definition.general.path,"restart_file_path",False):
         (problem_definition, damask_job) = PrepareFile.restart_file(problem_definition, damask_job) # type: ignore
 
     return (problem_definition, damask_job) # type: ignore

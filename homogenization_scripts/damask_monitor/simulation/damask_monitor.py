@@ -58,7 +58,7 @@ def create_launch_command(problem_definition: ProblemDefinition, damask_job: Dam
     launch_command = executable
     arguments = grid + loadcase + material + numerics + jobname + work_directory
 
-    if problem_definition.general.path.restart_file_path:
+    if getattr(problem_definition.general.path,"restart_file_path",False):
         restart = [f"--restart", f"{damask_job.runtime.restart_file_incs-1}"]
         arguments = grid + loadcase + material + numerics + jobname + work_directory + restart
 
@@ -318,8 +318,14 @@ def run_and_monitor_damask(
     
     job_number = damask_job.job_number
     total_jobs = damask_job.total_jobs
-
+    
     total_iterations = len(damask_job.target_stress)
+    if getattr(problem_definition.general.path,"history_loadcase_path",False):
+        total_iterations = total_iterations + damask_job.runtime.restart_file_incs
+
+    if getattr(problem_definition.load_path,"unloading",False):
+        total_iterations = total_iterations - 1 + problem_definition.solver.N_increments    
+ 
 
     try:
         sleep_time = increment_data.sleep_time

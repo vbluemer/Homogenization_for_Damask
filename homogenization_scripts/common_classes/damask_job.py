@@ -472,7 +472,7 @@ class       DamaskJob:
                     
                         loaded_directions.append(copy.deepcopy(loaded_directions_step))
                 
-            if problem_definition.load_path.unloading:
+            if getattr(problem_definition.load_path,"unloading",False):
                 unloaded_stress_increment = create_stress_tensor(0, 0, 0,
                                                                     0, 0,
                                                                        0)

@@ -182,7 +182,7 @@ def summarize_tasks(problem_definition: ProblemDefinition, jobs_list: list[Damas
 
         job_counter+=1
     print("")
-    if problem_definition.general.path.restart_file_path:
+    if getattr(problem_definition.general.path,"restart_file_path",False):
         print("--------------------------------")
         print("|       Restart files          |")
         print("--------------------------------")

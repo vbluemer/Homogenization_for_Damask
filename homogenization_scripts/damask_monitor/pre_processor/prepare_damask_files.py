@@ -141,7 +141,7 @@ class PrepareFile:
         solver = {'mechanical':problem_definition.solver.solver_type}
         
         loadsteps = [] # type: ignore
-        if problem_definition.general.path.restart_file_path:
+        if getattr(problem_definition.general.path,"restart_file_path",False):
             lc_hist_path = '/'.join([problem_definition.general.path.project_path,problem_definition.general.path.history_loadcase_path])
             with open(lc_hist_path, 'r') as file:
                 lc = yaml.safe_load(file)
@@ -151,8 +151,8 @@ class PrepareFile:
 
         incs_per_loadstep = np.ones(n_load_steps, dtype=int)
 
-        if getattr(problem_definition, "load_path.unloading", True):
-            incs_per_loadstep[-1] = 15
+        if getattr(problem_definition.load_path, "unloading", False):
+            incs_per_loadstep[-1] = problem_definition.solver.N_increments
             
         for load_step_number in range(n_load_steps):
             loadstep    = { # type: ignore
