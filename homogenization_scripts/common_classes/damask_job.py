@@ -471,11 +471,19 @@ class       DamaskJob:
                                         loaded_directions_step[i][j] = True
                     
                         loaded_directions.append(copy.deepcopy(loaded_directions_step))
-                        
-            breakpoint()
+                
+            if problem_definition.load_path.unloading:
+                unloaded_stress_increment = create_stress_tensor(0, 0, 0,
+                                                                    0, 0,
+                                                                       0)
+                unloaded_F_increment      = create_unconstrained_tensor(1)
+                
+                target_F.append(copy.deepcopy(unloaded_F_increment[0]))
+                target_stress.append(copy.deepcopy(unloaded_stress_increment))
             self.target_stress = target_stress
             self.target_F      = target_F
-            
+            breakpoint()
+
             self.stress_tensor = copy.deepcopy(self.target_stress)
             #self.deformation_gradient_tensor = create_unconstrained_tensor(number_states*N_increments)
             self.deformation_gradient_tensor = copy.deepcopy(self.target_F)

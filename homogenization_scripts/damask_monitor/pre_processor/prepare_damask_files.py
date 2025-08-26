@@ -146,8 +146,15 @@ class PrepareFile:
             with open(lc_hist_path, 'r') as file:
                 lc = yaml.safe_load(file)
                 loadsteps = lc['loadstep']
+        
+        n_load_steps = len(damask_job.stress_tensor)
+
+        incs_per_loadstep = np.ones(n_load_steps, dtype=int)
+
+        if getattr(problem_definition, "load_path.unloading", True):
+            incs_per_loadstep[-1] = 15
             
-        for load_step_number in range(len(damask_job.stress_tensor)):
+        for load_step_number in range(n_load_steps):
             loadstep    = { # type: ignore
                 'boundary_conditions':{
                     'mechanical':{
@@ -157,7 +164,7 @@ class PrepareFile:
                 },
                 'discretization':{
                     't':problem_definition.solver.simulation_time,
-                    'N':1
+                    'N':incs_per_loadstep[load_step_number]
                 },
                 'f_out':1,
                 'f_restart':1

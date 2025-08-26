@@ -307,6 +307,10 @@ valid_problem_definition_file_scheme = {  # type: ignore
                 'type': ['number', 'list'],
                 'valuesrules': {'type': 'number'},
             },
+            'unloading': {
+                'required': True,
+                'type': 'boolean',
+            },
             'enable_yield_detection': {
                 'required': False,
                 'type': 'boolean',
