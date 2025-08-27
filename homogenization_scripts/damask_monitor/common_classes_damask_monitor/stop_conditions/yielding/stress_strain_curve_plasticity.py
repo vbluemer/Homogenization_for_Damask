@@ -28,7 +28,7 @@ def slope_stress_strain_curve_and_value(
 
     # Slope stress/strain curve linear domain
     slope_stress_strain_curve_linear = stress_iteration_1 / strain_iteration_1
-
+    #breakpoint()
     # Deduction of elastic strain from total strain
     plastic_strain = strain - stress / slope_stress_strain_curve_linear
     
@@ -109,14 +109,22 @@ def slope_stress_strain_curve_monitor(damask_job: DamaskJobTypes, increment_data
         yielding_detected = False
         return yielding_detected, 0
 
-    stress_iteration_1 = increment_data.stress_averaged_per_increment[1]
+    if getattr(damask_job,"existing_incs",False):
+        if len(increment_data.stress_averaged_per_increment)<3:
+            yielding_detected = False
+            return yielding_detected, 0
+        else:
+            stress_iteration_1 = increment_data.stress_averaged_per_increment[2] - increment_data.stress_averaged_per_increment[1]
+            strain_iteration_1 = increment_data.strain_averaged_per_increment[2] - increment_data.strain_averaged_per_increment[1]
+    else:
+        stress_iteration_1 = increment_data.stress_averaged_per_increment[1]
+        strain_iteration_1 = increment_data.strain_averaged_per_increment[1]
+        
     stress_current = increment_data.stress_averaged_per_increment[-1]
-
-    strain_iteration_1 = increment_data.strain_averaged_per_increment[1]
     strain_current = increment_data.strain_averaged_per_increment[-1]
 
     loaded_directions = damask_job.loaded_directions[0]
-
+    #breakpoint()
     yielding_detected, yield_value = slope_stress_strain_curve_and_value(
         damask_job.general_yield_value_plastic_strain, loaded_directions,
         stress_iteration_1, strain_iteration_1,
@@ -141,9 +149,13 @@ def slope_stress_strain_curve_post_process(problem_definition: ProblemDefinition
 
     stored_iteration = damask_results.increments_in_range()
 
-    stress_iteration_1 = stress_averaged_per_increment[1]
-    strain_iteration_1 = strain_averaged_per_increment[1]
-
+    if getattr(damask_job,"existing_incs",False):
+        stress_iteration_1 = stress_averaged_per_increment[damask_job.existing_incs + 1] - stress_averaged_per_increment[damask_job.existing_incs]
+        strain_iteration_1 = strain_averaged_per_increment[damask_job.existing_incs + 1] - strain_averaged_per_increment[damask_job.existing_incs]
+    else:
+        stress_iteration_1 = stress_averaged_per_increment[1]
+        strain_iteration_1 = strain_averaged_per_increment[1]
+    #breakpoint()
     # yield_value = damask_job.general_yield_value_plastic_strain
 
     iteration_before_yield = 0
@@ -152,6 +164,9 @@ def slope_stress_strain_curve_post_process(problem_definition: ProblemDefinition
 
 
     # detect iteration numbers with yielding
+    if getattr(damask_job,"existing_incs",False):
+        stored_iteration = [x for x in stored_iteration if x > damask_job.existing_incs]
+        
     for iteration in stored_iteration:
         if iteration == 0:
             continue
@@ -184,19 +199,21 @@ def slope_stress_strain_curve_post_process(problem_definition: ProblemDefinition
     
     stress_before_yield = stress_averaged_per_increment[iteration_before_yield]
     strain_before_yield = strain_averaged_per_increment[iteration_before_yield]
-
+    
     stress_after_yield = stress_averaged_per_increment[iteration_after_yield]
     strain_after_yield = strain_averaged_per_increment[iteration_after_yield]
-
-
+    
+    
     loaded_directions = damask_job.loaded_directions[0]
 
     fraction_for_interpolation = interpolation_fraction(damask_job.general_yield_value_plastic_strain, loaded_directions,
                                                     stress_iteration_1, strain_iteration_1,
                                                     stress_before_yield, strain_before_yield,
                                                     stress_after_yield, strain_after_yield)
+    # probably add existing incs here
     
     interpolated_results = InterpolatedResults(fraction_for_interpolation, damask_results, iteration_before_yield, iteration_after_yield, stress_tensor_type, strain_tensor_type)
+    breakpoint()
 
     plot_stress_strain_curves(problem_definition, damask_job, stress_averaged_per_increment, strain_averaged_per_increment, interpolated_results)
     plot_modulus_degradation(problem_definition, damask_job, stress_averaged_per_increment, strain_averaged_per_increment, interpolated_results)

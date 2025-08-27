@@ -53,7 +53,8 @@ class LoadCaseResults:
         self.interpolated_yield_value = interpolated_yield_value
 
         # plot stress-strain curves and modulus curves
-        plot_stress_strain_curves(problem_definition, damask_job, stress_homogonized, strain_homogonized, interpolated_yield_value, plot_title="Stress strain curves")
+        monitor = False
+        plot_stress_strain_curves(problem_definition, damask_job, stress_homogonized, strain_homogonized, interpolated_yield_value, plot_title="Stress strain curves",monitor=monitor)
         plot_modulus_degradation(problem_definition, damask_job, stress_homogonized, strain_homogonized, interpolated_yield_value, plot_title="Modulus degradation curves")
 
         # create Results structure

@@ -359,7 +359,7 @@ class       DamaskJob:
             self.runtime_main = RunTime()
 
             load_path_settings = problem_definition.load_path
-
+            breakpoint()
             target_stress: list[list[list[float | str]]] = list()
             target_F:      list[list[list[float | str]]] = list()
             loaded_directions: list[list[list[bool]]] = list()

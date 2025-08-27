@@ -24,7 +24,8 @@ def plot_stress_strain_curves(
         strain_per_increment: NDArray[np.float64], 
         interpolated_yield: InterpolatedResults | None = None,
         file_name: str | None = None,
-        plot_title: str | None = None):
+        plot_title: str | None = None,
+        monitor: bool = False):
     
     style = FigureStyle(linewidth=3, 
                         markersize=12,
@@ -85,7 +86,7 @@ def plot_stress_strain_curves(
                 subplot[i][j].legend()
     
             if True:
-                subplot[i][j] = stress_strain_curves_plastic_yield_lines(subplot[i][j], i, j, stress_per_increment/Pa_unit, strain_per_increment, problem_definition, damask_job, style)
+                subplot[i][j] = stress_strain_curves_plastic_yield_lines(subplot[i][j], i, j, stress_per_increment/Pa_unit, strain_per_increment, problem_definition, damask_job, style,monitor)
                 
             if not damask_job.loaded_directions[0][i][j]:
                 subplot[i][j].ticklabel_format(axis='x', style='sci', scilimits=(-2, 2)) 
@@ -118,7 +119,8 @@ def stress_strain_curves_plastic_yield_lines( # type: ignore
         strain_green_lagrange_per_increment: NDArray[np.float64], 
         problem_definition: ProblemDefinition, 
         damask_job: DamaskJobTypes,
-        style: FigureStyle | None = None): 
+        style: FigureStyle | None = None,
+        monitor: bool = False): 
     
     if not style:
         style = FigureStyle()
@@ -128,10 +130,18 @@ def stress_strain_curves_plastic_yield_lines( # type: ignore
 
     if not(direction_is_loaded):
         return subplot  # type: ignore
+    
 
-    stress_difference_1st: np.float64 = stress_piola_kirchoff_per_increment[1][i][j] - stress_piola_kirchoff_per_increment[0][i][j]
-    strain_difference_1st: np.float64 = strain_green_lagrange_per_increment[1][i][j] - strain_green_lagrange_per_increment[0][i][j]
-
+    if getattr(damask_job,"existing_incs",False) and monitor and len(stress_piola_kirchoff_per_increment)>2:
+        stress_difference_1st: np.float64 = stress_piola_kirchoff_per_increment[2][i][j] - stress_piola_kirchoff_per_increment[1][i][j]
+        strain_difference_1st: np.float64 = strain_green_lagrange_per_increment[2][i][j] - strain_green_lagrange_per_increment[1][i][j]
+    elif getattr(damask_job,"existing_incs",False) and not monitor:
+        stress_difference_1st: np.float64 = stress_piola_kirchoff_per_increment[damask_job.existing_incs + 1][i][j] - stress_piola_kirchoff_per_increment[damask_job.existing_incs][i][j]
+        strain_difference_1st: np.float64 = strain_green_lagrange_per_increment[damask_job.existing_incs + 1][i][j] - strain_green_lagrange_per_increment[damask_job.existing_incs][i][j]
+    else:
+        stress_difference_1st: np.float64 = stress_piola_kirchoff_per_increment[1][i][j] - stress_piola_kirchoff_per_increment[0][i][j]
+        strain_difference_1st: np.float64 = strain_green_lagrange_per_increment[1][i][j] - strain_green_lagrange_per_increment[0][i][j]
+    
     slope_stress_strain_1st: np.float64 = stress_difference_1st / strain_difference_1st
 
     strain_lim_plot: NDArray[np.float64] = subplot.get_xlim() # type: ignore
@@ -155,6 +165,9 @@ def stress_strain_curves_plastic_yield_lines( # type: ignore
     subplot.plot(strains_plot, stress_plot, 'r--', scalex=False, scaley=False, linewidth = style.lw, label='offset', zorder=1) # type: ignore
     subplot.legend() # type: ignore
 
+    print(monitor)
+    breakpoint()
+
     return subplot # type: ignore
 
 
@@ -167,8 +180,9 @@ def plot_stress_strain_curves_monitor(problem_definition: ProblemDefinition,
     
     stress_per_increment = increment_data.stress_averaged_per_increment
     strain_per_increment = increment_data.strain_averaged_per_increment
-
-    plot_stress_strain_curves(problem_definition, damask_job, stress_per_increment, strain_per_increment, interpolated_yield, file_name=file_name, plot_title=plot_title)
+    breakpoint()
+    monitor = True
+    plot_stress_strain_curves(problem_definition, damask_job, stress_per_increment, strain_per_increment, interpolated_yield, file_name=file_name, plot_title=plot_title,monitor=monitor)
 
 
 def plot_modulus_degradation(

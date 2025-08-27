@@ -145,7 +145,12 @@ class PrepareFile:
             lc_hist_path = '/'.join([problem_definition.general.path.project_path,problem_definition.general.path.history_loadcase_path])
             with open(lc_hist_path, 'r') as file:
                 lc = yaml.safe_load(file)
-                loadsteps = lc['loadstep']
+            loadsteps = lc['loadstep']
+            existing_incs = 0
+            for i_inc in range(len(loadsteps)):
+                existing_incs = existing_incs + loadsteps[i_inc]['discretization']['N']
+            damask_job.existing_incs = existing_incs
+            breakpoint()
         
         n_load_steps = len(damask_job.stress_tensor)
 
