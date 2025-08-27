@@ -100,34 +100,46 @@ def summarize_yield_surface_job(job: DamaskJob.YieldPointMultiaxial):
 
 def summarize_load_path_job(job: DamaskJob.LoadPath):
     print("    Job type: load_path")
-    if job.prescribed_stress:
-        number_of_load_steps = len(job.target_stress)
-        if not job.reduce_parasitic_stresses:
-            message = "1st Piola-Kirchoff stress"
-        else:
-            message = "Cauchy stress (itterative)"
-    
-        target_stress_step = job.target_stress[-1]
-        print("")
-        print(f"""    Increasing {message} boundary condition with {number_of_load_steps} steps to:
-            [{target_stress_step[0][0]}, {target_stress_step[0][1]}, {target_stress_step[0][2]}],
-            [{target_stress_step[1][0]}, {target_stress_step[1][1]}, {target_stress_step[1][2]}],
-            [{target_stress_step[2][0]}, {target_stress_step[2][1]}, {target_stress_step[2][2]}]""")
-    
-        print(textwrap.fill(f"    {job.stop_condition}",width=80))
+    #if job.prescribed_stress:
+    number_of_load_steps = len(job.target_stress) * job.N_increments
+    if not job.reduce_parasitic_stresses:
+        message = "1st Piola-Kirchoff stress"
     else:
-        number_of_load_steps = len(job.target_F)
-        
-        message = "deformation gradient"
+        message = "Cauchy stress (itterative)"
     
+    if job.unloading_requested:
+        target_stress_step = job.target_stress[-2]
+        target_F_step = job.target_F[-2]
+    else:                    
+        target_stress_step = job.target_stress[-1]
         target_F_step = job.target_F[-1]
+    print("")
+    print(f"""    Increasing {message} boundary condition with {number_of_load_steps} steps to:
+        [{target_stress_step[0][0]}, {target_stress_step[0][1]}, {target_stress_step[0][2]}],
+        [{target_stress_step[1][0]}, {target_stress_step[1][1]}, {target_stress_step[1][2]}],
+        [{target_stress_step[2][0]}, {target_stress_step[2][1]}, {target_stress_step[2][2]}]""")
+    print(f"""    and deformation gradient F boundary condition with {number_of_load_steps} steps to:
+        [{target_F_step[0][0]}, {target_F_step[0][1]}, {target_F_step[0][2]}],
+        [{target_F_step[1][0]}, {target_F_step[1][1]}, {target_F_step[1][2]}],
+        [{target_F_step[2][0]}, {target_F_step[2][1]}, {target_F_step[2][2]}]""")    
+    if job.unloading_requested:
+        print("    followed by unloading.")
         print("")
-        print(f"""    Increasing {message} boundary condition with {number_of_load_steps} steps to:
-            [{target_F_step[0][0]}, {target_F_step[0][1]}, {target_F_step[0][2]}],
-            [{target_F_step[1][0]}, {target_F_step[1][1]}, {target_F_step[1][2]}],
-            [{target_F_step[2][0]}, {target_F_step[2][1]}, {target_F_step[2][2]}]""")
+    print(textwrap.fill(f"    {job.stop_condition}",width=80))
+
+    # else:
+    #     number_of_load_steps = len(job.target_F)
+        
+    #     message = "deformation gradient"
     
-        print(textwrap.fill(f"    {job.stop_condition}",width=80))
+    #     target_F_step = job.target_F[-1]
+    #     print("")
+    #     print(f"""    Increasing {message} boundary condition with {number_of_load_steps} steps to:
+    #         [{target_F_step[0][0]}, {target_F_step[0][1]}, {target_F_step[0][2]}],
+    #         [{target_F_step[1][0]}, {target_F_step[1][1]}, {target_F_step[1][2]}],
+    #         [{target_F_step[2][0]}, {target_F_step[2][1]}, {target_F_step[2][2]}]""")
+    
+    #     print(textwrap.fill(f"    {job.stop_condition}",width=80))
 
 def summarize_tasks(problem_definition: ProblemDefinition, jobs_list: list[DamaskJobTypes]):
     print("")
@@ -149,7 +161,7 @@ def summarize_tasks(problem_definition: ProblemDefinition, jobs_list: list[Damas
     print(f"Selected type to run: {problem_definition.general.simulation_type}")
     print(f"Definition of stress tensor: {problem_definition.general.stress_tensor_type}")
     print(f"Definition of strain tensor: {problem_definition.general.strain_tensor_type}")
-    print(f"For post processing purposes, the number of dimensions is assumed to be: {problem_definition.general.dimensions}")
+    #print(f"For post processing purposes, the number of dimensions is assumed to be: {problem_definition.general.dimensions}")
     print(f"The following files will be passed to Damask:")
     print(f"- Material properties: {problem_definition.general.path.material_properties} (Found)")
     # print(f"- Grain orientation: {problem_definition.general.path.grain_orientation} (Found)")

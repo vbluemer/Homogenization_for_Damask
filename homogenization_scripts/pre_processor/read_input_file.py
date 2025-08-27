@@ -166,11 +166,6 @@ def check_load_path_settings(problem_definition_dict: dict[str, Any]):
         load_path_settings_correct = False
         print("The load_path section is missing from the problem_definition.yaml file!")
         return problem_definition_dict, load_path_settings_correct
-    
-    if "stress_x_x" in load_path_settings and "F_x_x" in load_path_settings:
-        load_path_settings_correct = False
-        print("Overlapping definitions for load path through P and F!")
-        return problem_definition_dict, load_path_settings_correct
 
     if "stress_x_x" in load_path_settings:      
         if isinstance(load_path_settings['stress_x_x'], (int, float)):
@@ -349,6 +344,9 @@ def read_problem_definition(project_name: str, project_path: str) -> None | Prob
         problem_definition_dict, yield_surface_set_correctly = check_yield_surface_settings(problem_definition_dict)
         if not yield_surface_set_correctly:
             return False
+
+    problem_definition_dict['general']['dimensions'] = '3D'
+    problem_definition_dict['general']['reduce_parasitic_stresses'] = False
 
     # Transform the dict to a class object.
     problem_definition = ProblemDefinition(problem_definition_dict)

@@ -57,17 +57,27 @@ class RunTime:
     def set_backup_folder(self, backup_folder: str) -> None:
         self.backup_folder = backup_folder
 
-def create_stress_tensor(s_xx: float, s_xy: float, s_xz: float,
-                                      s_yy: float, s_yz: float,
-                                                   s_zz: float) -> list[list[float | str]]:
+def create_stress_tensor(s_xx: float|str, s_xy: float|str, s_xz: float|str,
+                                          s_yy: float|str, s_yz: float|str,
+                                                           s_zz: float|str) -> list[list[float | str]]:
     
     stress_tensor: list[list[float | str]] = [
         [s_xx, s_xy, s_xz],
         ['x',  s_yy, s_yz],
         ['x', 'x',   s_zz]
         ]
-    
     return stress_tensor
+
+def create_F_tensor(F_xx: float|str, F_xy: float|str, F_xz: float|str,
+                                     F_yy: float|str, F_yz: float|str,
+                                                      F_zz: float|str) -> list[list[float | str]]:
+    
+    F_tensor: list[list[float | str]] = [
+        [F_xx, F_xy, F_xz],
+        [   0, F_yy, F_yz],
+        [   0,    0, F_zz]
+        ]
+    return F_tensor
 
 def create_unconstrained_tensor(number_of_tensors: int) -> list[list[list[float | str]]]:
     tensor_set:  list[list[list[float | str]]] = []
@@ -354,124 +364,176 @@ class       DamaskJob:
             target_F:      list[list[list[float | str]]] = list()
             loaded_directions: list[list[list[bool]]] = list()
             
-            if hasattr(load_path_settings,'stress_x_x'):   
-                number_states: int = len(load_path_settings.stress_x_x)
-                N_increments = problem_definition.solver.N_increments
-    
-                self.load_steps = number_states * N_increments
-                self.prescribed_stress = True
-                target_F = create_unconstrained_tensor(number_states*N_increments)
-    
-                # Instead of letting Damask create in the in-between stress states, create the
-                # stress states in advance. (used for iterative mode)
-                for stress_state_number in range(number_states):
-    
-                    if stress_state_number == 0:
-                        d_s_xx = load_path_settings.stress_x_x[stress_state_number]
-                        d_s_xy = load_path_settings.stress_x_y[stress_state_number]
-                        d_s_xz = load_path_settings.stress_x_z[stress_state_number]
-                        d_s_yy = load_path_settings.stress_y_y[stress_state_number]
-                        d_s_yz = load_path_settings.stress_y_z[stress_state_number]
-                        d_s_zz = load_path_settings.stress_z_z[stress_state_number]
-                    else:
-                        d_s_xx = load_path_settings.stress_x_x[stress_state_number] - load_path_settings.stress_x_x[stress_state_number-1]
-                        d_s_xy = load_path_settings.stress_x_y[stress_state_number] - load_path_settings.stress_x_y[stress_state_number-1]
-                        d_s_xz = load_path_settings.stress_x_z[stress_state_number] - load_path_settings.stress_x_z[stress_state_number-1] 
-                        d_s_yy = load_path_settings.stress_y_y[stress_state_number] - load_path_settings.stress_y_y[stress_state_number-1]
-                        d_s_yz = load_path_settings.stress_y_z[stress_state_number] - load_path_settings.stress_y_z[stress_state_number-1]
-                        d_s_zz = load_path_settings.stress_z_z[stress_state_number] - load_path_settings.stress_z_z[stress_state_number-1]
+            #if hasattr(load_path_settings,'stress_x_x') and hasattr(load_path_settings,'F_x_x'):
+            number_states: int = len(load_path_settings.stress_x_x)
+            N_increments = problem_definition.solver.N_increments
+
+            self.load_steps = number_states * N_increments
+            #self.prescribed_stress = True
+
+            
+            for state_number in range(number_states):
+                s_xx = load_path_settings.stress_x_x[state_number]
+                s_xy = load_path_settings.stress_x_y[state_number]
+                s_xz = load_path_settings.stress_x_z[state_number]
+                s_yy = load_path_settings.stress_y_y[state_number]
+                s_yz = load_path_settings.stress_y_z[state_number]
+                s_zz = load_path_settings.stress_z_z[state_number]
+                
+                F_xx = load_path_settings.F_x_x[state_number]
+                F_xy = load_path_settings.F_x_y[state_number]
+                F_xz = load_path_settings.F_x_z[state_number]
+                F_yy = load_path_settings.F_y_y[state_number]
+                F_yz = load_path_settings.F_y_z[state_number]
+                F_zz = load_path_settings.F_z_z[state_number]
+                
+                target_stress_increment: list[list[float | str]] = create_stress_tensor(s_xx, s_xy, s_xz,
+                                                                                              s_yy, s_yz,
+                                                                                                    s_zz)
+                
+                target_F_increment: list[list[float | str]] = create_F_tensor(F_xx, F_xy, F_xz,
+                                                                                    F_yy, F_yz,
+                                                                                          F_zz)
+                target_stress.append(copy.deepcopy(target_stress_increment))
+                target_F.append(copy.deepcopy(target_F_increment))
+
+                
+                loaded_directions_step: list[list[bool]] = [
+                    [False, False, False],
+                    [False, False, False],
+                    [False, False, False]
+                ]
+
+                for i in range(3):
+                    for j in range(3):
+                        if isinstance(target_F_increment[i][j], (int, float)):
+                            numerical_value: float = float(target_F_increment[i][j])
+                            compare_val = 1 if i==j else 0
+                            if not np.isclose(numerical_value,compare_val):
+                                loaded_directions_step[i][j] = True
+                        if isinstance(target_stress_increment[i][j], (int, float)):
+                            numerical_value: float = float(target_stress_increment[i][j])
+                            compare_val = 0
+                            if not np.isclose(numerical_value,compare_val):
+                                loaded_directions_step[i][j] = True
+            
+                loaded_directions.append(copy.deepcopy(loaded_directions_step))
+
                     
+            # elif hasattr(load_path_settings,'stress_x_x'):   
+            #     number_states: int = len(load_path_settings.stress_x_x)
+            #     N_increments = problem_definition.solver.N_increments
     
-                    load_step_fractions = np.linspace(0, 1, N_increments+1)[1:]
+            #     self.load_steps = number_states * N_increments
+            #     self.prescribed_stress = True
+            #     target_F = create_unconstrained_tensor(number_states*N_increments)
     
-                    for fraction in load_step_fractions:
-                        s_xx = load_path_settings.stress_x_x[stress_state_number] - d_s_xx *(1-fraction)
-                        s_xy = load_path_settings.stress_x_y[stress_state_number] - d_s_xy *(1-fraction)
-                        s_xz = load_path_settings.stress_x_z[stress_state_number] - d_s_xz *(1-fraction)
-                        s_yy = load_path_settings.stress_y_y[stress_state_number] - d_s_yy *(1-fraction)
-                        s_yz = load_path_settings.stress_y_z[stress_state_number] - d_s_yz *(1-fraction)
-                        s_zz = load_path_settings.stress_z_z[stress_state_number] - d_s_zz *(1-fraction)
+            #     # Instead of letting Damask create in the in-between stress states, create the
+            #     # stress states in advance. (used for iterative mode)
+            #     for stress_state_number in range(number_states):
     
-                        target_stress_increment: list[list[float | str]] = create_stress_tensor(s_xx, s_xy, s_xz,
-                                                                                                        s_yy, s_yz,
-                                                                                                            s_zz)
-                        target_stress.append(copy.deepcopy(target_stress_increment))
-                        loaded_directions_step: list[list[bool]] = [
-                            [False, False, False],
-                            [False, False, False],
-                            [False, False, False]
-                        ]
-    
-                        for i in range(3):
-                            for j in range(3):
-                                if isinstance(target_stress_increment[i][j], (int, float)):
-                                    numerical_value: float = float(target_stress_increment[i][j])
-                                    if abs(numerical_value) > 0:
-                                        loaded_directions_step[i][j] = True
+            #         # if stress_state_number == 0:
+            #         #     d_s_xx = load_path_settings.stress_x_x[stress_state_number]
+            #         #     d_s_xy = load_path_settings.stress_x_y[stress_state_number]
+            #         #     d_s_xz = load_path_settings.stress_x_z[stress_state_number]
+            #         #     d_s_yy = load_path_settings.stress_y_y[stress_state_number]
+            #         #     d_s_yz = load_path_settings.stress_y_z[stress_state_number]
+            #         #     d_s_zz = load_path_settings.stress_z_z[stress_state_number]
+            #         # else:
+            #         #     d_s_xx = load_path_settings.stress_x_x[stress_state_number] - load_path_settings.stress_x_x[stress_state_number-1]
+            #         #     d_s_xy = load_path_settings.stress_x_y[stress_state_number] - load_path_settings.stress_x_y[stress_state_number-1]
+            #         #     d_s_xz = load_path_settings.stress_x_z[stress_state_number] - load_path_settings.stress_x_z[stress_state_number-1] 
+            #         #     d_s_yy = load_path_settings.stress_y_y[stress_state_number] - load_path_settings.stress_y_y[stress_state_number-1]
+            #         #     d_s_yz = load_path_settings.stress_y_z[stress_state_number] - load_path_settings.stress_y_z[stress_state_number-1]
+            #         #     d_s_zz = load_path_settings.stress_z_z[stress_state_number] - load_path_settings.stress_z_z[stress_state_number-1]
                     
-                        loaded_directions.append(copy.deepcopy(loaded_directions_step))
+            #         # load_step_fractions = np.linspace(0, 1, N_increments+1)[1:]
+    
+            #         #for fraction in load_step_fractions:
+            #         s_xx = load_path_settings.stress_x_x[stress_state_number]# - d_s_xx *(1-fraction)
+            #         s_xy = load_path_settings.stress_x_y[stress_state_number]# - d_s_xy *(1-fraction)
+            #         s_xz = load_path_settings.stress_x_z[stress_state_number]# - d_s_xz *(1-fraction)
+            #         s_yy = load_path_settings.stress_y_y[stress_state_number]# - d_s_yy *(1-fraction)
+            #         s_yz = load_path_settings.stress_y_z[stress_state_number]# - d_s_yz *(1-fraction)
+            #         s_zz = load_path_settings.stress_z_z[stress_state_number]# - d_s_zz *(1-fraction)
+    
+            #         target_stress_increment: list[list[float | str]] = create_stress_tensor(s_xx, s_xy, s_xz,
+            #                                                                                       s_yy, s_yz,
+            #                                                                                             s_zz)
+            #         target_stress.append(copy.deepcopy(target_stress_increment))
+            #         loaded_directions_step: list[list[bool]] = [
+            #             [False, False, False],
+            #             [False, False, False],
+            #             [False, False, False]
+            #         ]
+
+            #         for i in range(3):
+            #             for j in range(3):
+            #                 if isinstance(target_stress_increment[i][j], (int, float)):
+            #                     numerical_value: float = float(target_stress_increment[i][j])
+            #                     if abs(numerical_value) > 0:
+            #                         loaded_directions_step[i][j] = True
+                
+            #         loaded_directions.append(copy.deepcopy(loaded_directions_step))
 
                         
-            elif(hasattr(load_path_settings,'F_x_x')):
-
+            # elif hasattr(load_path_settings,'F_x_x'):
+            #     number_states: int = len(load_path_settings.F_x_x)
+            #     N_increments = problem_definition.solver.N_increments
     
-                number_states: int = len(load_path_settings.F_x_x)
-                N_increments = problem_definition.solver.N_increments
-    
-                self.load_steps = number_states * N_increments
-                self.prescribed_stress = False
+            #     self.load_steps = number_states * N_increments
+            #     self.prescribed_stress = False
 
-                target_stress = create_unconstrained_tensor(number_states*N_increments)
+            #     target_stress = create_unconstrained_tensor(number_states*N_increments)
 
-                # Instead of letting Damask create in the in-between F states, create the
-                # F states in advance. (used for iterative mode)
-                for F_state_number in range(number_states):
+            #     # Instead of letting Damask create in the in-between F states, create the
+            #     # F states in advance. (used for iterative mode)
+            #     for F_state_number in range(number_states):
     
-                    if F_state_number == 0:
-                        d_F_xx = load_path_settings.F_x_x[F_state_number] -1 
-                        d_F_xy = load_path_settings.F_x_y[F_state_number]
-                        d_F_xz = load_path_settings.F_x_z[F_state_number]
-                        d_F_yy = load_path_settings.F_y_y[F_state_number] -1 
-                        d_F_yz = load_path_settings.F_y_z[F_state_number]
-                        d_F_zz = load_path_settings.F_z_z[F_state_number] -1
-                    else:
-                        d_F_xx = load_path_settings.F_x_x[F_state_number] - load_path_settings.F_x_x[F_state_number-1]
-                        d_F_xy = load_path_settings.F_x_y[F_state_number] - load_path_settings.F_x_y[F_state_number-1]
-                        d_F_xz = load_path_settings.F_x_z[F_state_number] - load_path_settings.F_x_z[F_state_number-1] 
-                        d_F_yy = load_path_settings.F_y_y[F_state_number] - load_path_settings.F_y_y[F_state_number-1]
-                        d_F_yz = load_path_settings.F_y_z[F_state_number] - load_path_settings.F_y_z[F_state_number-1]
-                        d_F_zz = load_path_settings.F_z_z[F_state_number] - load_path_settings.F_z_z[F_state_number-1]
+            #         # if F_state_number == 0:
+            #         #     d_F_xx = load_path_settings.F_x_x[F_state_number] -1 
+            #         #     d_F_xy = load_path_settings.F_x_y[F_state_number]
+            #         #     d_F_xz = load_path_settings.F_x_z[F_state_number]
+            #         #     d_F_yy = load_path_settings.F_y_y[F_state_number] -1 
+            #         #     d_F_yz = load_path_settings.F_y_z[F_state_number]
+            #         #     d_F_zz = load_path_settings.F_z_z[F_state_number] -1
+            #         # else:
+            #         #     d_F_xx = load_path_settings.F_x_x[F_state_number] - load_path_settings.F_x_x[F_state_number-1]
+            #         #     d_F_xy = load_path_settings.F_x_y[F_state_number] - load_path_settings.F_x_y[F_state_number-1]
+            #         #     d_F_xz = load_path_settings.F_x_z[F_state_number] - load_path_settings.F_x_z[F_state_number-1] 
+            #         #     d_F_yy = load_path_settings.F_y_y[F_state_number] - load_path_settings.F_y_y[F_state_number-1]
+            #         #     d_F_yz = load_path_settings.F_y_z[F_state_number] - load_path_settings.F_y_z[F_state_number-1]
+            #         #     d_F_zz = load_path_settings.F_z_z[F_state_number] - load_path_settings.F_z_z[F_state_number-1]
                     
+            #         #load_step_fractions = np.linspace(0, 1, N_increments+1)[1:]
     
-                    load_step_fractions = np.linspace(0, 1, N_increments+1)[1:]
+            #         # for fraction in load_step_fractions:
+            #         F_xx = load_path_settings.F_x_x[F_state_number]# - d_F_xx *(1-fraction)
+            #         F_xy = load_path_settings.F_x_y[F_state_number]# - d_F_xy *(1-fraction)
+            #         F_xz = load_path_settings.F_x_z[F_state_number]# - d_F_xz *(1-fraction)
+            #         F_yy = load_path_settings.F_y_y[F_state_number]# - d_F_yy *(1-fraction)
+            #         F_yz = load_path_settings.F_y_z[F_state_number]# - d_F_yz *(1-fraction)
+            #         F_zz = load_path_settings.F_z_z[F_state_number]# - d_F_zz *(1-fraction)
     
-                    for fraction in load_step_fractions:
-                        F_xx = load_path_settings.F_x_x[F_state_number] - d_F_xx *(1-fraction)
-                        F_xy = load_path_settings.F_x_y[F_state_number] - d_F_xy *(1-fraction)
-                        F_xz = load_path_settings.F_x_z[F_state_number] - d_F_xz *(1-fraction)
-                        F_yy = load_path_settings.F_y_y[F_state_number] - d_F_yy *(1-fraction)
-                        F_yz = load_path_settings.F_y_z[F_state_number] - d_F_yz *(1-fraction)
-                        F_zz = load_path_settings.F_z_z[F_state_number] - d_F_zz *(1-fraction)
-    
-                        target_F_increment: list[list[float | str]] = create_stress_tensor(F_xx, F_xy, F_xz,
-                                                                                                 F_yy, F_yz,
-                                                                                                       F_zz)
-                        target_F.append(copy.deepcopy(target_F_increment))
-                        loaded_directions_step: list[list[bool]] = [
-                            [False, False, False],
-                            [False, False, False],
-                            [False, False, False]
-                        ]
-    
-                        for i in range(3):
-                            for j in range(3):
-                                if isinstance(target_F_increment[i][j], (int, float)):
-                                    numerical_value: float = float(target_F_increment[i][j])
-                                    if abs(numerical_value) > 0:
-                                        loaded_directions_step[i][j] = True
-                    
-                        loaded_directions.append(copy.deepcopy(loaded_directions_step))
+            #         target_F_increment: list[list[float | str]] = create_stress_tensor(F_xx, F_xy, F_xz,
+            #                                                                                  F_yy, F_yz,
+            #                                                                                        F_zz)
+            #         target_F.append(copy.deepcopy(target_F_increment))
+            #         loaded_directions_step: list[list[bool]] = [
+            #             [False, False, False],
+            #             [False, False, False],
+            #             [False, False, False]
+            #         ]
+
+            #         for i in range(3):
+            #             for j in range(3):
+            #                 if isinstance(target_F_increment[i][j], (int, float)):
+            #                     numerical_value: float = float(target_F_increment[i][j])
+            #                     if abs(numerical_value) > 0:
+            #                         loaded_directions_step[i][j] = True
                 
+            #         loaded_directions.append(copy.deepcopy(loaded_directions_step))
+            
             if getattr(problem_definition.load_path,"unloading",False):
                 unloaded_stress_increment = create_stress_tensor(0, 0, 0,
                                                                     0, 0,
@@ -480,6 +542,12 @@ class       DamaskJob:
                 
                 target_F.append(copy.deepcopy(unloaded_F_increment[0]))
                 target_stress.append(copy.deepcopy(unloaded_stress_increment))
+                
+                self.unloading_requested = True
+            else:
+                self.unloading_requested = False
+
+
             self.target_stress = target_stress
             self.target_F      = target_F
 
@@ -489,6 +557,7 @@ class       DamaskJob:
             
             self.loaded_directions = loaded_directions
             self.N_increments = problem_definition.solver.N_increments
+            
 
             # Define if yielding detection will be used.
             match load_path_settings.enable_yield_detection:

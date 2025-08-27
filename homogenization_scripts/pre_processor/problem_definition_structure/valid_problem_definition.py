@@ -13,12 +13,12 @@ valid_problem_definition_file_scheme = {  # type: ignore
                 'type': 'boolean'
             },
             'dimensions': {
-                'required': True,
+                'required': False,
                 'type': 'string',
                 'allowed': ['2D', '3D'],
             },
             'reduce_parasitic_stresses': {
-                'required': True,
+                'required': False,
                 'type': 'boolean'
             },
             'material_properties': {
@@ -248,64 +248,160 @@ valid_problem_definition_file_scheme = {  # type: ignore
         'type': 'dict',
         'schema': {
             'stress_x_x': {
-                'required': False,
-                'type': ['number', 'list'],
-                'valuesrules': {'type': 'number'},
+                'required': True,
+                'anyof': [
+                    {'type': 'number'},                      
+                    {'type': 'string', 'allowed': ['x']},     
+                    {'type': 'list', 'schema': {              
+                        'anyof': [
+                            {'type': 'number'},
+                            {'type': 'string', 'allowed': ['x']},
+                        ]
+                    }},
+                ],
             },
             'stress_x_y': {
-                'required': False,
-                'type': ['number', 'list'],
-                'valuesrules': {'type': 'number'},
+    				'required': True,
+    				'anyof': [
+    					{'type': 'number'},                      
+    					{'type': 'string', 'allowed': ['x']},    
+    					{'type': 'list', 'schema': {             
+    						'anyof': [
+    							{'type': 'number'},
+    							{'type': 'string', 'allowed': ['x']},
+    						]
+    					}},
+    				],
             },
             'stress_x_z': {
-                'required': False,
-                'type': ['number', 'list'],
-                'valuesrules': {'type': 'number'},
+					'required': True,
+					'anyof': [
+						{'type': 'number'},                       
+						{'type': 'string', 'allowed': ['x']},    
+						{'type': 'list', 'schema': {              
+							'anyof': [
+								{'type': 'number'},
+								{'type': 'string', 'allowed': ['x']},
+							]
+						}},
+					],
             },
             'stress_y_y': {
-                'required': False,
-                'type': ['number', 'list'],
-                'valuesrules': {'type': 'number'},
+					'required': True,
+					'anyof': [
+						{'type': 'number'},                       
+						{'type': 'string', 'allowed': ['x']},     
+						{'type': 'list', 'schema': {              
+							'anyof': [
+								{'type': 'number'},
+								{'type': 'string', 'allowed': ['x']},
+							]
+						}},
+					],            
             },
             'stress_y_z': {
-                'required': False,
-                'type': ['number', 'list'],
-                'valuesrules': {'type': 'number'},
+					'required': True,
+					'anyof': [
+						{'type': 'number'},                       
+						{'type': 'string', 'allowed': ['x']},     
+						{'type': 'list', 'schema': {              
+							'anyof': [
+								{'type': 'number'},
+								{'type': 'string', 'allowed': ['x']},
+							]
+						}},
+					],
             },
             'stress_z_z': {
-                'required': False,
-                'type': ['number', 'list'],
-                'valuesrules': {'type': 'number'},
+					'required': True,
+					'anyof': [
+						{'type': 'number'},                      
+						{'type': 'string', 'allowed': ['x']},     
+						{'type': 'list', 'schema': {             
+							'anyof': [
+								{'type': 'number'},
+								{'type': 'string', 'allowed': ['x']},
+							]
+						}},
+					],            
             },
             'F_x_x': {
-                'required': False,
-                'type': ['number', 'list'],
-                'valuesrules': {'type': 'number'},
+					'required': True,
+					'anyof': [
+						{'type': 'number'},                       
+						{'type': 'string', 'allowed': ['x']},     
+						{'type': 'list', 'schema': {             
+							'anyof': [
+								{'type': 'number'},
+								{'type': 'string', 'allowed': ['x']},
+							]
+						}},
+					],
             },
             'F_x_y': {
-                'required': False,
-                'type': ['number', 'list'],
-                'valuesrules': {'type': 'number'},
+					'required': True,
+					'anyof': [
+						{'type': 'number'},                       
+						{'type': 'string', 'allowed': ['x']},     
+						{'type': 'list', 'schema': {             
+							'anyof': [
+								{'type': 'number'},
+								{'type': 'string', 'allowed': ['x']},
+							]
+						}},
+					],
             },
             'F_x_z': {
-                'required': False,
-                'type': ['number', 'list'],
-                'valuesrules': {'type': 'number'},
+					'required': True,
+					'anyof': [
+						{'type': 'number'},                       
+						{'type': 'string', 'allowed': ['x']},     
+						{'type': 'list', 'schema': {              
+							'anyof': [
+								{'type': 'number'},
+								{'type': 'string', 'allowed': ['x']},
+							]
+						}},
+					],
             },
             'F_y_y': {
-                'required': False,
-                'type': ['number', 'list'],
-                'valuesrules': {'type': 'number'},
+					'required': True,
+					'anyof': [
+						{'type': 'number'},                       
+						{'type': 'string', 'allowed': ['x']},     
+						{'type': 'list', 'schema': {              
+							'anyof': [
+								{'type': 'number'},
+								{'type': 'string', 'allowed': ['x']},
+							]
+						}},
+					],
             },
             'F_y_z': {
-                'required': False,
-                'type': ['number', 'list'],
-                'valuesrules': {'type': 'number'},
+					'required': True,
+					'anyof': [
+						{'type': 'number'},                       
+						{'type': 'string', 'allowed': ['x']},     
+						{'type': 'list', 'schema': {              
+							'anyof': [
+								{'type': 'number'},
+								{'type': 'string', 'allowed': ['x']},
+							]
+						}},
+					],
             },
             'F_z_z': {
-                'required': False,
-                'type': ['number', 'list'],
-                'valuesrules': {'type': 'number'},
+					'required': True,
+					'anyof': [
+						{'type': 'number'},                       
+						{'type': 'string', 'allowed': ['x']},     
+						{'type': 'list', 'schema': {              
+							'anyof': [
+								{'type': 'number'},
+								{'type': 'string', 'allowed': ['x']},
+							]
+						}},
+					],
             },
             'unloading': {
                 'required': True,
