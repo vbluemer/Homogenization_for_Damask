@@ -165,7 +165,7 @@ def stress_strain_curves_plastic_yield_lines( # type: ignore
     subplot.plot(strains_plot, stress_plot, 'r--', scalex=False, scaley=False, linewidth = style.lw, label='offset', zorder=1) # type: ignore
     subplot.legend() # type: ignore
 
-    print(monitor)
+    #print(monitor)
     #breakpoint()
 
     return subplot # type: ignore

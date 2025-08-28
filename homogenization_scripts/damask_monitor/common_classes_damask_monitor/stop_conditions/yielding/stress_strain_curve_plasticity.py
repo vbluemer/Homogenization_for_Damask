@@ -131,14 +131,14 @@ def slope_stress_strain_curve_monitor(damask_job: DamaskJobTypes, increment_data
         stress_current, strain_current)
     
 
-    if yielding_detected:
-        damask_job.stress_iteration_1 = stress_iteration_1
-        damask_job.strain_iteration_1 = strain_iteration_1
-        print(stress_iteration_1)
-        print(strain_iteration_1)
-        print(stress_current)
-        print(strain_current)
-        print("=======")
+    # if yielding_detected:
+    #     damask_job.stress_iteration_1 = stress_iteration_1
+    #     damask_job.strain_iteration_1 = strain_iteration_1
+    #     print(stress_iteration_1)
+    #     print(strain_iteration_1)
+    #     print(stress_current)
+    #     print(strain_current)
+    #     print("=======")
     return yielding_detected, yield_value
 
 def slope_stress_strain_curve_post_process(problem_definition: ProblemDefinition, damask_job: DamaskJobTypes) -> InterpolatedResults | None:
@@ -166,10 +166,10 @@ def slope_stress_strain_curve_post_process(problem_definition: ProblemDefinition
         strain_iteration_1 = strain_averaged_per_increment[1]
         
     #breakpoint()
-    if getattr(damask_job,"stress_iteration_1",None) is not None:
-        print("Overwrite stiffness")
-        stress_iteration_1 = damask_job.stress_iteration_1
-        strain_iteration_1 = damask_job.strain_iteration_1
+    # if getattr(damask_job,"stress_iteration_1",None) is not None:
+    #     print("Overwrite stiffness")
+    #     stress_iteration_1 = damask_job.stress_iteration_1
+    #     strain_iteration_1 = damask_job.strain_iteration_1
     #breakpoint()
     # yield_value = damask_job.general_yield_value_plastic_strain
     
@@ -197,13 +197,13 @@ def slope_stress_strain_curve_post_process(problem_definition: ProblemDefinition
             stress_iteration_1, strain_iteration_1,
             stress, strain)
         
-        breakpoint()
+        #breakpoint()
         if yield_detected:
             iteration_before_yield = iteration - 1
             iteration_after_yield = iteration
             yield_found = True
             print(yield_found)
-            breakpoint()
+            #breakpoint()
             break
 
     # Produce the completed set of plots including the interpolated yielding value.
@@ -231,11 +231,11 @@ def slope_stress_strain_curve_post_process(problem_definition: ProblemDefinition
     # probably add existing incs here
     
     interpolated_results = InterpolatedResults(fraction_for_interpolation, damask_results, iteration_before_yield, iteration_after_yield, stress_tensor_type, strain_tensor_type)
-    breakpoint()
+    #breakpoint()
 
     plot_stress_strain_curves(problem_definition, damask_job, stress_averaged_per_increment, strain_averaged_per_increment, interpolated_results)
     plot_modulus_degradation(problem_definition, damask_job, stress_averaged_per_increment, strain_averaged_per_increment, interpolated_results)
-    breakpoint()
+    #breakpoint()
     post_process_succeeded = True # type: ignore
     return interpolated_results
     
