@@ -94,37 +94,46 @@ def fit_cazacu_plunkett_barlat(yield_stress_ref: float, dataset_path: str, outpu
 
     data_set = read_yield_points(dataset_path, symmetry)
 
-    a_coeff_test_values: list[int] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    # a_coeff_test_values: list[int] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
-    fitted_cazacu_plunkett_barlat_list: list[CazacuPlunkettBarlat] = list()
+    # fitted_cazacu_plunkett_barlat_list: list[CazacuPlunkettBarlat] = list()
 
     # The Cazacu-Plunkett-Barlat yield surface has both continues (C_ij, k) as integer (a) coefficients.
     # This is difficult to combine in a single optimization scheme. Hence, a list of "a" values 
     # are used and for each the "C_ij" and "k" coefficients are fitted. 
     # In the end the Cazacu-Plunkett-Barlat surface is taken with the lowest MSE.
     
-    lowest_MSE: float = None # type: ignore
-    index_lowest_MSE = 0
-    for index in range(len(a_coeff_test_values)):
+    # lowest_MSE: float = None # type: ignore
+    # index_lowest_MSE = 0
+    # for index in range(len(a_coeff_test_values)):
 
-        if use_extended == False:
-            cazacu_plunkett_barlat_fit = fit_surface(CazacuPlunkettBarlat(a = a_coeff_test_values[index]), data_set, yield_stress_ref)
-        else:
-            cazacu_plunkett_barlat_fit = fit_surface(CazacuPlunkettBarlatExtendedN(a = a_coeff_test_values[index], n=use_extended), data_set, yield_stress_ref)
+    #     if use_extended == False:
+    #         cazacu_plunkett_barlat_fit = fit_surface(CazacuPlunkettBarlat(a = a_coeff_test_values[index]), data_set, yield_stress_ref)
+    #         cazacu_plunkett_barlat_fit = fit_surface(CazacuPlunkettBarlat(), data_set, yield_stress_ref)
+    #         pass
+    #     else:
+    #         cazacu_plunkett_barlat_fit = fit_surface(CazacuPlunkettBarlatExtendedN(a = a_coeff_test_values[index], n=use_extended), data_set, yield_stress_ref)
 
-        fitted_cazacu_plunkett_barlat_list.append(cazacu_plunkett_barlat_fit) # type: ignore
-        MSE = cazacu_plunkett_barlat_fit.get_and_set_MSE(data_set)
+    #     fitted_cazacu_plunkett_barlat_list.append(cazacu_plunkett_barlat_fit) # type: ignore
+    #     MSE = cazacu_plunkett_barlat_fit.get_and_set_MSE(data_set)
 
-        if lowest_MSE == None: # type: ignore
-            lowest_MSE = MSE
-            index_lowest_MSE = index
-            continue
+    #     if lowest_MSE == None: # type: ignore
+    #         lowest_MSE = MSE
+    #         index_lowest_MSE = index
+    #         continue
         
-        if lowest_MSE > MSE:
-            lowest_MSE = MSE
-            index_lowest_MSE = index
+    #     if lowest_MSE > MSE:
+    #         lowest_MSE = MSE
+    #         index_lowest_MSE = index
 
-    cazacu_plunkett_barlat = fitted_cazacu_plunkett_barlat_list[index_lowest_MSE]
+    if use_extended == False:
+        cazacu_plunkett_barlat_fit = fit_surface(CazacuPlunkettBarlat(), data_set, yield_stress_ref)
+    else:
+        cazacu_plunkett_barlat_fit = fit_surface(CazacuPlunkettBarlatExtendedN(n=use_extended), data_set, yield_stress_ref)
+
+
+    # cazacu_plunkett_barlat = fitted_cazacu_plunkett_barlat_list[index_lowest_MSE]
+    cazacu_plunkett_barlat = cazacu_plunkett_barlat_fit
 
     Messages.YieldSurface.show_cazacu_plunkett_barlat_fit(cazacu_plunkett_barlat) # type: ignore
 

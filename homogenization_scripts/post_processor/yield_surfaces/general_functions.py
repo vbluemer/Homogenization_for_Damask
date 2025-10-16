@@ -127,7 +127,7 @@ def fit_surface(yield_surface: YieldSurfaces, data_set: DataFrame, yield_stress_
 
     # Objective function that is zero for perfect fit.
     def objective(coefficients: list[float]) -> float:
-
+        
         yield_surface_objective = copy.deepcopy(yield_surface)
 
         yield_surface_objective.set_yield_stress_ref(yield_stress_ref)
@@ -143,13 +143,16 @@ def fit_surface(yield_surface: YieldSurfaces, data_set: DataFrame, yield_stress_
         penalty_value = yield_surface_objective.penalty_sum()
 
         objective_value = mean_square_error_yield + penalty_value
-
+        #print(coefficients[-1])
+        print(objective_value)
         return objective_value
     
     number_optimization_coefficients = yield_surface.number_optimization_coefficients()
     initial_guess: list [float] = np.squeeze(np.ones((1,number_optimization_coefficients))).tolist()
-
-    optimization_result = scipy.optimize.minimize(objective, initial_guess, options={'disp': False }, method="L-BFGS-B") # type: ignore
+    initial_guess[-1] = 5
+    
+    bounds = [(0, 1)] + [(0, 3)] * 9 + [(1, None)]
+    optimization_result = scipy.optimize.minimize(objective, initial_guess, bounds=bounds, options={'disp': True }, method="L-BFGS-B") # type: ignore
 
     optimized_coefficients: list[float] = optimization_result.x # type: ignore
 

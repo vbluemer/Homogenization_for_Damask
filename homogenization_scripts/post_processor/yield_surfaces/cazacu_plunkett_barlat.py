@@ -15,9 +15,11 @@ class CazacuPlunkettBarlat:
     a: int
     mean_square_error_stress: float
 
-    def __init__(self, a: int) -> None:
-        self.a = a
-    
+    #def __init__(self, a: int) -> None:
+    #    self.a = a
+    def __init__(self) -> None:
+        pass
+        
     def set_yield_stress_ref(self, yield_stress_ref: float):
         self.yield_stress_ref = yield_stress_ref
         
@@ -36,14 +38,18 @@ class CazacuPlunkettBarlat:
         c[2][0] = c[0][2]
         c[0][1] = coefficients_list[9]
         c[1][0] = c[0][1]
+        
+        a: float = coefficients_list[10]
 
         self.k = k
         self.c = c
+        self.a = a
 
         return
 
     def display_name(self) -> str:
-        display_name= f"CPB (a = {self.a})"
+        # display_name= f"CPB (a = {self.a})"
+        display_name= f"CPB"
         return display_name
     
     def unit_conversion(self) -> float:
@@ -88,12 +94,13 @@ class CazacuPlunkettBarlat:
         # = self.unit_conversion()
 
         #cazacu_plunkett_barlat_value: float = -1/(unit_conversion) + (abs(p1) - k*p1)**a + (abs(p2) - k*p2)**a + (abs(p3) - k*p3)**a
-        cazacu_plunkett_barlat_value: float = (abs(p1) - k*p1)**a + (abs(p2) - k*p2)**a + (abs(p3) - k*p3)**a - (yield_stress_ref/1e6)**a
-
+        cazacu_plunkett_barlat_value: float = ((abs(p1) - k*p1)**a + (abs(p2) - k*p2)**a + (abs(p3) - k*p3)**a)**(1/a) - (yield_stress_ref/1e6)
+        #print(cazacu_plunkett_barlat_value)
         return cazacu_plunkett_barlat_value
     
     def number_optimization_coefficients(self) -> int:
-        number_optimization_coefficients = 10
+        # number_optimization_coefficients = 10
+        number_optimization_coefficients = 11
         return number_optimization_coefficients
 
     def penalty_sum(self) -> float:
