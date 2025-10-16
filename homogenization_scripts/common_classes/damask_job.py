@@ -367,10 +367,8 @@ class       DamaskJob:
             #if hasattr(load_path_settings,'stress_x_x') and hasattr(load_path_settings,'F_x_x'):
             number_states: int = len(load_path_settings.stress_x_x)
             N_increments = problem_definition.solver.N_increments
-
             self.load_steps = number_states * N_increments
             #self.prescribed_stress = True
-
             
             for state_number in range(number_states):
                 s_xx = load_path_settings.stress_x_x[state_number]
