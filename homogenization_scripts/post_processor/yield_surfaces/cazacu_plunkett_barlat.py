@@ -95,7 +95,7 @@ class CazacuPlunkettBarlat:
 
         #cazacu_plunkett_barlat_value: float = -1/(unit_conversion) + (abs(p1) - k*p1)**a + (abs(p2) - k*p2)**a + (abs(p3) - k*p3)**a
         cazacu_plunkett_barlat_value: float = ((abs(p1) - k*p1)**a + (abs(p2) - k*p2)**a + (abs(p3) - k*p3)**a)**(1/a) - (yield_stress_ref/1e6)
-        #print(cazacu_plunkett_barlat_value)
+
         return cazacu_plunkett_barlat_value
     
     def number_optimization_coefficients(self) -> int:

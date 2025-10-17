@@ -626,30 +626,35 @@ class       DamaskJob:
             ]
 
             loaded_directions: list[list[list[bool]]] = []
-
             for i in range(3):
                 for j in range(3):
                     if isinstance(target_stress_input[i][j],(float, int)):
                         loaded_directions_increment[i][j] = abs(target_stress_input[i][j]) > 0 # type: ignore
+            
+            # for i in range(3):
+            #     for j in range(3):
+            #         if isinstance(target_stress_input[i][j],(float, int)):
+            #             loaded_directions_increment[i][j] = abs(target_stress_input[i][j]) > 0 # type: ignore
                     
-            for fraction in load_step_fractions:
-                target_stess_increment: list[list[float | str]] = [
-                    [ 0,   0,  0],
-                    ['x',  0,  0],
-                    ['x', 'x', 0]
-                ]
-                for i in range(3):
-                    for j in range(3):
-                        if isinstance(target_stress_input[i][j],(float, int)):
-                            target_stess_increment[i][j] = fraction*target_stress_input[i][j]
+            # for fraction in load_step_fractions:
+            #     target_stess_increment: list[list[float | str]] = [
+            #         [ 0,   0,  0],
+            #         ['x',  0,  0],
+            #         ['x', 'x', 0]
+            #     ]
+            #     for i in range(3):
+            #         for j in range(3):
+            #             if isinstance(target_stress_input[i][j],(float, int)):
+            #                 target_stess_increment[i][j] = fraction*target_stress_input[i][j]
 
-                target_stess.append(copy.deepcopy(target_stess_increment))
-                loaded_directions.append(copy.deepcopy(loaded_directions_increment))
+                # target_stess.append(copy.deepcopy(target_stess_increment))
+                # loaded_directions.append(copy.deepcopy(loaded_directions_increment))
 
-
+            target_stess.append(copy.deepcopy(target_stress_input))
+            loaded_directions.append(copy.deepcopy(loaded_directions_increment))
             self.target_stress = target_stess
             self.loaded_directions = loaded_directions
-
+            
             # setup what yielding definition to use.
             match problem_definition.yielding_condition.yield_condition:
                 case 'modulus_degradation':

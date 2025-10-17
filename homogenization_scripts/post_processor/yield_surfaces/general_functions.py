@@ -114,7 +114,12 @@ def read_yield_points(yield_points_file: str, symmetry: bool) -> DataFrame:
         df = pd.concat([df, df_sym], ignore_index=True)
     return df
 
-def fit_surface(yield_surface: YieldSurfaces, data_set: DataFrame, yield_stress_ref: float) -> YieldSurfaces:
+def fit_surface(yield_surface: YieldSurfaces, 
+                data_set: DataFrame, 
+                yield_stress_ref: float,
+                initial_guess = None,
+                bounds = None
+                ) -> YieldSurfaces:
     # This function takes a generic yield surface and data_set of yield points and fits the coefficients to the data_set.
     # For a yield surface to be fitted by this function it must implement the function defined in YieldSurfaces (yield_surface_template.py)
 
@@ -143,16 +148,17 @@ def fit_surface(yield_surface: YieldSurfaces, data_set: DataFrame, yield_stress_
         penalty_value = yield_surface_objective.penalty_sum()
 
         objective_value = mean_square_error_yield + penalty_value
-        #print(coefficients[-1])
-        print(objective_value)
+        # print(objective_value)
         return objective_value
     
     number_optimization_coefficients = yield_surface.number_optimization_coefficients()
-    initial_guess: list [float] = np.squeeze(np.ones((1,number_optimization_coefficients))).tolist()
-    initial_guess[-1] = 5
+    if initial_guess is None:
+        initial_guess: list [float] = np.squeeze(np.ones((1,number_optimization_coefficients))).tolist()
+    #initial_guess[-1] = 2
     
-    bounds = [(0, 1)] + [(0, 3)] * 9 + [(1, None)]
-    optimization_result = scipy.optimize.minimize(objective, initial_guess, bounds=bounds, options={'disp': True }, method="L-BFGS-B") # type: ignore
+    #bounds = [(0, 1)] + [(0, 3)] * 9 + [(1, None)]
+    optimization_result = scipy.optimize.minimize(objective, initial_guess, bounds=bounds, options={'disp': False }, method="L-BFGS-B") # type: ignore
+    #optimization_result = scipy.optimize.minimize(objective, initial_guess, options={'disp': False }, method="L-BFGS-B") # type: ignore
 
     optimized_coefficients: list[float] = optimization_result.x # type: ignore
 

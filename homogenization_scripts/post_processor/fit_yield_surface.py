@@ -1,6 +1,7 @@
 # System packages
 import os
 import textwrap
+import numpy as np
 
 # Local packages
 from .yield_surfaces.cazacu_plunkett_barlat import *
@@ -125,11 +126,29 @@ def fit_cazacu_plunkett_barlat(yield_stress_ref: float, dataset_path: str, outpu
     #     if lowest_MSE > MSE:
     #         lowest_MSE = MSE
     #         index_lowest_MSE = index
+    
+    #breakpoint()
 
+    
     if use_extended == False:
-        cazacu_plunkett_barlat_fit = fit_surface(CazacuPlunkettBarlat(), data_set, yield_stress_ref)
+        number_optimization_coefficients = CazacuPlunkettBarlat().number_optimization_coefficients()
+
+        initial_guess: list [float] = np.squeeze(np.ones((1,number_optimization_coefficients))).tolist()
+        initial_guess[-1] = 4
+    
+        bounds = [(0, 1)] + [(0, 3)] * 9 + [(1, None)]
+        
+        cazacu_plunkett_barlat_fit = fit_surface(CazacuPlunkettBarlat(), data_set, yield_stress_ref, initial_guess, bounds)
     else:
-        cazacu_plunkett_barlat_fit = fit_surface(CazacuPlunkettBarlatExtendedN(n=use_extended), data_set, yield_stress_ref)
+        #breakpoint()
+        number_optimization_coefficients = CazacuPlunkettBarlatExtendedN(n=use_extended).number_optimization_coefficients()
+        
+        initial_guess: list [float] = np.squeeze(np.ones((1,number_optimization_coefficients // use_extended))).tolist()
+        initial_guess[-1] = 4
+        initial_guess = initial_guess * use_extended
+        bounds = [(0, 1)] + [(0, 3)] * 9 + [(1, None)]
+        bounds = bounds * use_extended
+        cazacu_plunkett_barlat_fit = fit_surface(CazacuPlunkettBarlatExtendedN(n=use_extended), data_set, yield_stress_ref, initial_guess, bounds)
 
 
     # cazacu_plunkett_barlat = fitted_cazacu_plunkett_barlat_list[index_lowest_MSE]

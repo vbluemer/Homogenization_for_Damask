@@ -52,7 +52,7 @@ def summarize_yield_point_job(job: DamaskJob.YieldPointMultiaxial):
     else:
         message = "Cauchy stress (itterative)"
 
-    number_of_load_steps = len(job.target_stress)
+    number_of_load_steps = len(job.target_stress) * job.N_increments
     print(f"    Number of load steps: {number_of_load_steps}")
     target_stress_step = job.target_stress[-1]
     print("")
@@ -86,9 +86,10 @@ def summarize_yield_surface_job(job: DamaskJob.YieldPointMultiaxial):
     else:
         message = "Cauchy stress (itterative)"
 
-    number_of_load_steps = len(job.target_stress)
+    number_of_load_steps = len(job.target_stress) * job.N_increments
     print(f"    Number of load steps: {number_of_load_steps}")
-    target_stress_step = job.target_stress[number_of_load_steps-1]
+
+    target_stress_step = job.target_stress[0]#[number_of_load_steps-1]
     print("")
     print(f"""    Increasing {message} boundary condition with {number_of_load_steps} steps to:
     [[{target_stress_step[0][0]}, {target_stress_step[0][1]}, {target_stress_step[0][2]}],

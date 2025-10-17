@@ -16,9 +16,9 @@ class CazacuPlunkettBarlatExtendedN:
     n: int
     mean_square_error_stress: float
 
-    def __init__(self, a: int, n: int) -> None:
+    def __init__(self, n: int) -> None:
         self.n = n
-        self.a = a
+        #self.a = a
 
     def set_yield_stress_ref(self, yield_stress_ref: float):
         self.yield_stress_ref = yield_stress_ref
@@ -26,33 +26,40 @@ class CazacuPlunkettBarlatExtendedN:
     def set_coefficients_from_list(self, coefficients_list: list[float]) -> None:
         c: list[NDArray[np.float64]] = list()
         k: list[float] = list()
+        a: list[float] = list()
 
+        N_coeff = 11
+        
         for n_i in range(self.n):
-            k_i: float = coefficients_list[0 + n_i*10]
+            k_i: float = coefficients_list[0 + n_i*N_coeff]
             c_i = np.zeros((6,6))
-            c_i[0][0] = coefficients_list[1 + n_i*10]
-            c_i[1][1] = coefficients_list[2 + n_i*10]
-            c_i[2][2] = coefficients_list[3 + n_i*10]
-            c_i[3][3] = coefficients_list[4 + n_i*10]
-            c_i[4][4] = coefficients_list[5 + n_i*10]
-            c_i[5][5] = coefficients_list[6 + n_i*10]
-            c_i[1][2] = coefficients_list[7 + n_i*10]
+            c_i[0][0] = coefficients_list[1 + n_i*N_coeff]
+            c_i[1][1] = coefficients_list[2 + n_i*N_coeff]
+            c_i[2][2] = coefficients_list[3 + n_i*N_coeff]
+            c_i[3][3] = coefficients_list[4 + n_i*N_coeff]
+            c_i[4][4] = coefficients_list[5 + n_i*N_coeff]
+            c_i[5][5] = coefficients_list[6 + n_i*N_coeff]
+            c_i[1][2] = coefficients_list[7 + n_i*N_coeff]
             c_i[2][1] = c_i[1][2]
-            c_i[0][2] = coefficients_list[8 + n_i*10]
+            c_i[0][2] = coefficients_list[8 + n_i*N_coeff]
             c_i[2][0] = c_i[0][2]
-            c_i[0][1] = coefficients_list[9 + n_i*10]
+            c_i[0][1] = coefficients_list[9 + n_i*N_coeff]
             c_i[1][0] = c_i[0][1]
+
+            a_i: float = coefficients_list[10 + n_i*N_coeff]
 
             k.append(k_i)
             c.append(c_i)
+            a.append(a_i)
 
         self.k = k
         self.c = c
+        self.a = a
 
         return
 
     def display_name(self) -> str:
-        display_name= f"CPB ex. {self.n} (a = {self.a})"
+        display_name= f"CPB ex. {self.n}"
         return display_name
     
     def unit_conversion(self) -> float:
@@ -77,8 +84,7 @@ class CazacuPlunkettBarlatExtendedN:
         
         #unit_conversion = self.unit_conversion()
         #cazacu_plunkett_barlat_value = -1/(unit_conversion)
-        a = self.a
-        cazacu_plunkett_barlat_value = - (self.yield_stress_ref/1e6)**a
+        cazacu_plunkett_barlat_value = - (self.yield_stress_ref/1e6)
 
         for n_i in range(self.n):
             Sigma_Voigt = np.matmul(self.c[n_i], deviatoric_stress_Voigt)
@@ -98,13 +104,14 @@ class CazacuPlunkettBarlatExtendedN:
             p3 = principle_stresses[2]
 
             k = self.k[n_i]
+            a = self.a[n_i]
 
-            cazacu_plunkett_barlat_value +=  (abs(p1) - k*p1)**a + (abs(p2) - k*p2)**a + (abs(p3) - k*p3)**a
+            cazacu_plunkett_barlat_value +=  ((abs(p1) - k*p1)**a + (abs(p2) - k*p2)**a + (abs(p3) - k*p3)**a)**(1/a)
 
         return cazacu_plunkett_barlat_value
     
     def number_optimization_coefficients(self) -> int:
-        number_optimization_coefficients = 10 * self.n
+        number_optimization_coefficients = 11 * self.n
         return number_optimization_coefficients
 
     def penalty_sum(self) -> float:

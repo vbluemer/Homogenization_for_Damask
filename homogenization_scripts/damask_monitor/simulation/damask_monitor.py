@@ -319,10 +319,11 @@ def run_and_monitor_damask(
     job_number = damask_job.job_number
     total_jobs = damask_job.total_jobs
     
-    if problem_definition.general.simulation_type=="load_path":
-        total_iterations = len(damask_job.target_stress) * problem_definition.solver.N_increments
-    else:
-        total_iterations = len(damask_job.target_stress) 
+    total_iterations = len(damask_job.target_stress) * problem_definition.solver.N_increments
+    # if problem_definition.general.simulation_type=="load_path":
+    #     total_iterations = len(damask_job.target_stress) * problem_definition.solver.N_increments
+    # else:
+    #     total_iterations = len(damask_job.target_stress) 
 
 
     

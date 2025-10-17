@@ -154,10 +154,11 @@ class PrepareFile:
         
         n_load_steps = len(damask_job.stress_tensor)
 
-        if problem_definition.general.simulation_type=="load_path":
-            incs_per_loadstep = np.ones(n_load_steps, dtype=int) * problem_definition.solver.N_increments
-        else:
-            incs_per_loadstep = np.ones(n_load_steps, dtype=int)
+        incs_per_loadstep = np.ones(n_load_steps, dtype=int) * problem_definition.solver.N_increments
+        # if problem_definition.general.simulation_type=="load_path":
+        #     incs_per_loadstep = np.ones(n_load_steps, dtype=int) * problem_definition.solver.N_increments
+        # else:
+        #     incs_per_loadstep = np.ones(n_load_steps, dtype=int)
 
         # if getattr(problem_definition.load_path, "unloading", False):
         #     incs_per_loadstep[-1] = problem_definition.solver.N_increments
