@@ -150,7 +150,6 @@ class PrepareFile:
             for i_inc in range(len(loadsteps)):
                 existing_incs = existing_incs + loadsteps[i_inc]['discretization']['N']
             damask_job.existing_incs = existing_incs
-            #breakpoint()
         
         n_load_steps = len(damask_job.stress_tensor)
 

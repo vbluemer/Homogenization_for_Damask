@@ -47,6 +47,18 @@ valid_problem_definition_file_scheme = {  # type: ignore
                 'type': 'string',
                 'allowed': ['true_strain', 'Green_Lagrange'],
             },
+            'postprocessing_only': {
+                'required': True,
+                'type': 'boolean'
+            },
+            'restart_file_path': {
+                'required': False,
+                'type': 'string',
+            },
+            'history_loadcase_path': {
+                'required': False,
+                'type': 'string',
+            },
         },
     },
 

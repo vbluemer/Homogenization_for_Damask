@@ -127,7 +127,6 @@ def fit_cazacu_plunkett_barlat(yield_stress_ref: float, dataset_path: str, outpu
     #         lowest_MSE = MSE
     #         index_lowest_MSE = index
     
-    #breakpoint()
 
     
     if use_extended == False:
@@ -140,7 +139,7 @@ def fit_cazacu_plunkett_barlat(yield_stress_ref: float, dataset_path: str, outpu
         
         cazacu_plunkett_barlat_fit = fit_surface(CazacuPlunkettBarlat(), data_set, yield_stress_ref, initial_guess, bounds)
     else:
-        #breakpoint()
+
         number_optimization_coefficients = CazacuPlunkettBarlatExtendedN(n=use_extended).number_optimization_coefficients()
         
         initial_guess: list [float] = np.squeeze(np.ones((1,number_optimization_coefficients // use_extended))).tolist()

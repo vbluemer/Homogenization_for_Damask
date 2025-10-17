@@ -165,9 +165,6 @@ def stress_strain_curves_plastic_yield_lines( # type: ignore
     subplot.plot(strains_plot, stress_plot, 'r--', scalex=False, scaley=False, linewidth = style.lw, label='offset', zorder=1) # type: ignore
     subplot.legend() # type: ignore
 
-    #print(monitor)
-    #breakpoint()
-
     return subplot # type: ignore
 
 
@@ -180,7 +177,7 @@ def plot_stress_strain_curves_monitor(problem_definition: ProblemDefinition,
     
     stress_per_increment = increment_data.stress_averaged_per_increment
     strain_per_increment = increment_data.strain_averaged_per_increment
-    #breakpoint()
+
     monitor = True
     plot_stress_strain_curves(problem_definition, damask_job, stress_per_increment, strain_per_increment, interpolated_yield, file_name=file_name, plot_title=plot_title,monitor=monitor)
 

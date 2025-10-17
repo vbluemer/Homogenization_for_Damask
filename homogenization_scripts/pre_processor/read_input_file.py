@@ -315,7 +315,9 @@ def read_problem_definition(project_name: str, project_path: str) -> None | Prob
     problem_definition_dict['general']['path']['backup_results_folder'] = backup_folder
 
     problem_definition_dict['general']['path']['material_properties'] = problem_definition_dict['general']['material_properties']
-    
+    problem_definition_dict['general']['path']['postprocessing_only'] = problem_definition_dict['general']['postprocessing_only']
+    del problem_definition_dict['general']['postprocessing_only']
+
     if "restart_file_path" in problem_definition_dict["general"]:
         problem_definition_dict['general']['path']['restart_file_path'] = problem_definition_dict['general']['restart_file_path']
         del problem_definition_dict['general']['restart_file_path']
