@@ -88,7 +88,7 @@ def pre_process_damask_files(
 
     ########
     # damask preporcessing: Prepare and move the simulation files to the right location.
-    if not iteration_mode:
+    if not iteration_mode and not problem_definition.general.path.postprocessing_only:
         PrepareFile.make_sure_work_folders_are_empty(problem_definition, damask_job) # type: ignore
     (problem_definition, damask_job) = PrepareFile.material_properties_and_orientation_file(problem_definition, damask_job) # type: ignore
     (problem_definition, damask_job) = PrepareFile.grid_and_dimensions_file(problem_definition, damask_job) # type: ignore

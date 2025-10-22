@@ -107,7 +107,7 @@ def define_required_results(problem_definition: ProblemDefinition):
         previous_results_exist = False
 
 
-    if previous_results_exist:
+    if previous_results_exist and problem_definition.general.path.postprocessing_only==False:
         # Initialize the object which holds a list of re-useable results
         reused_results = ReusedResults(True)
 

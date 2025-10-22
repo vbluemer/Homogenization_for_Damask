@@ -4,6 +4,7 @@ from numpy.typing import NDArray
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 from matplotlib.legend import Legend
+from matplotlib.ticker import ScalarFormatter
 
 import os
 import typing
@@ -88,9 +89,20 @@ def plot_stress_strain_curves(
             if True:
                 subplot[i][j] = stress_strain_curves_plastic_yield_lines(subplot[i][j], i, j, stress_per_increment/Pa_unit, strain_per_increment, problem_definition, damask_job, style,monitor)
                 
-            if not damask_job.loaded_directions[0][i][j]:
+            #if not damask_job.loaded_directions[0][i][j]:
+            if damask_job.loaded_directions[0][i][j]:
+                formatter = ScalarFormatter(useMathText=True)
+                formatter.set_powerlimits((-2, -2))  # lock exponent to −2
+                
+                subplot[i][j].xaxis.set_major_formatter(formatter)
+                subplot[i][j].ticklabel_format(axis='x', style='sci')#, scilimits=(-2, -2))
+                #subplot[i][j].ticklabel_format(axis='x', style='sci', scilimits=(-2, 2)) 
+            else:
+                formatter = ScalarFormatter(useMathText=True)
+                subplot[i][j].xaxis.set_major_formatter(formatter)
+
                 subplot[i][j].ticklabel_format(axis='x', style='sci', scilimits=(-2, 2)) 
-    
+            
     subplot_titles = np.array([
         ["x-x", "x-y", "x-z"], 
         ["y-x", "y-y", "y-z"], 
@@ -109,7 +121,7 @@ def plot_stress_strain_curves(
         text.set_fontsize(style.fs)
 
     fig.savefig(stress_strain_plot_path, dpi=600) # type: ignore
-
+    #breakpoint()
     plt.close(fig)
 
 def stress_strain_curves_plastic_yield_lines( # type: ignore
