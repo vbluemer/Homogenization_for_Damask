@@ -135,7 +135,7 @@ def fit_cazacu_plunkett_barlat(yield_stress_ref: float, dataset_path: str, outpu
         initial_guess: list [float] = np.squeeze(np.ones((1,number_optimization_coefficients))).tolist()
         initial_guess[-1] = 4
     
-        bounds = [(0, 1)] + [(0, 3)] * 9 + [(1, None)]
+        bounds = [(0, 1)] + [(0, 3)] * 9 + [(1.5, None)]
         
         cazacu_plunkett_barlat_fit = fit_surface(CazacuPlunkettBarlat(), data_set, yield_stress_ref, initial_guess, bounds)
     else:
@@ -145,7 +145,7 @@ def fit_cazacu_plunkett_barlat(yield_stress_ref: float, dataset_path: str, outpu
         initial_guess: list [float] = np.squeeze(np.ones((1,number_optimization_coefficients // use_extended))).tolist()
         initial_guess[-1] = 4
         initial_guess = initial_guess * use_extended
-        bounds = [(0, 1)] + [(0, 3)] * 9 + [(1, None)]
+        bounds = [(0, 1)] + [(0, 3)] * 9 + [(1.5, None)]
         bounds = bounds * use_extended
         cazacu_plunkett_barlat_fit = fit_surface(CazacuPlunkettBarlatExtendedN(n=use_extended), data_set, yield_stress_ref, initial_guess, bounds)
 

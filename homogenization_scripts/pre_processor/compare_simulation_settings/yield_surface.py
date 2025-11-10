@@ -33,9 +33,9 @@ def compare_yield_surface_settings(
             differences_detected = True
             reasons.append("value at which plasticity is defined is changed")
     
-    if not existing_settings['estimated_tensile_yield'] == problem_definition.yielding_condition.estimated_tensile_yield:
-        differences_detected = True
-        reasons.append("estimated estimated tensile yield strength changed")
+    # if not existing_settings['estimated_tensile_yield'] == problem_definition.yielding_condition.estimated_tensile_yield:
+    #     differences_detected = True
+    #     reasons.append("estimated estimated tensile yield strength changed")
 
     if not existing_settings['estimated_shear_yield'] == problem_definition.yielding_condition.estimated_shear_yield:
         differences_detected = True

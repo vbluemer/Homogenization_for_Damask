@@ -141,8 +141,8 @@ def plot_surface(
         ]
     
     plot_labels = [
-        [["Stress xx", "Stress yy"], ["Stress xx", "Stress zz"], ["Stress yy", "Stress zz"]],
-        [["Stress xy", "Stress xz"], ["Stress xy", "Stress yz"], ["Stress xz", "Stress yz"]]
+        [["stress xx", "stress yy"], ["stress xx", "stress zz"], ["stress yy", "stress zz"]],
+        [["stress xy", "stress xz"], ["stress xy", "stress yz"], ["stress xz", "stress yz"]]
         ]
 
     n = yield_surface.display_name()
