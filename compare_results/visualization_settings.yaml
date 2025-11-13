@@ -1,0 +1,30 @@
+# config.yaml
+
+yield_point_databases:
+  - "compare_results/yield_points_yield_surface_predeformed.csv"
+  - "compare_results/yield_points_yield_surface_undeformed.csv"
+yield_surface_type:
+  - "Cazacu-Plunkett-Barlat"
+reference_yield_stress: 
+  - 472.41e6
+  - 472.41e6
+  
+yield_point_symmetry:
+  - False
+  - True
+
+# style: linewidth, marker size, marker edgewidth, fontsize
+style:
+  - [3, 12, 2, 16]
+  - [2, 12, 1, 16]
+  
+# colour: yield point marker, symmetric marker, countour 
+colour:    
+  - '#0072BD'
+  - '#D95319'
+  - '#7E2F8E'
+  
+# opacity of compared yield surface   
+alpha: 
+  - 0.4
+  
