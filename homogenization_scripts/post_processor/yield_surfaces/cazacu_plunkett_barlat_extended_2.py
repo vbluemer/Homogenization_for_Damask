@@ -125,11 +125,16 @@ class CazacuPlunkettBarlatExtendedN:
         component_names: list[str] = []
 
         result_dict: list[dict[str, float|str]] = [dict()]
-
-        result_dict[0]["a"] = self.a
-        component_names = component_names + ["a"]
+        
         for n_i_0 in range(self.n):
             n_i = n_i_0 + 1
+            
+            component_names = component_names + [f"k_{n_i}"]
+            result_dict[0][f"k_{n_i}"] = self.k[n_i_0]
+            
+            component_names = component_names + [f"a_{n_i}"]
+            result_dict[0][f"a_{n_i}"] = self.a[n_i_0]          
+            
             component_names_i = [
                 [f"C_{n_i}_11", f"C_{n_i}_12", f"C_{n_i}_13", f"C_{n_i}_14", f"C_{n_i}_15", f"C_{n_i}_16"],
                 [f"C_{n_i}_21", f"C_{n_i}_22", f"C_{n_i}_23", f"C_{n_i}_24", f"C_{n_i}_25", f"C_{n_i}_26"],
@@ -141,14 +146,14 @@ class CazacuPlunkettBarlatExtendedN:
 
             component_names_i_flat = [value for row in component_names_i for value in row]
 
-            component_names = component_names + component_names_i_flat + [f"k_{n_i}"]
-
+            component_names = component_names + component_names_i_flat
+            
             for i in range(6):
                 for j in range(6):
                     result_dict[0][component_names_i[i][j]] = self.c[n_i_0][i][j]
             
-            result_dict[0][f"k_{n_i}"] = self.k[n_i_0]
 
+            
             component_names = component_names + ["unit_stress"]
             result_dict[0]["unit_stress"] = self.unit_name()
         

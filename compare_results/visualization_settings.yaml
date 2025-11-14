@@ -1,10 +1,12 @@
 # config.yaml
 
 yield_point_databases:
-  - "compare_results/yield_points_yield_surface_predeformed.csv"
-  - "compare_results/yield_points_yield_surface_undeformed.csv"
-yield_surface_type:
-  - "Cazacu-Plunkett-Barlat"
+  - "compare_results/yield_points_predeformed.csv"
+  - "compare_results/yield_points_undeformed.csv"
+
+# Hill, Cazacu-Plunkett-Barlat, Cazacu-Plunkett-Barlat_extended_n
+yield_surface_type: "Cazacu-Plunkett-Barlat"
+
 reference_yield_stress: 
   - 472.41e6
   - 472.41e6
@@ -25,6 +27,6 @@ colour:
   - '#7E2F8E'
   
 # opacity of compared yield surface   
-alpha: 
-  - 0.4
+alpha: 0.4
   
+plot_only: False

@@ -7,11 +7,12 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 import pandas as pd
 from pathlib import Path
+import pickle
 # Local-packages
 from homogenization_scripts.post_processor.fit_yield_surface import fit_yield_surface
 from homogenization_scripts.post_processor.yield_surfaces.yield_surface_template import YieldSurfaces
 from homogenization_scripts.post_processor.yield_surfaces.general_functions import read_yield_points
-from homogenization_scripts.post_processor.yield_surfaces.plot_surface import make_plot_yield_surface,plot_data_points,plot_surface
+from homogenization_scripts.post_processor.yield_surfaces.plot_surface import plot_data_points,plot_surface
 from homogenization_scripts.common_classes.figure_style import FigureStyle
 
 
@@ -122,8 +123,12 @@ def faded(color, factor=0.5):
 
 
 def main():
-    
-    pth = sys.argv[1]
+    if len(sys.argv) == 1:
+        pth = "compare_results/visualization_settings.yaml"
+    elif len(sys.argv) == 2:        
+        pth = sys.argv[1]
+    else:
+        sys.exit('Invalid number of arguments. Specify path to visualization config or leave empty to run with default config.')
     # pth = "compare_results/visualization_settings.yaml"
     with open(pth, "r") as f:
         config = yaml.safe_load(f)
@@ -134,25 +139,33 @@ def main():
     parents         = [p.parent for p in database_pths]
     filenames       = [p.name for p in database_pths]
     stems           = [p.stem for p in database_pths]
-    extensions      = [p.suffix for p in database_pths]
     
-    output_pths = [parent / ("parameters_" + name) for parent, name in zip(parents, filenames)]
-    plot_pths   = [parent / ("plot_" + stem + ".png") for parent, stem in zip(parents, stems)]
+    
+    output_pths = [parent / ("parameters/parameters_" + name) for parent, name in zip(parents, filenames)]
+    plot_pths   = [parent / ("plots/plot_" + stem + ".png") for parent, stem in zip(parents, stems)]
+    yld_pths   = [parent / ("yield_surfaces/ys_" + stem + ".pkl") for parent, stem in zip(parents, stems)]
 
-    
-    
-    
+    parameter_dir    = [p.parent for p in output_pths]
+    plot_dir         = [p.parent for p in plot_pths]
+    yld_dir         = [p.parent for p in yld_pths]
+
+    for p in parameter_dir:
+        Path(p).mkdir(parents=True, exist_ok=True)
+    for p in plot_dir:
+        Path(p).mkdir(parents=True, exist_ok=True)
+    for p in yld_dir:
+        Path(p).mkdir(parents=True, exist_ok=True)
 
     c1 = config['colour'][0]
     c2 = config['colour'][1]
     c3 = config['colour'][2]
     
-    alpha = 0.4
+    alpha = config['alpha']
     c1b = faded(c1, alpha)
     c2b = faded(c2, alpha)
     c3b = faded(c3, alpha)
     
-    yield_surface_name = config['yield_surface_type'][0]
+    yield_surface_name = config['yield_surface_type']
     #yield_surface_name = 'Hill'
     yield_stress_ref1 = float(config['reference_yield_stress'][0])
     dataset_path1 = str(database_pths[0])
@@ -174,7 +187,21 @@ def main():
                         sym_pt_color=c1,
                         ln_color=c3)
     
-    yield_surface1   = fit_yield_surface(yield_surface_name, yield_stress_ref1, dataset_path1, output_path1, plot_path1, symmetry1)
+    if not config['plot_only']:
+        yield_surface1   = fit_yield_surface(yield_surface_name, 
+                                         yield_stress_ref1, 
+                                         dataset_path1, 
+                                         output_path1, 
+                                         plot_path1, 
+                                         symmetry1)
+        with open(yld_pths[0], "wb") as f:
+            pickle.dump(yield_surface1, f)
+    else:
+        print('Plot_only mode active. Skip yield surface fitting. Load yield surface 1 from file...')
+        with open(yld_pths[0], "rb") as f:   # open in *binary read* mode
+            yield_surface1 = pickle.load(f)
+                
+        
 
     if len(config['yield_point_databases'])==1:
         fig              = make_plot_yield_surface(yield_surface1, data_set1, plot_path1, symmetry1, style1)
@@ -184,7 +211,7 @@ def main():
         yield_stress_ref2   = float(config['reference_yield_stress'][1])
         output_path2        = output_pths[1]
         plot_path2          = plot_pths[1]
-        plot_path3          = parents[0] / 'comparison.png'
+        plot_path3          = plot_dir[0] / 'comparison.png'
         symmetry2           = config['yield_point_symmetry'][1]
         data_set2           = read_yield_points(dataset_path2, symmetry2)
         style2              = FigureStyle(linewidth=config['style'][1][0], 
@@ -195,7 +222,14 @@ def main():
                                           sym_pt_color=c1b,
                                           ln_color=c3b)
         
-        yield_surface2      = fit_yield_surface(yield_surface_name, yield_stress_ref2, dataset_path2, output_path2, plot_path2, symmetry2)
+        if not config['plot_only']:
+            yield_surface2      = fit_yield_surface(yield_surface_name, yield_stress_ref2, dataset_path2, output_path2, plot_path2, symmetry2)
+            with open(yld_pths[1], "wb") as f:
+                pickle.dump(yield_surface2, f)
+        else:
+            print('Plot_only mode active. Skip yield surface fitting. Load yield surface 2 from file...')
+            with open(yld_pths[1], "rb") as f:   
+                yield_surface2 = pickle.load(f)
         fig                 = make_comparison_plot_yield_surface(yield_surface1,yield_surface2, data_set1,data_set2, plot_path3, symmetry1, symmetry2,style1,style2)
     
    
