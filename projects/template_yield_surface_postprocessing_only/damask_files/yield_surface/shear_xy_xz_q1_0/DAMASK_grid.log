@@ -1,0 +1,3070 @@
+
+ <<<+-  parallelization init  -+>>>
+
+ Open MPI v4.1.6, package: Debian OpenMPI, ident: 4.1.6, repo rev: v4.1.6, Sep 30, 2023
+ MPI standard: 3.1
+ OpenMP version: 201511
+
+ MPI processes: 1
+ Could not get $OMP_NUM_THREADS, using default
+ OMP_NUM_THREADS: 4
+
+ <<<+-  CLI init  -+>>>
+
+     _/_/_/      _/_/    _/      _/    _/_/      _/_/_/  _/    _/    _/_/_/
+    _/    _/  _/    _/  _/_/  _/_/  _/    _/  _/        _/  _/            _/
+   _/    _/  _/_/_/_/  _/  _/  _/  _/_/_/_/    _/_/    _/_/          _/_/
+  _/    _/  _/    _/  _/      _/  _/    _/        _/  _/  _/            _/
+ _/_/_/    _/    _/  _/      _/  _/    _/  _/_/_/    _/    _/    _/_/_/
+ Grid solver
+
+ F. Roters et al., Computational Materials Science 158:420–478, 2019
+ https://doi.org/10.1016/j.commatsci.2018.04.030
+
+ S. Balay et al., PETSc/TAO User Manual Revision 3.19
+ https://doi.org/10.2172/1968587
+
+ Version: v3.0.1
+
+ Compiled with: GCC version 13.3.0
+ Compiled on: Linux-6.8.0-51-generic
+ Compiler options: -cpp -I /usr/lib/petscdir/petsc3.19/x86_64-linux-gnu-real/include -I /usr/include/hypre -I /usr/include/suitesparse -I /usr/include/superlu -I /usr/include/superlu-dist -I /usr/include/trilinos -I /usr/include/scotch -I /usr/include/hdf5/openmpi -I /usr/include/hdf5/serial -I /usr/include -I /usr/lib/x86_64-linux-gnu/openmpi/lib/../../fortran/gfortran-mod-15/openmpi -I /usr/lib/x86_64-linux-gnu/openmpi/lib -imultiarch x86_64-linux-gnu -D_REENTRANT -D CMAKE_SYSTEM="Linux-6.8.0-51-generic" -D DAMASKVERSION="v3.0.1" -D FYAML -D GRID -D PETSC --param=l1-cache-size=32 --param=l1-cache-line-size=64 --param=l2-cache-size=512 -mtune=znver2 -mno-omit-leaf-frame-pointer -march=x86-64 -g -O2 -O2 -Wall -Wextra -Wcharacter-truncation -Wunderflow -Wsuggest-attribute=pure -Wsuggest-attribute=noreturn -Wconversion-extra -Wunused-parameter -std=f2018 -fno-omit-frame-pointer -ffile-prefix-map=/build/damask-XEckOy/damask-3.0.1=. -flto=auto -ffat-lto-objects -fstack-protector-strong -fstack-clash-protection -fcf-protection=full -fdebug-prefix-map=/build/damask-XEckOy/damask-3.0.1=/usr/src/damask-3.0.1-6~noble -fopenmp -fPIE -ffree-line-length-none -fimplicit-none -fallow-argument-mismatch -ffpe-summary=all -fpre-include=/usr/include/finclude/x86_64-linux-gnu/math-vector-fortran.h
+
+ Compiled on: Jan 14 2025 at 07:40:31
+
+ PETSc version: 3.19.6
+
+ Date: 14/11/2025
+ Time: 23:09:05
+
+ Host name: UT170340
+ User name: vincent
+
+ Command line call:      DAMASK_grid --geom /home/vincent/local_Homogenization_for_Damask/projects/template_yield_surface_postprocessing_only/input_files/Polycrystal_25_5x5x5.vti --load /home/vincent/local_Homogenization_for_Damask/projects/template_yield_surface_postprocessing_only/damask_files/yield_surface/shear_xy_xz_q1_0/LOADCASE.yaml --material /home/vincent/local_Homogenization_for_Damask/projects/template_yield_surface_postprocessing_only/input_files/titanium_assigned.yaml --numerics /home/vincent/local_Homogenization_for_Damask/projects/template_yield_surface_postprocessing_only/damask_files/yield_surface/shear_xy_xz_q1_0/NUMERICS.yaml --jobname template_yield_surface_postprocessing_only --workingdirectory /home/vincent/local_Homogenization_for_Damask/projects/template_yield_surface_postprocessing_only/damask_files/yield_surface/shear_xy_xz_q1_0
+
+ Working directory:      /home/vincent/local_Homogenization_for_Damask/projects/template_yield_surface_postprocessing_only/damask_files/yield_surface/shear_xy_xz_q1_0
+ Geometry:               ../../../input_files/Polycrystal_25_5x5x5.vti <-- /home/vincent/local_Homogenization_for_Damask/projects/template_yield_surface_postprocessing_only/input_files/Polycrystal_25_5x5x5.vti
+ Load case:              LOADCASE.yaml <-- /home/vincent/local_Homogenization_for_Damask/projects/template_yield_surface_postprocessing_only/damask_files/yield_surface/shear_xy_xz_q1_0/LOADCASE.yaml
+ Material config:        ../../../input_files/titanium_assigned.yaml <-- /home/vincent/local_Homogenization_for_Damask/projects/template_yield_surface_postprocessing_only/input_files/titanium_assigned.yaml
+ Numerics config:        NUMERICS.yaml <-- /home/vincent/local_Homogenization_for_Damask/projects/template_yield_surface_postprocessing_only/damask_files/yield_surface/shear_xy_xz_q1_0/NUMERICS.yaml
+ Solver job name:        template_yield_surface_postprocessing_only
+
+ <<<+-  system_routines init  -+>>>
+
+ <<<+-  prec init  -+>>>
+
+ integer size / bit:   32
+   maximum value:              2147483647
+
+ real size / bit:      64
+   maximum value:      0.180+309
+   minimum value:      0.223-307
+   epsilon value:      0.222E-15
+   decimal precision:  15
+
+ <<<+-  misc init  -+>>>
+
+ <<<+-  IO init  -+>>>
+
+ <<<+-  base64 init  -+>>>
+
+ <<<+-  types init  -+>>>
+
+ <<<+-  YAML init  -+>>>
+
+ libfyaml powered
+
+ <<<+-  HDF5_utilities init  -+>>>
+
+ <<<+-  result init  -+>>>
+
+ M. Diehl et al., Integrating Materials and Manufacturing Innovation 6(1):83–91, 2017
+ https://doi.org/10.1007/s40192-017-0084-5
+
+ <<<+-  config init  -+>>>
+
+ reading material configuration
+
+ reading numerics configuration
+
+ <<<+-  math init  -+>>>
+
+ size  of random seed:      8
+ value of random seed:      -1772788480   567672038  1336800100  -879905855 -1482930963 -1791532161     2875896  1134653999
+ start of random sequence: 
+                           0.66118446699652
+                           0.02130564676311
+                           0.64576040540234
+                           0.35762345699445
+
+ <<<+-  rotations init  -+>>>
+
+ D. Rowenhorst et al., Modelling and Simulation in Materials Science and Engineering 23:083501, 2015
+ https://doi.org/10.1088/0965-0393/23/8/083501
+
+ <<<+-  polynomials init  -+>>>
+
+ <<<+-  tables init  -+>>>
+
+ <<<+-  crystal init  -+>>>
+
+ <<<+-  discretization_grid init  -+>>>
+
+ cells:  5 × 5 × 5
+ size:   1.00E-05 × 1.00E-05 × 1.00E-05 m³
+ origin:  0.00E+00  0.00E+00  0.00E+00 m
+
+ <<<+-  discretization init  -+>>>
+
+ <<<+-  material init  -+>>>
+
+ parsed material.yaml
+
+ <<<+-  phase init  -+>>>
+
+ phase 1: A
+
+ references:
+   - https://www.totalmateria.com/page.aspx?ID=CheckArticle&site=ktn&NM=221
+   - https://en.wikipedia.org/wiki/Titanium
+
+ <<<+-  phase:mechanical init  -+>>>
+
+ <<<+-  phase:mechanical:elastic init  -+>>>
+
+ <<<+-  phase:mechanical:elastic:Hooke init  -+>>>
+
+ # phases: 1
+
+ phase 1: A
+
+ references:
+   - E.S. Fisher and C.J. Renken, Physical Review 135(2A):A482-A494, 1964,
+     https://doi.org/10.1103/PhysRev.135.A482, fit to Tab. IV (T_min=77K, 
+     T_max=923K) 
+
+ <<<+-  phase:mechanical:plasticity init  -+>>>
+
+ <<<+-  phase:mechanical:plastic:phenopowerlaw init  -+>>>
+
+ # phases: 1
+
+ phase 1: A
+
+ references:
+   - C. Zambaldi et al., Journal of Materials Research 27(1):356-367, 2021,
+     https://doi.org/10.1557/jmr.2011.334 
+   - L. Wang et al., Acta Materialia 132:598-610, 2017,
+     https://doi.org/10.1016/j.actamat.2017.05.015 
+
+ <<<+-  phase:mechanical:eigen init  -+>>>
+
+ <<<+-  phase:damage init  -+>>>
+
+ <<<+-  phase:thermal init  -+>>>
+
+ <<<+-  homogenization init  -+>>>
+
+ <<<+-  homogenization:mechanical init  -+>>>
+
+ <<<+-  homogenization:mechanical:pass init  -+>>>
+
+ # homogenizations: 1
+
+ <<<+-  homogenization:thermal init  -+>>>
+
+ <<<+-  homogenization:damage init  -+>>>
+
+ <<<+-  homogenization:damage:pass init  -+>>>
+
+ <<<+-  materialpoint init  -+>>>
+
+ deallocating material configuration
+
+ <<<+-  DAMASK_grid init  -+>>>
+
+ P. Shanthraj et al., Handbook of Mechanics of Materials, 2019
+ https://doi.org/10.1007/978-981-10-6855-3_80
+
+ <<<+-  spectral_utilities init  -+>>>
+
+ M. Diehl, Diploma Thesis TU München, 2010
+ https://doi.org/10.13140/2.1.3234.3840
+
+ P. Eisenlohr et al., International Journal of Plasticity 46:37–53, 2013
+ https://doi.org/10.1016/j.ijplas.2012.09.012
+
+ P. Shanthraj et al., International Journal of Plasticity 66:31–45, 2015
+ https://doi.org/10.1016/j.ijplas.2014.02.006
+
+ P. Shanthraj et al., Handbook of Mechanics of Materials, 2019
+ https://doi.org/10.1007/978-981-10-6855-3_80
+
+ M. Frigo and S.G. Johnson, Proceedings of the IEEE 93(2):216–231, 2005
+ https://doi.org/10.1109/jproc.2004.840301
+
+ FFTW initialized
+
+ <<<+-  grid_mechanical_spectral_basic init  -+>>>
+
+ P. Eisenlohr et al., International Journal of Plasticity 46:37–53, 2013
+ https://doi.org/10.1016/j.ijplas.2012.09.012
+
+ P. Shanthraj et al., International Journal of Plasticity 66:31–45, 2015
+ https://doi.org/10.1016/j.ijplas.2014.02.006
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0000         0.0000         0.0000
+        0.0000         0.0000        -0.0000
+        0.0000        -0.0000         0.0000
+
+ deallocating numerics configuration
+
+ ... saving initial configuration ..........................................
+
+ load case: 1
+  estimate_rate: F
+  F:
+       x             x             x      
+     0.0000000       x             x      
+     0.0000000     0.0000000       x      
+  P / MPa:
+        0.0000        0.0000      350.0000
+       x              0.0000        0.0000
+       x             x              0.0000
+  r: 1 (constant step width)
+  t: 1000.000
+  N: 15
+  f_out: 1
+  f_restart: 1
+
+ ###########################################################################
+ Time  6.66667E+01s: Increment 1/15-1/1 of load case 1/1
+ Increment 1/15-1/1 @ Iteration 1≤0≤100
+
+ deformation gradient aim       =
+   1.0000000    0.0000000    0.0000000
+   0.0000000    1.0000000    0.0000000
+   0.0000000    0.0000000    1.0000000
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0000         0.0000         0.0000
+        0.0000        -0.0000        -0.0000
+        0.0000        -0.0000        -0.0000
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         1.24 (1.24E-04 / m, tol =  1.00E-04)
+ error stress BC  =     23333.33 (2.33E+07 Pa,  tol =  1.00E+03)
+
+ ===========================================================================
+ Increment 1/15-1/1 @ Iteration 1≤1≤100
+
+ deformation gradient aim       =
+   0.9999999    0.0000012    0.0005252
+   0.0000000    1.0000017   -0.0000047
+   0.0000000    0.0000000    0.9999985
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0229         0.0000        23.3334
+       -0.0001         0.0105        -0.0000
+       23.3333        -0.0000         0.0231
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0223         0.0000        23.0551
+       -0.0001         0.0103        -0.0000
+       23.0550        -0.0000         0.0226
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =       649.31 (7.48E+06 / m, tol =  1.15E+04)
+ error stress BC  =        12.07 (2.78E+05 Pa,  tol =  2.31E+04)
+
+ ===========================================================================
+ Increment 1/15-1/1 @ Iteration 1≤2≤100
+
+ deformation gradient aim       =
+   0.9999997    0.0000012    0.0005315
+   0.0000000    1.0000018   -0.0000048
+   0.0000000    0.0000000    0.9999982
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0378        -0.0716        23.0237
+       -0.0717         0.0289        -0.0381
+       23.0237        -0.0381        -0.0616
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0383        -0.0711        23.3278
+       -0.0712         0.0290        -0.0378
+       23.3278        -0.0378        -0.0603
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =        76.49 (8.92E+05 / m, tol =  1.17E+04)
+ error stress BC  =         3.05 (7.11E+04 Pa,  tol =  2.33E+04)
+
+ ===========================================================================
+ Increment 1/15-1/1 @ Iteration 1≤3≤100
+
+ deformation gradient aim       =
+   0.9999989    0.0000046    0.0005385
+   0.0000000    1.0000012   -0.0000031
+   0.0000000    0.0000000    0.9999996
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0011        -0.0041        23.3267
+       -0.0042        -0.0007         0.0072
+       23.3267         0.0072         0.0005
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0017        -0.0060        23.3334
+       -0.0061        -0.0001         0.0061
+       23.3334         0.0061        -0.0015
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =        12.06 (1.41E+05 / m, tol =  1.17E+04)
+ error stress BC  =         0.26 (6.15E+03 Pa,  tol =  2.33E+04)
+
+ ===========================================================================
+ Increment 1/15-1/1 @ Iteration 1≤4≤100
+
+ deformation gradient aim       =
+   0.9999989    0.0000048    0.0005387
+   0.0000000    1.0000012   -0.0000034
+   0.0000000    0.0000000    0.9999996
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0010        -0.0007        23.3336
+       -0.0008         0.0004        -0.0000
+       23.3336        -0.0000        -0.0015
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0004         0.0004        23.3333
+        0.0003        -0.0001         0.0008
+       23.3333         0.0008        -0.0005
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         1.65 (1.92E+04 / m, tol =  1.17E+04)
+ error stress BC  =         0.03 (7.55E+02 Pa,  tol =  2.33E+04)
+
+ ===========================================================================
+ Increment 1/15-1/1 @ Iteration 1≤5≤100
+
+ deformation gradient aim       =
+   0.9999988    0.0000048    0.0005387
+   0.0000000    1.0000012   -0.0000034
+   0.0000000    0.0000000    0.9999996
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0001        -0.0001        23.3334
+       -0.0002         0.0000         0.0001
+       23.3333         0.0001        -0.0001
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0001         0.0000        23.3333
+       -0.0001         0.0000         0.0000
+       23.3333         0.0000        -0.0001
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         0.24 (2.77E+03 / m, tol =  1.17E+04)
+ error stress BC  =         0.01 (1.19E+02 Pa,  tol =  2.33E+04)
+
+ ===========================================================================
+
+ increment 1 converged
+
+ ... saving results ........................................................
+ saving solver data required for restart
+ saving field and constitutive data required for restart
+
+ ###########################################################################
+ Time  1.33333E+02s: Increment 2/15-1/1 of load case 1/1
+ Increment 2/15-1/1 @ Iteration 1≤0≤100
+
+ deformation gradient aim       =
+   0.9999977    0.0000096    0.0010774
+   0.0000000    1.0000025   -0.0000069
+   0.0000000    0.0000000    0.9999992
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0753         0.1518        47.2273
+        0.1514        -0.0544         0.0613
+       47.2272         0.0613         0.1285
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         8.84 (2.09E+05 / m, tol =  2.36E+04)
+ error stress BC  =        11.87 (5.61E+05 Pa,  tol =  4.72E+04)
+
+ ===========================================================================
+ Increment 2/15-1/1 @ Iteration 1≤1≤100
+
+ deformation gradient aim       =
+   0.9999985    0.0000061    0.0010648
+   0.0000000    1.0000030   -0.0000081
+   0.0000000    0.0000000    0.9999979
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0016        -0.0045        46.6582
+       -0.0048         0.0012        -0.0018
+       46.6582        -0.0018        -0.0052
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0018         0.0025        46.6837
+        0.0022        -0.0013         0.0011
+       46.6837         0.0011         0.0008
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         8.33 (1.94E+05 / m, tol =  2.33E+04)
+ error stress BC  =         0.37 (1.71E+04 Pa,  tol =  4.67E+04)
+
+ ===========================================================================
+ Increment 2/15-1/1 @ Iteration 1≤2≤100
+
+ deformation gradient aim       =
+   0.9999985    0.0000061    0.0010646
+   0.0000000    1.0000030   -0.0000081
+   0.0000000    0.0000000    0.9999979
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0026         0.0041        46.6744
+        0.0038        -0.0017         0.0017
+       46.6744         0.0017         0.0037
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0014         0.0019        46.6663
+        0.0015        -0.0009         0.0008
+       46.6663         0.0008         0.0018
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         1.04 (2.43E+04 / m, tol =  2.33E+04)
+ error stress BC  =         0.04 (1.88E+03 Pa,  tol =  4.67E+04)
+
+ ===========================================================================
+ Increment 2/15-1/1 @ Iteration 1≤3≤100
+
+ deformation gradient aim       =
+   0.9999986    0.0000060    0.0010644
+   0.0000000    1.0000030   -0.0000082
+   0.0000000    0.0000000    0.9999978
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0000         0.0002        46.6670
+       -0.0002        -0.0001        -0.0001
+       46.6670        -0.0001         0.0001
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0000         0.0001        46.6666
+       -0.0002        -0.0001        -0.0001
+       46.6666        -0.0001         0.0001
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         0.16 (3.68E+03 / m, tol =  2.33E+04)
+ error stress BC  =         0.00 (1.35E+02 Pa,  tol =  4.67E+04)
+
+ ===========================================================================
+
+ increment 2 converged
+
+ ... saving results ........................................................
+ saving solver data required for restart
+ saving field and constitutive data required for restart
+
+ ###########################################################################
+ Time  2.00000E+02s: Increment 3/15-1/1 of load case 1/1
+ Increment 3/15-1/1 @ Iteration 1≤0≤100
+
+ deformation gradient aim       =
+   0.9999983    0.0000071    0.0015901
+   0.0000000    1.0000048   -0.0000129
+   0.0000000    0.0000000    0.9999961
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.1140        -0.0846        69.6870
+       -0.0854         0.0643        -0.0341
+       69.6869        -0.0341         0.0019
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         3.26 (1.14E+05 / m, tol =  3.48E+04)
+ error stress BC  =         4.49 (3.13E+05 Pa,  tol =  6.97E+04)
+
+ ===========================================================================
+ Increment 3/15-1/1 @ Iteration 1≤1≤100
+
+ deformation gradient aim       =
+   0.9999975    0.0000091    0.0015972
+   0.0000000    1.0000046   -0.0000122
+   0.0000000    0.0000000    0.9999965
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0010         0.0025        70.0046
+        0.0017        -0.0005         0.0009
+       70.0045         0.0009         0.0027
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0040        -0.0013        69.9907
+       -0.0022         0.0024        -0.0006
+       69.9906        -0.0006         0.0027
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         3.10 (1.08E+05 / m, tol =  3.50E+04)
+ error stress BC  =         0.13 (9.32E+03 Pa,  tol =  7.00E+04)
+
+ ===========================================================================
+ Increment 3/15-1/1 @ Iteration 1≤2≤100
+
+ deformation gradient aim       =
+   0.9999975    0.0000091    0.0015973
+   0.0000000    1.0000046   -0.0000122
+   0.0000000    0.0000000    0.9999965
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0016        -0.0023        69.9957
+       -0.0031         0.0006        -0.0010
+       69.9956        -0.0010        -0.0019
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0000        -0.0010        70.0002
+       -0.0019        -0.0003        -0.0005
+       70.0001        -0.0005        -0.0019
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         0.38 (1.34E+04 / m, tol =  3.50E+04)
+ error stress BC  =         0.03 (1.87E+03 Pa,  tol =  7.00E+04)
+
+ ===========================================================================
+
+ increment 3 converged
+
+ ... saving results ........................................................
+ saving solver data required for restart
+ saving field and constitutive data required for restart
+
+ ###########################################################################
+ Time  2.66667E+02s: Increment 4/15-1/1 of load case 1/1
+ Increment 4/15-1/1 @ Iteration 1≤0≤100
+
+ deformation gradient aim       =
+   0.9999963    0.0000123    0.0021303
+   0.0000000    1.0000062   -0.0000162
+   0.0000000    0.0000000    0.9999952
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0361         0.0090        93.3679
+        0.0075         0.0158         0.0039
+       93.3677         0.0039         0.0487
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         0.74 (3.45E+04 / m, tol =  4.67E+04)
+ error stress BC  =         0.52 (4.87E+04 Pa,  tol =  9.34E+04)
+
+ ===========================================================================
+ Increment 4/15-1/1 @ Iteration 1≤1≤100
+
+ deformation gradient aim       =
+   0.9999962    0.0000121    0.0021296
+   0.0000000    1.0000063   -0.0000163
+   0.0000000    0.0000000    0.9999949
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0001        -0.0005        93.3324
+       -0.0020         0.0003        -0.0000
+       93.3322        -0.0000        -0.0006
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0018        -0.0000        93.3340
+       -0.0016         0.0010         0.0002
+       93.3339         0.0002         0.0017
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         0.24 (1.13E+04 / m, tol =  4.67E+04)
+ error stress BC  =         0.02 (1.83E+03 Pa,  tol =  9.33E+04)
+
+ ===========================================================================
+
+ increment 4 converged
+
+ ... saving results ........................................................
+ saving solver data required for restart
+ saving field and constitutive data required for restart
+
+ ###########################################################################
+ Time  3.33333E+02s: Increment 5/15-1/1 of load case 1/1
+ Increment 5/15-1/1 @ Iteration 1≤0≤100
+
+ deformation gradient aim       =
+   0.9999949    0.0000151    0.0026618
+   0.0000000    1.0000079   -0.0000204
+   0.0000000    0.0000000    0.9999933
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0505        -0.0025       116.6291
+       -0.0048         0.0216        -0.0088
+      116.6288        -0.0088         0.0417
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         5.00 (2.91E+05 / m, tol =  5.83E+04)
+ error stress BC  =         0.43 (5.05E+04 Pa,  tol =  1.17E+05)
+
+ ===========================================================================
+ Increment 5/15-1/1 @ Iteration 1≤1≤100
+
+ deformation gradient aim       =
+   0.9999947    0.0000152    0.0026626
+   0.0000000    1.0000080   -0.0000202
+   0.0000000    0.0000000    0.9999931
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0015        -0.0007       116.6628
+       -0.0031        -0.0001        -0.0006
+      116.6626        -0.0006        -0.0009
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0065        -0.0004       116.6683
+       -0.0028        -0.0036         0.0008
+      116.6681         0.0008        -0.0079
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         0.65 (3.80E+04 / m, tol =  5.83E+04)
+ error stress BC  =         0.07 (7.87E+03 Pa,  tol =  1.17E+05)
+
+ ===========================================================================
+
+ increment 5 converged
+
+ ... saving results ........................................................
+ saving solver data required for restart
+ saving field and constitutive data required for restart
+
+ ###########################################################################
+ Time  4.00000E+02s: Increment 6/15-1/1 of load case 1/1
+ Increment 6/15-1/1 @ Iteration 1≤0≤100
+
+ deformation gradient aim       =
+   0.9999932    0.0000183    0.0031957
+   0.0000000    1.0000097   -0.0000241
+   0.0000000    0.0000000    0.9999914
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0865         0.0073       139.6599
+        0.0042         0.0380        -0.0858
+      139.6596        -0.0858         0.0187
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =        42.67 (2.98E+06 / m, tol =  6.98E+04)
+ error stress BC  =         2.44 (3.40E+05 Pa,  tol =  1.40E+05)
+
+ ===========================================================================
+ Increment 6/15-1/1 @ Iteration 1≤1≤100
+
+ deformation gradient aim       =
+   0.9999925    0.0000181    0.0032034
+   0.0000000    1.0000098   -0.0000223
+   0.0000000    0.0000000    0.9999916
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0219        -0.0149       139.8779
+       -0.0179         0.0069        -0.0270
+      139.8778        -0.0270        -0.0263
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0140        -0.0272       139.9972
+       -0.0302        -0.0106         0.0052
+      139.9973         0.0052        -0.0522
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         6.93 (4.85E+05 / m, tol =  7.00E+04)
+ error stress BC  =         0.37 (5.22E+04 Pa,  tol =  1.40E+05)
+
+ ===========================================================================
+ Increment 6/15-1/1 @ Iteration 1≤2≤100
+
+ deformation gradient aim       =
+   0.9999922    0.0000191    0.0032062
+   0.0000000    1.0000096   -0.0000218
+   0.0000000    0.0000000    0.9999922
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0014         0.0013       139.9967
+       -0.0017        -0.0027        -0.0015
+      139.9967        -0.0015         0.0007
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0009         0.0016       140.0069
+       -0.0014        -0.0039         0.0009
+      140.0069         0.0009         0.0010
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         1.15 (8.06E+04 / m, tol =  7.00E+04)
+ error stress BC  =         0.05 (6.91E+03 Pa,  tol =  1.40E+05)
+
+ ===========================================================================
+ Increment 6/15-1/1 @ Iteration 1≤3≤100
+
+ deformation gradient aim       =
+   0.9999922    0.0000190    0.0032062
+   0.0000000    1.0000097   -0.0000218
+   0.0000000    0.0000000    0.9999922
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0003        -0.0006       140.0003
+       -0.0036         0.0001         0.0001
+      140.0002         0.0001        -0.0004
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0007         0.0000       140.0001
+       -0.0030         0.0005        -0.0000
+      140.0001        -0.0000         0.0009
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         0.18 (1.24E+04 / m, tol =  7.00E+04)
+ error stress BC  =         0.01 (9.26E+02 Pa,  tol =  1.40E+05)
+
+ ===========================================================================
+
+ increment 6 converged
+
+ ... saving results ........................................................
+ saving solver data required for restart
+ saving field and constitutive data required for restart
+
+ ###########################################################################
+ Time  4.66667E+02s: Increment 7/15-1/1 of load case 1/1
+ Increment 7/15-1/1 @ Iteration 1≤0≤100
+
+ deformation gradient aim       =
+   0.9999897    0.0000229    0.0037496
+   0.0000000    1.0000114   -0.0000234
+   0.0000000    0.0000000    0.9999912
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0769         0.0868       162.1666
+        0.0839         0.1537        -0.2497
+      162.1669        -0.2497        -0.0215
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =        69.54 (5.64E+06 / m, tol =  8.11E+04)
+ error stress BC  =         7.19 (1.17E+06 Pa,  tol =  1.62E+05)
+
+ ===========================================================================
+ Increment 7/15-1/1 @ Iteration 1≤1≤100
+
+ deformation gradient aim       =
+   0.9999894    0.0000209    0.0037766
+   0.0000000    1.0000103   -0.0000179
+   0.0000000    0.0000000    0.9999919
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0249        -0.0073       162.9317
+       -0.0099         0.0509        -0.0750
+      162.9324        -0.0750        -0.0761
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0125        -0.0735       163.4660
+       -0.0760        -0.0207         0.0476
+      163.4670         0.0476        -0.1169
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =        19.11 (1.56E+06 / m, tol =  8.17E+04)
+ error stress BC  =         0.81 (1.33E+05 Pa,  tol =  1.63E+05)
+
+ ===========================================================================
+ Increment 7/15-1/1 @ Iteration 1≤2≤100
+
+ deformation gradient aim       =
+   0.9999888    0.0000227    0.0037828
+   0.0000000    1.0000096   -0.0000173
+   0.0000000    0.0000000    0.9999936
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0142         0.0009       163.2886
+       -0.0015        -0.0035        -0.0129
+      163.2894        -0.0129        -0.0117
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0135         0.0050       163.3342
+        0.0026        -0.0108        -0.0060
+      163.3350        -0.0060         0.0017
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         4.44 (3.63E+05 / m, tol =  8.17E+04)
+ error stress BC  =         0.08 (1.35E+04 Pa,  tol =  1.63E+05)
+
+ ===========================================================================
+ Increment 7/15-1/1 @ Iteration 1≤3≤100
+
+ deformation gradient aim       =
+   0.9999885    0.0000226    0.0037838
+   0.0000000    1.0000098   -0.0000169
+   0.0000000    0.0000000    0.9999938
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0016        -0.0034       163.3392
+       -0.0058        -0.0013         0.0016
+      163.3400         0.0016        -0.0001
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0005        -0.0005       163.3312
+       -0.0029         0.0016        -0.0002
+      163.3320        -0.0002         0.0066
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         1.02 (8.37E+04 / m, tol =  8.17E+04)
+ error stress BC  =         0.04 (6.63E+03 Pa,  tol =  1.63E+05)
+
+ ===========================================================================
+ Increment 7/15-1/1 @ Iteration 1≤4≤100
+
+ deformation gradient aim       =
+   0.9999885    0.0000227    0.0037838
+   0.0000000    1.0000098   -0.0000170
+   0.0000000    0.0000000    0.9999937
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0005         0.0000       163.3335
+       -0.0024        -0.0007        -0.0008
+      163.3343        -0.0008         0.0002
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0003        -0.0002       163.3333
+       -0.0026        -0.0003        -0.0006
+      163.3341        -0.0006        -0.0005
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         0.25 (2.04E+04 / m, tol =  8.17E+04)
+ error stress BC  =         0.00 (6.27E+02 Pa,  tol =  1.63E+05)
+
+ ===========================================================================
+
+ increment 7 converged
+
+ ... saving results ........................................................
+ saving solver data required for restart
+ saving field and constitutive data required for restart
+
+ ###########################################################################
+ Time  5.33333E+02s: Increment 8/15-1/1 of load case 1/1
+ Increment 8/15-1/1 @ Iteration 1≤0≤100
+
+ deformation gradient aim       =
+   0.9999847    0.0000264    0.0043614
+   0.0000000    1.0000099   -0.0000121
+   0.0000000    0.0000000    0.9999952
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0444         0.0311       184.0214
+        0.0308         0.3257        -0.4582
+      184.0235        -0.4581        -0.0689
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =        70.47 (6.48E+06 / m, tol =  9.20E+04)
+ error stress BC  =        14.37 (2.65E+06 Pa,  tol =  1.84E+05)
+
+ ===========================================================================
+ Increment 8/15-1/1 @ Iteration 1≤1≤100
+
+ deformation gradient aim       =
+   0.9999857    0.0000255    0.0044256
+   0.0000000    1.0000068   -0.0000015
+   0.0000000    0.0000000    0.9999965
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0087        -0.0473       186.0093
+       -0.0472         0.0801        -0.0847
+      186.0116        -0.0848        -0.0833
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0068        -0.0839       186.8787
+       -0.0836        -0.0275         0.0790
+      186.8811         0.0789        -0.0910
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =        38.30 (3.58E+06 / m, tol =  9.34E+04)
+ error stress BC  =         1.13 (2.12E+05 Pa,  tol =  1.87E+05)
+
+ ===========================================================================
+ Increment 8/15-1/1 @ Iteration 1≤2≤100
+
+ deformation gradient aim       =
+   0.9999854    0.0000286    0.0044364
+   0.0000000    1.0000059   -0.0000013
+   0.0000000    0.0000000    0.9999980
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0274        -0.0164       186.3847
+       -0.0159         0.0323        -0.0593
+      186.3872        -0.0593        -0.0645
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0409        -0.0132       186.6295
+       -0.0126         0.0016        -0.0271
+      186.6321        -0.0271        -0.0606
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =        11.39 (1.06E+06 / m, tol =  9.33E+04)
+ error stress BC  =         0.32 (6.06E+04 Pa,  tol =  1.87E+05)
+
+ ===========================================================================
+ Increment 8/15-1/1 @ Iteration 1≤3≤100
+
+ deformation gradient aim       =
+   0.9999846    0.0000293    0.0044441
+   0.0000000    1.0000055    0.0000006
+   0.0000000    0.0000000    0.9999993
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0109         0.0001       186.6684
+        0.0007        -0.0043         0.0029
+      186.6710         0.0029        -0.0065
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0035         0.0109       186.6575
+        0.0116        -0.0034         0.0035
+      186.6601         0.0035         0.0146
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         2.96 (2.76E+05 / m, tol =  9.33E+04)
+ error stress BC  =         0.08 (1.46E+04 Pa,  tol =  1.87E+05)
+
+ ===========================================================================
+ Increment 8/15-1/1 @ Iteration 1≤4≤100
+
+ deformation gradient aim       =
+   0.9999844    0.0000290    0.0044443
+   0.0000000    1.0000056    0.0000005
+   0.0000000    0.0000000    0.9999993
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0020         0.0009       186.6639
+        0.0016        -0.0006        -0.0019
+      186.6665        -0.0019        -0.0016
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0016         0.0005       186.6670
+        0.0012         0.0001        -0.0006
+      186.6696        -0.0006         0.0006
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         0.92 (8.55E+04 / m, tol =  9.33E+04)
+ error stress BC  =         0.01 (1.58E+03 Pa,  tol =  1.87E+05)
+
+ ===========================================================================
+
+ increment 8 converged
+
+ ... saving results ........................................................
+ saving solver data required for restart
+ saving field and constitutive data required for restart
+
+ ###########################################################################
+ Time  6.00000E+02s: Increment 9/15-1/1 of load case 1/1
+ Increment 9/15-1/1 @ Iteration 1≤0≤100
+
+ deformation gradient aim       =
+   0.9999804    0.0000352    0.0051050
+   0.0000000    1.0000014    0.0000181
+   0.0000000    0.0000000    1.0000049
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.1788        -0.4770       206.8578
+       -0.4720         0.2945        -0.2425
+      206.8629        -0.2424        -0.0461
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =        61.32 (6.34E+06 / m, tol =  1.03E+05)
+ error stress BC  =        15.19 (3.14E+06 Pa,  tol =  2.07E+05)
+
+ ===========================================================================
+ Increment 9/15-1/1 @ Iteration 1≤1≤100
+
+ deformation gradient aim       =
+   0.9999827    0.0000477    0.0051863
+   0.0000000    0.9999979    0.0000242
+   0.0000000    0.0000000    1.0000055
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0108        -0.1938       209.3085
+       -0.1887         0.0422         0.0015
+      209.3133         0.0015        -0.0477
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0425        -0.1060       210.0841
+       -0.1008        -0.0385         0.0798
+      210.0889         0.0798        -0.0481
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =        42.82 (4.50E+06 / m, tol =  1.05E+05)
+ error stress BC  =         0.50 (1.06E+05 Pa,  tol =  2.10E+05)
+
+ ===========================================================================
+ Increment 9/15-1/1 @ Iteration 1≤2≤100
+
+ deformation gradient aim       =
+   0.9999822    0.0000552    0.0052021
+   0.0000000    0.9999977    0.0000225
+   0.0000000    0.0000000    1.0000064
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0229        -0.1031       209.5503
+       -0.0977         0.0359        -0.0618
+      209.5556        -0.0617        -0.0696
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0560        -0.0385       209.9327
+       -0.0330         0.0025        -0.0545
+      209.9380        -0.0545        -0.0780
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =        14.64 (1.54E+06 / m, tol =  1.05E+05)
+ error stress BC  =         0.37 (7.80E+04 Pa,  tol =  2.10E+05)
+
+ ===========================================================================
+ Increment 9/15-1/1 @ Iteration 1≤3≤100
+
+ deformation gradient aim       =
+   0.9999812    0.0000588    0.0052155
+   0.0000000    0.9999971    0.0000253
+   0.0000000    0.0000000    1.0000079
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0219        -0.0042       209.9803
+        0.0013        -0.0108        -0.0104
+      209.9856        -0.0104        -0.0114
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0082         0.0185       209.9846
+        0.0241        -0.0126        -0.0049
+      209.9899        -0.0049         0.0156
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         4.41 (4.63E+05 / m, tol =  1.05E+05)
+ error stress BC  =         0.09 (1.85E+04 Pa,  tol =  2.10E+05)
+
+ ===========================================================================
+ Increment 9/15-1/1 @ Iteration 1≤4≤100
+
+ deformation gradient aim       =
+   0.9999809    0.0000584    0.0052164
+   0.0000000    0.9999975    0.0000256
+   0.0000000    0.0000000    1.0000079
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0052         0.0012       209.9936
+        0.0069        -0.0020        -0.0075
+      209.9989        -0.0075        -0.0035
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0010         0.0018       210.0006
+        0.0075        -0.0001        -0.0031
+      210.0060        -0.0032         0.0008
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         1.50 (1.58E+05 / m, tol =  1.05E+05)
+ error stress BC  =         0.01 (3.15E+03 Pa,  tol =  2.10E+05)
+
+ ===========================================================================
+ Increment 9/15-1/1 @ Iteration 1≤5≤100
+
+ deformation gradient aim       =
+   0.9999808    0.0000584    0.0052166
+   0.0000000    0.9999975    0.0000259
+   0.0000000    0.0000000    1.0000080
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0010         0.0017       209.9983
+        0.0074        -0.0006        -0.0008
+      210.0036        -0.0008         0.0016
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0016         0.0003       209.9995
+        0.0061         0.0001         0.0004
+      210.0049         0.0004         0.0007
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         0.40 (4.24E+04 / m, tol =  1.05E+05)
+ error stress BC  =         0.01 (1.63E+03 Pa,  tol =  2.10E+05)
+
+ ===========================================================================
+
+ increment 9 converged
+
+ ... saving results ........................................................
+ saving solver data required for restart
+ saving field and constitutive data required for restart
+
+ ###########################################################################
+ Time  6.66667E+02s: Increment 10/15-1/1 of load case 1/1
+ Increment 10/15-1/1 @ Iteration 1≤0≤100
+
+ deformation gradient aim       =
+   0.9999773    0.0000877    0.0059889
+   0.0000000    0.9999893    0.0000512
+   0.0000000    0.0000000    1.0000166
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0040        -0.5893       230.3963
+       -0.5786        -0.0884         0.1868
+      230.4046         0.1871         0.0543
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =        57.19 (6.59E+06 / m, tol =  1.15E+05)
+ error stress BC  =        12.75 (2.94E+06 Pa,  tol =  2.30E+05)
+
+ ===========================================================================
+ Increment 10/15-1/1 @ Iteration 1≤1≤100
+
+ deformation gradient aim       =
+   0.9999773    0.0001046    0.0060695
+   0.0000000    0.9999900    0.0000471
+   0.0000000    0.0000000    1.0000157
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0756        -0.1633       232.6124
+       -0.1526        -0.0889         0.0559
+      232.6211         0.0560        -0.0068
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.1035        -0.0209       233.3476
+       -0.0103        -0.0908         0.0126
+      233.3565         0.0126        -0.0273
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =        40.66 (4.74E+06 / m, tol =  1.17E+05)
+ error stress BC  =         0.44 (1.03E+05 Pa,  tol =  2.33E+05)
+
+ ===========================================================================
+ Increment 10/15-1/1 @ Iteration 1≤2≤100
+
+ deformation gradient aim       =
+   0.9999750    0.0001096    0.0060889
+   0.0000000    0.9999920    0.0000456
+   0.0000000    0.0000000    1.0000159
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0210        -0.1502       232.8110
+       -0.1396         0.0084        -0.0127
+      232.8204        -0.0126        -0.0438
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0115        -0.0817       233.2173
+       -0.0710         0.0470        -0.0595
+      233.2271        -0.0595        -0.0682
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =        16.04 (1.87E+06 / m, tol =  1.17E+05)
+ error stress BC  =         0.50 (1.16E+05 Pa,  tol =  2.33E+05)
+
+ ===========================================================================
+ Increment 10/15-1/1 @ Iteration 1≤3≤100
+
+ deformation gradient aim       =
+   0.9999746    0.0001159    0.0061066
+   0.0000000    0.9999912    0.0000473
+   0.0000000    0.0000000    1.0000171
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0152        -0.0151       233.2947
+       -0.0044        -0.0080        -0.0148
+      233.3043        -0.0148        -0.0082
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0044         0.0120       233.3193
+        0.0227        -0.0177        -0.0016
+      233.3290        -0.0017         0.0176
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         5.66 (6.61E+05 / m, tol =  1.17E+05)
+ error stress BC  =         0.08 (1.77E+04 Pa,  tol =  2.33E+05)
+
+ ===========================================================================
+ Increment 10/15-1/1 @ Iteration 1≤4≤100
+
+ deformation gradient aim       =
+   0.9999743    0.0001160    0.0061080
+   0.0000000    0.9999916    0.0000477
+   0.0000000    0.0000000    1.0000170
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0052        -0.0040       233.3213
+        0.0069         0.0012        -0.0140
+      233.3311        -0.0140        -0.0065
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0051         0.0014       233.3332
+        0.0123        -0.0002        -0.0112
+      233.3430        -0.0112        -0.0049
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         2.10 (2.45E+05 / m, tol =  1.17E+05)
+ error stress BC  =         0.05 (1.12E+04 Pa,  tol =  2.33E+05)
+
+ ===========================================================================
+ Increment 10/15-1/1 @ Iteration 1≤5≤100
+
+ deformation gradient aim       =
+   0.9999742    0.0001161    0.0061083
+   0.0000000    0.9999916    0.0000483
+   0.0000000    0.0000000    1.0000172
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0001         0.0020       233.3313
+        0.0128        -0.0015        -0.0025
+      233.3410        -0.0025         0.0016
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0022         0.0010       233.3329
+        0.0119        -0.0000        -0.0003
+      233.3427        -0.0003         0.0016
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         0.71 (8.26E+04 / m, tol =  1.17E+05)
+ error stress BC  =         0.01 (2.16E+03 Pa,  tol =  2.33E+05)
+
+ ===========================================================================
+
+ increment 10 converged
+
+ ... saving results ........................................................
+ saving solver data required for restart
+ saving field and constitutive data required for restart
+
+ ###########################################################################
+ Time  7.33333E+02s: Increment 11/15-1/1 of load case 1/1
+ Increment 11/15-1/1 @ Iteration 1≤0≤100
+
+ deformation gradient aim       =
+   0.9999676    0.0001737    0.0070002
+   0.0000000    0.9999857    0.0000708
+   0.0000000    0.0000000    1.0000263
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.2835        -0.2933       252.6266
+       -0.2766        -0.4136         0.1951
+      252.6409         0.1955         0.0192
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =        77.88 (9.84E+06 / m, tol =  1.26E+05)
+ error stress BC  =        15.99 (4.04E+06 Pa,  tol =  2.53E+05)
+
+ ===========================================================================
+ Increment 11/15-1/1 @ Iteration 1≤1≤100
+
+ deformation gradient aim       =
+   0.9999631    0.0001844    0.0071189
+   0.0000000    0.9999908    0.0000664
+   0.0000000    0.0000000    1.0000255
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.1032         0.0121       255.6672
+        0.0296        -0.0680        -0.0614
+      255.6832        -0.0613        -0.0679
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0551         0.0954       256.4817
+        0.1132         0.0251        -0.1327
+      256.4982        -0.1327        -0.0922
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =        52.74 (6.76E+06 / m, tol =  1.28E+05)
+ error stress BC  =         0.72 (1.85E+05 Pa,  tol =  2.56E+05)
+
+ ===========================================================================
+ Increment 11/15-1/1 @ Iteration 1≤2≤100
+
+ deformation gradient aim       =
+   0.9999609    0.0001825    0.0071535
+   0.0000000    0.9999913    0.0000711
+   0.0000000    0.0000000    1.0000272
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0280        -0.1208       255.8120
+       -0.1030         0.0236        -0.0343
+      255.8290        -0.0342        -0.0802
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0412        -0.1336       256.4085
+       -0.1155         0.1310        -0.0677
+      256.4264        -0.0677        -0.1036
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =        26.29 (3.37E+06 / m, tol =  1.28E+05)
+ error stress BC  =         1.01 (2.58E+05 Pa,  tol =  2.56E+05)
+
+ ===========================================================================
+ Increment 11/15-1/1 @ Iteration 1≤3≤100
+
+ deformation gradient aim       =
+   0.9999609    0.0001899    0.0071863
+   0.0000000    0.9999893    0.0000736
+   0.0000000    0.0000000    1.0000291
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0001        -0.0232       256.5473
+       -0.0051         0.0182        -0.0100
+      256.5647        -0.0100        -0.0214
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0063         0.0044       256.6385
+        0.0226        -0.0292         0.0357
+      256.6560         0.0356         0.0262
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         9.59 (1.23E+06 / m, tol =  1.28E+05)
+ error stress BC  =         0.14 (3.57E+04 Pa,  tol =  2.57E+05)
+
+ ===========================================================================
+ Increment 11/15-1/1 @ Iteration 1≤4≤100
+
+ deformation gradient aim       =
+   0.9999609    0.0001905    0.0071906
+   0.0000000    0.9999895    0.0000730
+   0.0000000    0.0000000    1.0000291
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0065        -0.0136       256.6290
+        0.0047         0.0102        -0.0232
+      256.6468        -0.0232        -0.0176
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0141         0.0003       256.6635
+        0.0188         0.0028        -0.0334
+      256.6813        -0.0334        -0.0170
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         3.95 (5.07E+05 / m, tol =  1.28E+05)
+ error stress BC  =         0.13 (3.34E+04 Pa,  tol =  2.57E+05)
+
+ ===========================================================================
+ Increment 11/15-1/1 @ Iteration 1≤5≤100
+
+ deformation gradient aim       =
+   0.9999606    0.0001909    0.0071919
+   0.0000000    0.9999893    0.0000743
+   0.0000000    0.0000000    1.0000295
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0009         0.0016       256.6618
+        0.0201        -0.0033        -0.0049
+      256.6795        -0.0049         0.0022
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0048         0.0022       256.6668
+        0.0207        -0.0013        -0.0006
+      256.6846        -0.0007         0.0054
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         1.57 (2.02E+05 / m, tol =  1.28E+05)
+ error stress BC  =         0.02 (5.44E+03 Pa,  tol =  2.57E+05)
+
+ ===========================================================================
+ Increment 11/15-1/1 @ Iteration 1≤6≤100
+
+ deformation gradient aim       =
+   0.9999606    0.0001908    0.0071920
+   0.0000000    0.9999893    0.0000745
+   0.0000000    0.0000000    1.0000294
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0003         0.0020       256.6658
+        0.0206         0.0011        -0.0045
+      256.6836        -0.0045        -0.0010
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0010         0.0023       256.6661
+        0.0209         0.0015        -0.0019
+      256.6839        -0.0019        -0.0005
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         0.54 (6.97E+04 / m, tol =  1.28E+05)
+ error stress BC  =         0.01 (2.31E+03 Pa,  tol =  2.57E+05)
+
+ ===========================================================================
+
+ increment 11 converged
+
+ ... saving results ........................................................
+ saving solver data required for restart
+ saving field and constitutive data required for restart
+
+ ###########################################################################
+ Time  8.00000E+02s: Increment 12/15-1/1 of load case 1/1
+ Increment 12/15-1/1 @ Iteration 1≤0≤100
+
+ deformation gradient aim       =
+   0.9999471    0.0002654    0.0082757
+   0.0000000    0.9999870    0.0001009
+   0.0000000    0.0000000    1.0000416
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.3155        -0.1737       274.1172
+       -0.1468        -0.5911         0.0924
+      274.1421         0.0928         0.0657
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =        97.47 (1.34E+07 / m, tol =  1.37E+05)
+ error stress BC  =        21.46 (5.88E+06 Pa,  tol =  2.74E+05)
+
+ ===========================================================================
+ Increment 12/15-1/1 @ Iteration 1≤1≤100
+
+ deformation gradient aim       =
+   0.9999407    0.0002756    0.0084685
+   0.0000000    0.9999951    0.0000999
+   0.0000000    0.0000000    1.0000398
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0516         0.0877       278.6810
+        0.1168         0.0394        -0.1295
+      278.7084        -0.1296        -0.0456
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.1191         0.1349       279.4998
+        0.1645         0.1537        -0.1695
+      279.5276        -0.1696        -0.0654
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =        76.68 (1.07E+07 / m, tol =  1.40E+05)
+ error stress BC  =         1.79 (5.00E+05 Pa,  tol =  2.80E+05)
+
+ ===========================================================================
+ Increment 12/15-1/1 @ Iteration 1≤2≤100
+
+ deformation gradient aim       =
+   0.9999423    0.0002714    0.0085278
+   0.0000000    0.9999925    0.0001077
+   0.0000000    0.0000000    1.0000409
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0023        -0.0781       278.4950
+       -0.0478         0.0807        -0.1424
+      278.5234        -0.1425        -0.1453
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0657        -0.1095       279.5502
+       -0.0780         0.2710        -0.2061
+      279.5800        -0.2063        -0.2336
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =        42.94 (6.00E+06 / m, tol =  1.40E+05)
+ error stress BC  =         1.61 (4.50E+05 Pa,  tol =  2.80E+05)
+
+ ===========================================================================
+ Increment 12/15-1/1 @ Iteration 1≤3≤100
+
+ deformation gradient aim       =
+   0.9999427    0.0002782    0.0085919
+   0.0000000    0.9999879    0.0001167
+   0.0000000    0.0000000    1.0000451
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0297        -0.0002       279.7059
+        0.0313         0.0745        -0.0249
+      279.7349        -0.0252        -0.0534
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0013         0.0253       279.9105
+        0.0572        -0.0248         0.0927
+      279.9393         0.0924         0.0342
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =        18.35 (2.57E+06 / m, tol =  1.40E+05)
+ error stress BC  =         0.33 (9.27E+04 Pa,  tol =  2.80E+05)
+
+ ===========================================================================
+ Increment 12/15-1/1 @ Iteration 1≤4≤100
+
+ deformation gradient aim       =
+   0.9999430    0.0002779    0.0086044
+   0.0000000    0.9999873    0.0001153
+   0.0000000    0.0000000    1.0000453
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0098        -0.0124       279.9062
+        0.0200         0.0366        -0.0475
+      279.9356        -0.0476        -0.0499
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0291        -0.0052       279.9946
+        0.0276         0.0116        -0.0698
+      280.0243        -0.0698        -0.0433
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         9.02 (1.26E+06 / m, tol =  1.40E+05)
+ error stress BC  =         0.25 (6.98E+04 Pa,  tol =  2.80E+05)
+
+ ===========================================================================
+ Increment 12/15-1/1 @ Iteration 1≤5≤100
+
+ deformation gradient aim       =
+   0.9999425    0.0002784    0.0086077
+   0.0000000    0.9999867    0.0001181
+   0.0000000    0.0000000    1.0000464
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0029         0.0054       279.9844
+        0.0383        -0.0070        -0.0122
+      280.0138        -0.0123         0.0034
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0091         0.0067       279.9982
+        0.0398        -0.0116        -0.0063
+      280.0277        -0.0064         0.0194
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         3.66 (5.13E+05 / m, tol =  1.40E+05)
+ error stress BC  =         0.07 (1.94E+04 Pa,  tol =  2.80E+05)
+
+ ===========================================================================
+ Increment 12/15-1/1 @ Iteration 1≤6≤100
+
+ deformation gradient aim       =
+   0.9999426    0.0002781    0.0086083
+   0.0000000    0.9999869    0.0001186
+   0.0000000    0.0000000    1.0000461
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0014         0.0061       280.0010
+        0.0393         0.0033        -0.0115
+      280.0306        -0.0116        -0.0019
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0038         0.0079       280.0006
+        0.0412         0.0061        -0.0030
+      280.0302        -0.0030        -0.0014
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         1.42 (1.99E+05 / m, tol =  1.40E+05)
+ error stress BC  =         0.03 (7.93E+03 Pa,  tol =  2.80E+05)
+
+ ===========================================================================
+ Increment 12/15-1/1 @ Iteration 1≤7≤100
+
+ deformation gradient aim       =
+   0.9999426    0.0002778    0.0086082
+   0.0000000    0.9999868    0.0001189
+   0.0000000    0.0000000    1.0000462
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0021         0.0031       280.0009
+        0.0364         0.0018        -0.0034
+      280.0305        -0.0034         0.0002
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0004         0.0007       280.0007
+        0.0340         0.0020        -0.0030
+      280.0302        -0.0030        -0.0019
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         0.64 (8.90E+04 / m, tol =  1.40E+05)
+ error stress BC  =         0.01 (3.02E+03 Pa,  tol =  2.80E+05)
+
+ ===========================================================================
+
+ increment 12 converged
+
+ ... saving results ........................................................
+ saving solver data required for restart
+ saving field and constitutive data required for restart
+
+ ###########################################################################
+ Time  8.66667E+02s: Increment 13/15-1/1 of load case 1/1
+ Increment 13/15-1/1 @ Iteration 1≤0≤100
+
+ deformation gradient aim       =
+   0.9999247    0.0003646    0.0100242
+   0.0000000    0.9999841    0.0001635
+   0.0000000    0.0000000    1.0000630
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0991        -0.2639       294.9735
+       -0.2196        -0.6351         0.4483
+      295.0091         0.4485         0.3834
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =       101.76 (1.50E+07 / m, tol =  1.48E+05)
+ error stress BC  =        28.34 (8.36E+06 Pa,  tol =  2.95E+05)
+
+ ===========================================================================
+ Increment 13/15-1/1 @ Iteration 1≤1≤100
+
+ deformation gradient aim       =
+   0.9999223    0.0003821    0.0103347
+   0.0000000    0.9999937    0.0001530
+   0.0000000    0.0000000    1.0000556
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.1924         0.1667       302.0859
+        0.2129        -0.0075         0.0886
+      302.1233         0.0884         0.1313
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.1955         0.1792       302.2914
+        0.2255         0.0104         0.0785
+      302.3289         0.0783         0.1247
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =       105.21 (1.59E+07 / m, tol =  1.51E+05)
+ error stress BC  =         3.45 (1.04E+06 Pa,  tol =  3.02E+05)
+
+ ===========================================================================
+ Increment 13/15-1/1 @ Iteration 1≤2≤100
+
+ deformation gradient aim       =
+   0.9999263    0.0003755    0.0104190
+   0.0000000    0.9999937    0.0001492
+   0.0000000    0.0000000    1.0000517
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0174        -0.0410       300.9690
+        0.0058         0.0657        -0.1045
+      301.0088        -0.1047        -0.1686
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0975        -0.0595       302.6638
+       -0.0115         0.3574        -0.4056
+      302.7062        -0.4059        -0.5187
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =        64.16 (9.71E+06 / m, tol =  1.51E+05)
+ error stress BC  =         2.21 (6.70E+05 Pa,  tol =  3.03E+05)
+
+ ===========================================================================
+ Increment 13/15-1/1 @ Iteration 1≤3≤100
+
+ deformation gradient aim       =
+   0.9999244    0.0003817    0.0105314
+   0.0000000    0.9999882    0.0001628
+   0.0000000    0.0000000    1.0000593
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0042         0.0678       302.7158
+        0.1150         0.0600        -0.0162
+      302.7559        -0.0170        -0.0873
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0186         0.1117       303.1209
+        0.1590        -0.0540         0.1339
+      303.1608         0.1326         0.0510
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =        32.31 (4.90E+06 / m, tol =  1.52E+05)
+ error stress BC  =         0.70 (2.12E+05 Pa,  tol =  3.03E+05)
+
+ ===========================================================================
+ Increment 13/15-1/1 @ Iteration 1≤4≤100
+
+ deformation gradient aim       =
+   0.9999238    0.0003778    0.0105620
+   0.0000000    0.9999884    0.0001601
+   0.0000000    0.0000000    1.0000595
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0306         0.0229       303.1371
+        0.0715         0.0602        -0.0966
+      303.1786        -0.0971        -0.0996
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0193         0.0038       303.2970
+        0.0533         0.0417        -0.1297
+      303.3390        -0.1299        -0.0667
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =        17.16 (2.60E+06 / m, tol =  1.52E+05)
+ error stress BC  =         0.43 (1.30E+05 Pa,  tol =  3.03E+05)
+
+ ===========================================================================
+ Increment 13/15-1/1 @ Iteration 1≤5≤100
+
+ deformation gradient aim       =
+   0.9999232    0.0003773    0.0105706
+   0.0000000    0.9999870    0.0001659
+   0.0000000    0.0000000    1.0000615
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0038         0.0255       303.2756
+        0.0751        -0.0118        -0.0283
+      303.3169        -0.0286         0.0123
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0239         0.0168       303.3206
+        0.0670        -0.0310        -0.0128
+      303.3620        -0.0130         0.0487
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         8.42 (1.28E+06 / m, tol =  1.52E+05)
+ error stress BC  =         0.16 (4.87E+04 Pa,  tol =  3.03E+05)
+
+ ===========================================================================
+ Increment 13/15-1/1 @ Iteration 1≤6≤100
+
+ deformation gradient aim       =
+   0.9999234    0.0003762    0.0105731
+   0.0000000    0.9999875    0.0001669
+   0.0000000    0.0000000    1.0000608
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0090         0.0125       303.3276
+        0.0628         0.0116        -0.0271
+      303.3693        -0.0272        -0.0026
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0095         0.0128       303.3319
+        0.0635         0.0221        -0.0061
+      303.3737        -0.0062        -0.0085
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         3.90 (5.91E+05 / m, tol =  1.52E+05)
+ error stress BC  =         0.07 (2.21E+04 Pa,  tol =  3.03E+05)
+
+ ===========================================================================
+ Increment 13/15-1/1 @ Iteration 1≤7≤100
+
+ deformation gradient aim       =
+   0.9999237    0.0003755    0.0105734
+   0.0000000    0.9999871    0.0001678
+   0.0000000    0.0000000    1.0000609
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0064         0.0076       303.3360
+        0.0583         0.0053        -0.0040
+      303.3777        -0.0041         0.0008
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0013         0.0030       303.3361
+        0.0537         0.0037        -0.0016
+      303.3778        -0.0016        -0.0039
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         1.88 (2.85E+05 / m, tol =  1.52E+05)
+ error stress BC  =         0.01 (3.95E+03 Pa,  tol =  3.03E+05)
+
+ ===========================================================================
+ Increment 13/15-1/1 @ Iteration 1≤8≤100
+
+ deformation gradient aim       =
+   0.9999238    0.0003752    0.0105731
+   0.0000000    0.9999869    0.0001680
+   0.0000000    0.0000000    1.0000610
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0032         0.0042       303.3351
+        0.0551         0.0061        -0.0023
+      303.3768        -0.0024        -0.0026
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0025         0.0025       303.3340
+        0.0534         0.0034        -0.0022
+      303.3756        -0.0022        -0.0008
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         0.86 (1.31E+05 / m, tol =  1.52E+05)
+ error stress BC  =         0.01 (3.42E+03 Pa,  tol =  3.03E+05)
+
+ ===========================================================================
+
+ increment 13 converged
+
+ ... saving results ........................................................
+ saving solver data required for restart
+ saving field and constitutive data required for restart
+
+ ###########################################################################
+ Time  9.33333E+02s: Increment 14/15-1/1 of load case 1/1
+ Increment 14/15-1/1 @ Iteration 1≤0≤100
+
+ deformation gradient aim       =
+   0.9999051    0.0004724    0.0125379
+   0.0000000    0.9999869    0.0002171
+   0.0000000    0.0000000    1.0000759
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.4620        -0.4159       314.2804
+       -0.3555        -0.8381         0.7869
+      314.3238         0.7856         0.7300
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =       108.57 (1.71E+07 / m, tol =  1.57E+05)
+ error stress BC  =        39.41 (1.24E+07 Pa,  tol =  3.14E+05)
+
+ ===========================================================================
+ Increment 14/15-1/1 @ Iteration 1≤1≤100
+
+ deformation gradient aim       =
+   0.9999064    0.0005041    0.0130565
+   0.0000000    1.0000026    0.0001926
+   0.0000000    0.0000000    1.0000586
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.1239         0.1523       326.2543
+        0.2155        -0.2634         0.2461
+      326.2974         0.2457         0.3632
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.1528         0.0973       325.1208
+        0.1602        -0.3154         0.2969
+      325.1640         0.2964         0.3918
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =       130.66 (2.12E+07 / m, tol =  1.63E+05)
+ error stress BC  =         4.75 (1.55E+06 Pa,  tol =  3.25E+05)
+
+ ===========================================================================
+ Increment 14/15-1/1 @ Iteration 1≤2≤100
+
+ deformation gradient aim       =
+   0.9999088    0.0004999    0.0131386
+   0.0000000    1.0000115    0.0001773
+   0.0000000    0.0000000    1.0000475
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0135        -0.1530       323.4876
+       -0.0908        -0.0754        -0.0321
+      323.5354        -0.0321        -0.1265
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.2715        -0.2121       325.6996
+       -0.1497         0.3031        -0.5031
+      325.7516        -0.5023        -0.7028
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =        82.87 (1.35E+07 / m, tol =  1.63E+05)
+ error stress BC  =         2.97 (9.67E+05 Pa,  tol =  3.26E+05)
+
+ ===========================================================================
+ Increment 14/15-1/1 @ Iteration 1≤3≤100
+
+ deformation gradient aim       =
+   0.9999035    0.0005169    0.0133116
+   0.0000000    1.0000091    0.0001909
+   0.0000000    0.0000000    1.0000555
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0898         0.0617       325.5044
+        0.1211        -0.0107         0.0698
+      325.5525         0.0687        -0.1405
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.1058         0.2420       326.2306
+        0.2978        -0.0581         0.3114
+      326.2782         0.3087        -0.0371
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =        54.01 (8.81E+06 / m, tol =  1.63E+05)
+ error stress BC  =         1.34 (4.36E+05 Pa,  tol =  3.26E+05)
+
+ ===========================================================================
+ Increment 14/15-1/1 @ Iteration 1≤4≤100
+
+ deformation gradient aim       =
+   0.9999002    0.0005106    0.0133779
+   0.0000000    1.0000113    0.0001808
+   0.0000000    0.0000000    1.0000565
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.1124         0.0113       326.2445
+        0.0705         0.1157        -0.1240
+      326.2965        -0.1249        -0.2516
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0653        -0.0221       326.5436
+        0.0375         0.1411        -0.2018
+      326.5978        -0.2025        -0.2070
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =        27.77 (4.53E+06 / m, tol =  1.63E+05)
+ error stress BC  =         0.63 (2.07E+05 Pa,  tol =  3.27E+05)
+
+ ===========================================================================
+ Increment 14/15-1/1 @ Iteration 1≤5≤100
+
+ deformation gradient aim       =
+   0.9998979    0.0005116    0.0134003
+   0.0000000    1.0000079    0.0001897
+   0.0000000    0.0000000    1.0000622
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0158         0.0655       326.5113
+        0.1247        -0.0073        -0.0249
+      326.5637        -0.0259        -0.0166
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0357         0.0709       326.6258
+        0.1309        -0.0772        -0.0140
+      326.6785        -0.0147         0.0982
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =        15.89 (2.60E+06 / m, tol =  1.63E+05)
+ error stress BC  =         0.30 (9.82E+04 Pa,  tol =  3.27E+05)
+
+ ===========================================================================
+ Increment 14/15-1/1 @ Iteration 1≤6≤100
+
+ deformation gradient aim       =
+   0.9998979    0.0005079    0.0134084
+   0.0000000    1.0000091    0.0001907
+   0.0000000    0.0000000    1.0000611
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0077         0.0257       326.6213
+        0.0862         0.0226        -0.0549
+      326.6751        -0.0554        -0.0160
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0138         0.0148       326.6524
+        0.0759         0.0457        -0.0315
+      326.7066        -0.0319        -0.0242
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         8.96 (1.46E+06 / m, tol =  1.63E+05)
+ error stress BC  =         0.14 (4.57E+04 Pa,  tol =  3.27E+05)
+
+ ===========================================================================
+ Increment 14/15-1/1 @ Iteration 1≤7≤100
+
+ deformation gradient aim       =
+   0.9998983    0.0005067    0.0134107
+   0.0000000    1.0000081    0.0001930
+   0.0000000    0.0000000    1.0000616
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0092         0.0265       326.6595
+        0.0875         0.0024        -0.0100
+      326.7135        -0.0103         0.0047
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0015         0.0185       326.6643
+        0.0799         0.0003         0.0044
+      326.7187         0.0043        -0.0064
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         5.15 (8.42E+05 / m, tol =  1.63E+05)
+ error stress BC  =         0.06 (1.85E+04 Pa,  tol =  3.27E+05)
+
+ ===========================================================================
+ Increment 14/15-1/1 @ Iteration 1≤8≤100
+
+ deformation gradient aim       =
+   0.9998984    0.0005054    0.0134110
+   0.0000000    1.0000081    0.0001932
+   0.0000000    0.0000000    1.0000616
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0077         0.0115       326.6640
+        0.0731         0.0200        -0.0060
+      326.7182        -0.0061        -0.0114
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0101         0.0059       326.6663
+        0.0677         0.0235        -0.0051
+      326.7206        -0.0051        -0.0118
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         2.91 (4.75E+05 / m, tol =  1.63E+05)
+ error stress BC  =         0.07 (2.35E+04 Pa,  tol =  3.27E+05)
+
+ ===========================================================================
+ Increment 14/15-1/1 @ Iteration 1≤9≤100
+
+ deformation gradient aim       =
+   0.9998986    0.0005049    0.0134111
+   0.0000000    1.0000074    0.0001936
+   0.0000000    0.0000000    1.0000619
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0040         0.0097       326.6670
+        0.0715         0.0088        -0.0029
+      326.7212        -0.0030        -0.0054
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0018         0.0090       326.6665
+        0.0710         0.0020        -0.0042
+      326.7206        -0.0042        -0.0012
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         1.52 (2.49E+05 / m, tol =  1.63E+05)
+ error stress BC  =         0.03 (9.00E+03 Pa,  tol =  3.27E+05)
+
+ ===========================================================================
+ Increment 14/15-1/1 @ Iteration 1≤10≤100
+
+ deformation gradient aim       =
+   0.9998987    0.0005044    0.0134110
+   0.0000000    1.0000073    0.0001938
+   0.0000000    0.0000000    1.0000620
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0021         0.0023       326.6680
+        0.0642         0.0054        -0.0005
+      326.7221        -0.0005        -0.0029
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0003        -0.0023       326.6672
+        0.0597         0.0027         0.0021
+      326.7213         0.0021        -0.0018
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         0.78 (1.27E+05 / m, tol =  1.63E+05)
+ error stress BC  =         0.01 (2.68E+03 Pa,  tol =  3.27E+05)
+
+ ===========================================================================
+
+ increment 14 converged
+
+ ... saving results ........................................................
+ saving solver data required for restart
+ saving field and constitutive data required for restart
+
+ ###########################################################################
+ Time  1.00000E+03s: Increment 15/15-1/1 of load case 1/1
+ Increment 15/15-1/1 @ Iteration 1≤0≤100
+
+ deformation gradient aim       =
+   0.9998736    0.0006338    0.0162489
+   0.0000000    1.0000275    0.0002194
+   0.0000000    0.0000000    1.0000631
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.3490        -0.7883       331.6321
+       -0.7360        -0.6870         1.1868
+      331.7002         1.1842        -0.6126
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =       174.10 (2.89E+07 / m, tol =  1.66E+05)
+ error stress BC  =        55.38 (1.84E+07 Pa,  tol =  3.32E+05)
+
+ ===========================================================================
+ Increment 15/15-1/1 @ Iteration 1≤1≤100
+
+ deformation gradient aim       =
+   0.9998609    0.0006939    0.0171168
+   0.0000000    1.0000516    0.0001741
+   0.0000000    0.0000000    1.0000519
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0581         0.2844       351.3381
+        0.3443        -0.0155         0.4012
+      351.4000         0.3997         0.1461
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0247         0.0975       348.1275
+        0.1564        -0.1257         0.5260
+      348.1907         0.5243         0.0014
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =       173.20 (3.02E+07 / m, tol =  1.74E+05)
+ error stress BC  =         5.38 (1.87E+06 Pa,  tol =  3.48E+05)
+
+ ===========================================================================
+ Increment 15/15-1/1 @ Iteration 1≤2≤100
+
+ deformation gradient aim       =
+   0.9998606    0.0006835    0.0171420
+   0.0000000    1.0000551    0.0001477
+   0.0000000    0.0000000    1.0000487
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0223        -0.3660       345.7493
+       -0.3046         0.0516        -0.0592
+      345.8176        -0.0582        -0.3148
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.1934        -0.4584       348.6173
+       -0.3933         0.3698        -0.7233
+      348.6881        -0.7199        -0.3679
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =       112.16 (1.96E+07 / m, tol =  1.74E+05)
+ error stress BC  =         3.97 (1.38E+06 Pa,  tol =  3.49E+05)
+
+ ===========================================================================
+ Increment 15/15-1/1 @ Iteration 1≤3≤100
+
+ deformation gradient aim       =
+   0.9998622    0.0007199    0.0174075
+   0.0000000    1.0000506    0.0001667
+   0.0000000    0.0000000    1.0000523
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0211        -0.0925       348.0432
+       -0.0367         0.0529         0.1187
+      348.1092         0.1179        -0.2014
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.1222         0.2123       349.1862
+        0.2591        -0.0424         0.5486
+      349.2488         0.5446        -0.0970
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =        86.85 (1.52E+07 / m, tol =  1.75E+05)
+ error stress BC  =         2.33 (8.14E+05 Pa,  tol =  3.49E+05)
+
+ ===========================================================================
+ Increment 15/15-1/1 @ Iteration 1≤4≤100
+
+ deformation gradient aim       =
+   0.9998589    0.0007218    0.0175380
+   0.0000000    1.0000532    0.0001466
+   0.0000000    0.0000000    1.0000530
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0398        -0.1070       349.0276
+       -0.0535         0.2591        -0.1311
+      349.0997        -0.1314        -0.3754
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0863        -0.0810       349.6288
+       -0.0301         0.4253        -0.2375
+      349.7077        -0.2376        -0.5493
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =        53.93 (9.43E+06 / m, tol =  1.75E+05)
+ error stress BC  =         1.57 (5.49E+05 Pa,  tol =  3.50E+05)
+
+ ===========================================================================
+ Increment 15/15-1/1 @ Iteration 1≤5≤100
+
+ deformation gradient aim       =
+   0.9998575    0.0007304    0.0176000
+   0.0000000    1.0000435    0.0001573
+   0.0000000    0.0000000    1.0000643
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.1095         0.0882       349.5360
+        0.1370         0.0255         0.0791
+      349.6095         0.0774        -0.1590
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.1025         0.1470       349.8558
+        0.1954        -0.1349         0.0618
+      349.9308         0.0601         0.0197
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =        32.41 (5.67E+06 / m, tol =  1.75E+05)
+ error stress BC  =         0.42 (1.47E+05 Pa,  tol =  3.50E+05)
+
+ ===========================================================================
+ Increment 15/15-1/1 @ Iteration 1≤6≤100
+
+ deformation gradient aim       =
+   0.9998539    0.0007241    0.0176283
+   0.0000000    1.0000460    0.0001531
+   0.0000000    0.0000000    1.0000654
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0073         0.0466       349.8313
+        0.0963         0.0807        -0.0557
+      349.9084        -0.0571        -0.0974
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0860         0.0253       349.9417
+        0.0754         0.1200        -0.0790
+      350.0196        -0.0806        -0.0304
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =        18.19 (3.18E+06 / m, tol =  1.75E+05)
+ error stress BC  =         0.34 (1.20E+05 Pa,  tol =  3.50E+05)
+
+ ===========================================================================
+ Increment 15/15-1/1 @ Iteration 1≤7≤100
+
+ deformation gradient aim       =
+   0.9998553    0.0007222    0.0176385
+   0.0000000    1.0000429    0.0001572
+   0.0000000    0.0000000    1.0000670
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0244         0.0627       349.9496
+        0.1120        -0.0182        -0.0029
+      350.0276        -0.0041        -0.0134
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0644         0.0564       349.9833
+        0.1055        -0.0617         0.0239
+      350.0624         0.0232        -0.0148
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =        12.40 (2.17E+06 / m, tol =  1.75E+05)
+ error stress BC  =         0.18 (6.44E+04 Pa,  tol =  3.50E+05)
+
+ ===========================================================================
+ Increment 15/15-1/1 @ Iteration 1≤8≤100
+
+ deformation gradient aim       =
+   0.9998538    0.0007185    0.0176415
+   0.0000000    1.0000443    0.0001565
+   0.0000000    0.0000000    1.0000672
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0046         0.0300       349.9769
+        0.0797         0.0194        -0.0070
+      350.0563        -0.0075        -0.0144
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0189         0.0133       349.9911
+        0.0632         0.0378        -0.0000
+      350.0715         0.0000        -0.0111
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         7.35 (1.29E+06 / m, tol =  1.75E+05)
+ error stress BC  =         0.11 (3.78E+04 Pa,  tol =  3.50E+05)
+
+ ===========================================================================
+ Increment 15/15-1/1 @ Iteration 1≤9≤100
+
+ deformation gradient aim       =
+   0.9998542    0.0007171    0.0176429
+   0.0000000    1.0000435    0.0001568
+   0.0000000    0.0000000    1.0000676
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0089         0.0357       349.9911
+        0.0857         0.0003        -0.0020
+      350.0710        -0.0023        -0.0106
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0061         0.0420       349.9942
+        0.0925         0.0006        -0.0155
+      350.0742        -0.0158        -0.0107
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         4.79 (8.38E+05 / m, tol =  1.75E+05)
+ error stress BC  =         0.12 (4.20E+04 Pa,  tol =  3.50E+05)
+
+ ===========================================================================
+ Increment 15/15-1/1 @ Iteration 1≤10≤100
+
+ deformation gradient aim       =
+   0.9998540    0.0007147    0.0176434
+   0.0000000    1.0000435    0.0001574
+   0.0000000    0.0000000    1.0000678
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0102         0.0168       349.9991
+        0.0671         0.0184         0.0010
+      350.0794         0.0009        -0.0081
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0198        -0.0015       350.0002
+        0.0487         0.0266         0.0107
+      350.0806         0.0106        -0.0070
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         2.98 (5.22E+05 / m, tol =  1.75E+05)
+ error stress BC  =         0.08 (2.66E+04 Pa,  tol =  3.50E+05)
+
+ ===========================================================================
+ Increment 15/15-1/1 @ Iteration 1≤11≤100
+
+ deformation gradient aim       =
+   0.9998545    0.0007142    0.0176433
+   0.0000000    1.0000428    0.0001572
+   0.0000000    0.0000000    1.0000680
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0011         0.0148       349.9991
+        0.0651         0.0099        -0.0021
+      350.0794        -0.0022        -0.0086
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+        0.0057         0.0121       349.9983
+        0.0625         0.0069        -0.0074
+      350.0787        -0.0075        -0.0104
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         1.76 (3.08E+05 / m, tol =  1.75E+05)
+ error stress BC  =         0.03 (1.21E+04 Pa,  tol =  3.50E+05)
+
+ ===========================================================================
+ Increment 15/15-1/1 @ Iteration 1≤12≤100
+
+ deformation gradient aim       =
+   0.9998545    0.0007134    0.0176434
+   0.0000000    1.0000426    0.0001575
+   0.0000000    0.0000000    1.0000683
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0033         0.0024       350.0001
+        0.0527         0.0072         0.0014
+      350.0805         0.0014        -0.0039
+
+ ... doing gamma convolution ...............................................
+
+ ... evaluating constitutive response ......................................
+
+ Piola--Kirchhoff stress       / MPa =
+       -0.0047        -0.0029       350.0003
+        0.0475         0.0030         0.0032
+      350.0806         0.0031         0.0006
+
+ ... doing gamma convolution ...............................................
+
+ ... reporting .............................................................
+
+ error divergence =         0.95 (1.67E+05 / m, tol =  1.75E+05)
+ error stress BC  =         0.01 (4.67E+03 Pa,  tol =  3.50E+05)
+
+ ===========================================================================
+
+ increment 15 converged
+
+ ... saving results ........................................................
+ saving solver data required for restart
+ saving field and constitutive data required for restart
+Note: The following floating-point exceptions are signalling: IEEE_UNDERFLOW_FLAG IEEE_DENORMAL IEEE_INEXACT_FLAG
+STOP 0
+
+ ###########################################################################
+
+ DAMASK terminated on:
+ Date:               14/11/2025
+ Time:               23:09:06

@@ -1,0 +1,291 @@
+
+## README:
+# Fill in the "General" section, and the section asscociated with the simulation_type.
+
+# All unused sections can be either commented, or all fields given dummy variables.
+# This could be 0 for values that are numbers, or "" for text values. 
+
+# for scientific number notation, only the following cases are valid:
+# 10e2, 10e+2, 10e-2
+# 10E2, 10E+2, 10E-2
+
+# All units are assumed to be SI: m, kg, N, s, PaEmden
+
+###########################################
+################# General #################
+###########################################
+
+general: 
+
+    # Choose: yield_surface, yield_point, load_path, elastic_tensor
+    simulation_type     : elastic_tensor
+    # Go down to the section asscociated with the type to fill in the other details.
+    # The other sections can be kept as is, or kept empty.
+
+    remove_damask_files_after_job_completion: True
+    # The files that are required by damask can be large. These can be removed automatically, however
+    # this removes the possibility to do manual post-processing or troubleshoot errors.
+    # NOTE: If DAMASK_grid closes with an error the damask_files remain untill replaced.
+
+
+    # Material properties in Damask yaml format, use quotes: "input_files/..."
+    material_properties : "input_files/titanium_zero_rotation_assigned.yaml"
+    # All file paths are relative to the project folder, or absolute (starting with /)
+
+    # The grid file needs to be supplied with either a .vti file
+    grid_file           : "input_files/Polycrystal_25_5x5x5.vti"
+    # All file paths are relative to the project folder, or absolute (starting with /)
+
+    # Choose: "PK1", "PK2", "Cauchy". PK stands for order of Piola Kirchoff
+    stress_tensor_type: "Cauchy"
+    # It's strongly recommended to use Cauchy with true_strain.
+
+    # Choose "true_strain", "Green_Lagrange"
+    strain_tensor_type: "true_strain"
+    # It's strongly recommended to use Cauchy with true_strain.
+    
+    postprocessing_only: False
+    #restart_file_path: "input_files/Prestrain_restart.hdf5"
+    #history_loadcase_path:  "input_files/LOADCASE.yaml"
+
+
+yielding_condition:
+    # Choose: "stress_strain_curve", "modulus_degradation" or "plastic_work"
+    yield_condition: stress_strain_curve
+    # Adjust yield criterion below
+
+    # For stress strain cruve:
+    plastic_strain_yield: 0.002
+
+    # For energy stiffness:
+    modulus_degradation_percentage: 0.15
+
+    # For plastic work criterion
+    plastic_work_threshold: 889649
+
+    # (over)Estimated yield point in uniaxial tension.
+    # Must be higher than actual yield point for yielding to be found.
+    estimated_tensile_yield: 800e6
+
+    # (over)Estimated yield point in pure shear.
+    # Must be higher than actual yield point for yielding to be found.
+    estimated_shear_yield: 450e6
+
+# Settings used for solver
+# Default settings should be ok in most cases, but can be adapted if needed.
+solver:
+    N_increments: 15
+    cpu_cores: 0
+    stop_after_subsequent_parsing_errors: 20
+
+    # Choose "spectral_basic"
+    solver_type: "spectral_basic"
+
+    # Damask_grid settings: See https://damask-multiphysics.org/documentation/file_formats/numerics.html
+    N_staggered_iter_max: 10        # Standard is 10
+    N_cutback_max: 3        # maximum cutback level. Standard is 3
+    N_iter_min: 1            # Minimum iterations per increment. Standard is 1
+    N_iter_max: 100          # Maximum iterations per increment. Standard is 100
+    eps_abs_div_P: 1.0e-4            # absolute tolerance for fulfillment of stress equilibrium. Standard is 1.0e-4
+    eps_rel_div_P: 5.0e-4            # relative tolerance for fulfillment of stress equilibrium. Standard is 5.0e-4 
+    eps_abs_P: 1.0e3                  # absolute tolerance for fulfillment of stress BC. Standard is 1.0e3 
+    eps_rel_P: 1.0e-3                 # relative tolerance for fulfillment of stress BC. Standard is 1.0e-3 
+    eps_abs_curl_F: 1.0e-10          # absolute tolerance for fulfillment of strain compatibility. Standard is 1.0e-10
+    eps_rel_curl_F: 5.0e-4           # relative tolerance for fulfillment of strain compatibility. Standard is 5.0e-4
+
+    simulation_time : 1000         # length of time increment
+
+    monitor_update_cycle: 5     # in seconds. Defines how often the DAMASK_grid process is checked for new results
+
+
+###########################################
+############### Yield point ###############
+###########################################
+
+# Fill in this section if you want to find the uniaxial  point in a certain load direction(s)
+
+yield_point:
+    # Load direction(s): Fill in the directions to find the yield point.
+    # Direction can be given by:
+    #     "x-x", "x-y", "x-z", "y-y", "y-z", "z-z"
+    # Example single direction:
+    #     load_direction: "y-y"
+    # Example multiple directions (these will be ran seperatly):
+    #     load_direction: ["x-x", "x-y"]   
+
+    load_direction: ['x-x']
+
+    # For combined load cases use the yield_surface section and set yield_criterion to "None"
+
+    # These datapoints are not used for fiting on the yield surface.
+
+###########################################
+############## Yield surface ##############
+###########################################
+
+yield_surface:
+
+    # Yield surface to be fitted. Options: 
+    #   "Hill", # The hill48 yield surface.
+    #   "Cazacu-Plunkett-Barlat", 
+    #   "Cazacu-Plunkett-Barlat_extended_n", # replace n with any positive integer
+    #   "example_yield_surface", # dummy yield surface to act as example for how to add another yield_surface
+    #   "..."
+    yield_criterion: Cazacu-Plunkett-Barlat
+    # NOTE: this field is not spelling checked. This simplifies adding custom yield sufaces.
+    # See end of this section for formulation of fitted equations.
+    yield_stress_ref: 419.14e6
+
+    # Choose: manual, automatic
+    stress_state_creation: automatic 
+    # fill in the relavant sub-sections below.
+
+    ## Automatic stress state settings:
+    # Asume that the tensile and compressive yield values are the same.
+    assume_tensile_compressive_symmetry: True
+
+    # There are three planes, x-y, x-z and y-z.
+    # Must be a power of 2
+    load_points_per_quadrant: 2
+
+    ## Manual stress state settings:
+    stress_x_x: [600e6,      0,      0,     0,     0,     0]
+    stress_x_y: [     0,      0,      0, 400e6,     0,     0]
+    stress_x_z: [     0,      0,      0,     0, 400e6,     0]
+    stress_y_y: [     0, 600e6,      0,     0,     0,     0]
+    stress_y_z: [     0,      0,      0,     0,     0, 400e6]
+    stress_z_z: [     0,      0, 60e6,     0,     0,     0]
+
+    # NOTE: More results then the minimum defined here can accu%%milate in the
+    #       stored results (results/results_database.yaml). To make sure only
+    #       the results defined here are used the results_database.yaml can
+    #       be removed or specific values redacted from it.            
+    
+    # Fitted results are formulated as (s = sigma = Cauchy stress):
+    # Hill, unit stress = [MPa]:
+    #   f(s) = 1/(1e6) = F*(s_yy-s_zz)^2 + G*(s_zz-s_xx)^2 + H*(s_xx-s_yy)^2 + 2*L*s_yz^2 + 2*M*s_xz^2 + 2*N*s_xy^2
+    #
+    # Cazacu-Plunkett-Barlat, unit stress = [MPa]:
+    #   Sigma_Voigt = C*sigma_Voigt [C = 6x6, sigma_Voigt = 6x1]
+    #   Sigma_Voigt [6x1] -> Sigma [3x3]
+    #   Sigma_1,2,3 are eigenvalues of Sigma
+    #   f(s) = [abs(Sigma_1) - k*Sigma_1]^a + [abs(Sigma_2) - k*Sigma_2]^a + [abs(Sigma_3) - k*Sigma_3]^a
+    #   1/(1e6) = f(s)
+    #
+    # Cazacu-Plunkett-Barlat_extended_n, unit stress = [MPa], ^i is index:
+    #   Sigma_Voigt^i = C^i*sigma_Voigt [C = 6x6, sigma_Voigt = 6x1]
+    #   Sigma_Voigt [6x1] -> Sigma [3x3]
+    #   Sigma^i_1,2,3 are eigenvalues of Sigma^i
+    #   f^i(s) = [abs(Sigma^i_1) - k^i*Sigma^i_1]^a + [abs(Sigma^i_2) - k^i*Sigma^i_2]^a + [abs(Sigma^i_3) - k^i*Sigma^i_3]^a
+    #   1/(1e6) = sum[f^i(s)] for i in 1->n
+    #
+
+###########################################
+############# Elastic tensor ##############
+###########################################
+
+elastic_tensor:
+
+    # Define the symmetry that should be assumed for the elastic tensor:
+    # Supported kinds:
+    # anisotropic,  monoclinic, orthotropic, tetragonal, cubic, isotropic
+    material_type: anisotropic
+
+    # Strain to use for strain step:
+    strain_step: 1e-7
+
+    # Choose: algebraic, optimization
+    # component_fitting: algebraic
+    component_fitting: algebraic
+    # Method for fitting the components of the elastic tensor.
+    # In algebraic, fixed equations define the components (i.e. C_11 = stress_xx / strain_xx)
+    # In optimization, a general data fitting approach with an optimizer is used. This allows
+    # for more data points to be used for better averaging.
+
+    # Only effected in "optimization" mode, for algebraic this option is always "minimum"
+    # Choose: minimum, all_directions, combined_directions
+    number_of_load_cases: minimum
+    # More then the minimum number of simulations can be used for better averaging
+    # all_directions uses a signle strain step in all 6 directions (xx, yy, zz, xy, xz, yz)
+    # combined_directions combines all sets of 2 directions (xx+yy, xx+zz, ...). 21 in total.
+    # For some material types (orthotropic, monoclinic, anisotropic), minimum and all_directions are the same
+    # When using minimum: if there is symmetry over multiple axis, the following priority is used to represent the other axis:
+    # xx, yy, zz, xy, xz, yz
+    # So for isentropic materials for example, the strain in xx direction will be used to represent the symmetry in yy, zz directions.
+
+    # NOTE: More results then the minimum defined here can accumilate in the
+    #       stored results (results/results_database.yaml). To make sure only
+    #       the results defined here are used the results_database.yaml can
+    #       be removed or specific values redacted from it.   
+
+
+############################################
+################ Load path #################
+############################################
+
+load_path:
+
+    # Set the subsequent loads to apply.
+    # For a single load case use:
+    #     stress_xx = 100e6
+    # For multiple subsequent load cases:
+    #     stress_xx = [100e6, 30e6]
+    # All stresses should have the same amount of entries.
+    # Even for 2D simulation all fields should be present (2D/3D status is ignored for this simulation type)
+
+    #stress_x_x: [    0, 600e6, 0] # Example loading with steps: unloaded -> xy -> xx -> unloaded
+    #stress_x_y: [250e6,     0, 0]
+    #stress_x_z: [    0,     0, 0]
+    #stress_y_y: [    0,     0, 0]
+    #stress_y_z: [    0,     0, 0]
+    #stress_z_z: [    0,     0, 0]
+
+    stress_x_x: [ 800e6]
+    stress_x_y: [     0]
+    stress_x_z: [     0]
+    stress_y_y: [     0]
+    stress_y_z: [     0]
+    stress_z_z: [     0]
+    
+    F_x_x: [    x]
+    F_x_y: [    x]
+    F_x_z: [    x]
+    F_y_y: [    x]
+    F_y_z: [    x]
+    F_z_z: [    x]
+
+    unloading: False
+    # This stress is imposed as the components of the first order Piola-Kirchoff stress tensor.
+
+    # Enable yield detection for the simulation.
+    enable_yield_detection: True
+    # Use this feature when DAMASK_grid is getting stuck on plasticising loadcases 
+    # (DAMASK_grid does not check for plasticity and can get stuck if loads significantly higher then the yield strength are used.)
+
+    # Every stress state defined in the list each takes N_increments (see solver section).
+
+    # NOTE: Loadpaths are not compared to already existing results, running the same simulation twice will result in the damask simulation running twice.
+    # Every loadpath is stored in a seperate folder with the timestamp of the simulation start.
+    # In this folder, all Damasks working files are placed along with the homogenized results. A short summary (and copy of this file) are placed here as well.
+    # Running python in 'interactive' mode will give acces to the simulation results still loaded (python -i run_project.py project_name).
+    # A similar state can be reached by running the "load_results.py" script provided in the results folder (python -i load_results.py)
+
+############################################
+############# Custom section ###############
+############################################
+
+# Custom fields can be added too, these will be available for use in python like the other fields.
+# For example, adding this to the problem definition:
+# general:
+#   ...
+#   my_field: my_value
+# Becomes problem_definition.general.my_field
+# Adding custom fields is possible as well, example:
+# general:
+#   ... (some fields)
+# my_section:
+#   my_field: my_value
+# Becomes problem_definition.my_section.my_field
+
+# custom_section:
+#     custom_field: "Some value"

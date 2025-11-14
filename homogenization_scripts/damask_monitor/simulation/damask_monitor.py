@@ -305,7 +305,7 @@ def run_and_monitor_damask(
         increment_data = IncrementData(problem_definition)
         #increment_data.increment_last_update = damask_job.runtime.restart_file_incs-1
     
-    print(launch_command)
+    # print(launch_command)
     with open(damask_job.runtime.log_file, 'a') as f:
         # Run the command and redirect both stdout and stderr (console messages and errors) to the log file
         damask_grid_process = subprocess.Popen(args=launch_command, env=env, text=True,

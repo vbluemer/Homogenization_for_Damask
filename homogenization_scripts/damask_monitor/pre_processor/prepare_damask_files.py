@@ -5,6 +5,7 @@ import numpy as np
 import shutil
 import yaml
 import gc
+from pathlib import Path
 
 
 # Local packages
@@ -66,10 +67,43 @@ class PrepareFile:
     
     def restart_file(problem_definition: ProblemDefinition, damask_job: DamaskJob) -> tuple[ProblemDefinition, DamaskJob]: # type: ignore
         print('Copying restart file to target location...')
-        
-        consolelog.suppress_console_logging()
+
+        #breakpoint()
         restart_file_pth            = '/'.join([problem_definition.general.path.project_path, problem_definition.general.path.restart_file_path])
         existing_results_pth        = restart_file_pth.replace('_restart', '')
+        existing_results_p = Path(existing_results_pth)
+
+        proj_def_name = Path(problem_definition.general.project_name+'.hdf5')
+        required_file =     existing_results_p.parent / proj_def_name
+        
+        #existing_status_pth = existing_results_pth.replace('.hdf5', '.sta')
+        
+        if not required_file.is_file():
+            print('Warning: Restart files must have the name of the project. Creating copies that match the project name...')
+            src1 = existing_results_p
+            dst1 = required_file
+            shutil.copy(src1, dst1)
+            
+            src2 = existing_results_p.with_suffix('.sta')
+            dst2 = required_file.with_suffix('.sta')
+            shutil.copy(src2, dst2)
+            
+            src3 = existing_results_p.with_name(existing_results_p.stem + "_restart" + existing_results_p.suffix)
+            dst3 = required_file.with_name(required_file.stem + "_restart" + required_file.suffix)
+            shutil.copy(src3, dst3)
+            
+            path_from_config = Path(problem_definition.general.path.restart_file_path)
+            #project_folder_path = Path(problem_definition.general.path.project_path)
+            
+            adapted_path_from_config = path_from_config.with_name(problem_definition.general.project_name + '_restart' + path_from_config.suffix)
+            problem_definition.general.path.restart_file_path = str(adapted_path_from_config)
+
+        consolelog.suppress_console_logging()
+
+        existing_results_pth        = str(required_file)
+        restart_file_pth            = str(required_file.with_name(required_file.stem + "_restart" + required_file.suffix))
+        existing_status_pth         = existing_results_pth.replace('.hdf5', '.sta')
+
         existing_results            = damask.Result(existing_results_pth)
         existing_results            = existing_results.view(protected=False)
         all_existing_result_fields  = existing_results.get()
@@ -81,19 +115,18 @@ class PrepareFile:
         for key_remove in keys_to_remove:
             existing_results.remove(key_remove)
                 
-            
-        existing_status_pth = existing_results_pth.replace('.hdf5', '.sta')
+
         #source2 = '/'.join([problem_definition.general.path.project_path, existing_results_pth])
         #source3 = '/'.join([problem_definition.general.path.project_path, existing_status_pth])
         #dst = problem_definition.general.path.damask_files_folder
         dst = damask_job.runtime.damask_files
-
         shutil.copy(restart_file_pth, dst)
         shutil.copy(existing_results_pth, dst)
         shutil.copy(existing_status_pth, dst)
         restart_file_path = problem_definition.general.path.restart_file_path
         damask_job.runtime.set_restart_file(restart_file_path)
         consolelog.restore_console_logging()
+        #breakpoint()
         print('Copying completed.')
 
 
