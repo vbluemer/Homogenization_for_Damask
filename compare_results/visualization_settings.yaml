@@ -7,6 +7,12 @@ yield_point_databases:
 # Hill, Cazacu-Plunkett-Barlat, Cazacu-Plunkett-Barlat_extended_n
 yield_surface_type: "Cazacu-Plunkett-Barlat"
 
+# Optional: bounds for the Cazacu-Plunkett-Barlat function
+# [(min_k, max_k),(min_C_ii, max_C_ii), (min_a, max_a)]
+#bounds_CPB:
+#  - [[0, 1],[0, 3], [1.5, None]]
+#  - [[0, 1],[0, 3], [1.5, None]]
+  
 reference_yield_stress: 
   - 472.41e6
   - 472.41e6

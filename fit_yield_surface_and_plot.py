@@ -119,9 +119,6 @@ def faded(color, factor=0.5):
 
 
 
-
-
-
 def main():
     if len(sys.argv) == 1:
         pth = "compare_results/visualization_settings.yaml"
@@ -176,7 +173,14 @@ def main():
     
     symmetry1 = config['yield_point_symmetry'][0]
     
-        
+    bounds = config.get("bounds_CPB", None)
+    if bounds is None:
+        bounds1 = None
+        bounds2 = None
+    else:
+        bounds1 = bounds[0]
+        bounds2 = bounds[1]
+            
     data_set1 = read_yield_points(dataset_path1, symmetry1)
     
     style1 = FigureStyle(linewidth=config['style'][0][0], 
@@ -193,7 +197,8 @@ def main():
                                          dataset_path1, 
                                          output_path1, 
                                          plot_path1, 
-                                         symmetry1)
+                                         symmetry1,
+                                         bounds1)
         with open(yld_pths[0], "wb") as f:
             pickle.dump(yield_surface1, f)
     else:
@@ -223,7 +228,13 @@ def main():
                                           ln_color=c3b)
         
         if not config['plot_only']:
-            yield_surface2      = fit_yield_surface(yield_surface_name, yield_stress_ref2, dataset_path2, output_path2, plot_path2, symmetry2)
+            yield_surface2      = fit_yield_surface(yield_surface_name, 
+                                                    yield_stress_ref2, 
+                                                    dataset_path2, 
+                                                    output_path2, 
+                                                    plot_path2, 
+                                                    symmetry2, 
+                                                    bounds2)
             with open(yld_pths[1], "wb") as f:
                 pickle.dump(yield_surface2, f)
         else:

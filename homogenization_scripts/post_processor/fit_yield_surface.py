@@ -24,13 +24,14 @@ def fit_yield_surface_problem_definition(problem_definition: ProblemDefinition) 
     yield_criterion = problem_definition.yield_surface.yield_criterion
     yield_stress_ref = problem_definition.yield_surface.yield_stress_ref
     symmetry = problem_definition.yield_surface.assume_tensile_compressive_symmetry
+    bounds = getattr(problem_definition.yield_surface, "bounds_CPB", None)
 
     output_path = os.path.join(problem_definition.general.path.results_folder, f"{yield_criterion}.csv")
     plot_path = os.path.join(problem_definition.general.path.results_folder, f"{yield_criterion}.png")
     
-    fit_yield_surface(yield_criterion, yield_stress_ref, dataset_path, output_path, plot_path, symmetry)
+    fit_yield_surface(yield_criterion, yield_stress_ref, dataset_path, output_path, plot_path, symmetry, bounds)
 
-def fit_yield_surface(yield_surface_name: str, yield_stress_ref: float, dataset_path: str, output_path: str, plot_path: str, symmetry: bool) -> YieldSurfaces:
+def fit_yield_surface(yield_surface_name: str, yield_stress_ref: float, dataset_path: str, output_path: str, plot_path: str, symmetry: bool, bounds = None) -> YieldSurfaces:
     # This function takes the name of a yield surface and the yield points it should be fitted to.
     # The coefficients are stored to a file and plots of the fit are shown.
     
@@ -47,9 +48,9 @@ def fit_yield_surface(yield_surface_name: str, yield_stress_ref: float, dataset_
         case 'Hill':
             return fit_hill(yield_stress_ref, dataset_path, output_path, plot_path, symmetry)
         case "Cazacu-Plunkett-Barlat":
-            return fit_cazacu_plunkett_barlat(yield_stress_ref, dataset_path, output_path, plot_path, symmetry, use_extended=False)
+            return fit_cazacu_plunkett_barlat(yield_stress_ref, dataset_path, output_path, plot_path, symmetry, False, bounds)
         case "Cazacu-Plunkett-Barlat_extended":
-            return fit_cazacu_plunkett_barlat(yield_stress_ref, dataset_path, output_path, plot_path, symmetry, use_extended=n) # type: ignore
+            return fit_cazacu_plunkett_barlat(yield_stress_ref, dataset_path, output_path, plot_path, symmetry, n, bounds) # type: ignore
         case "example_yield_surface":
             return fit_example_yield_surface(dataset_path, output_path, plot_path, symmetry)
         case _:
@@ -91,42 +92,21 @@ def fit_hill(yield_stress_ref: float, dataset_path: str, output_path: str, plot_
     return hill
 
 
-def fit_cazacu_plunkett_barlat(yield_stress_ref: float, dataset_path: str, output_path: str, plot_path: str, symmetry: bool, use_extended: bool | int) -> CazacuPlunkettBarlat:
+def fit_cazacu_plunkett_barlat(yield_stress_ref: float, 
+                               dataset_path: str, 
+                               output_path: str, 
+                               plot_path: str, 
+                               symmetry: bool, 
+                               use_extended: bool | int, 
+                               bounds = None) -> CazacuPlunkettBarlat:
+    if bounds is None:
+        bounds = [(0, 1)] + [(0, 3)] * 9 + [(1.5, None)]
+    else:
+        bounds = [tuple(None if x == "None" else x for x in pair) for pair in bounds]
+        bounds = [bounds[0]] + [bounds[1]] * 9 + [bounds[2]]
 
-    data_set = read_yield_points(dataset_path, symmetry)
-
-    # a_coeff_test_values: list[int] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-
-    # fitted_cazacu_plunkett_barlat_list: list[CazacuPlunkettBarlat] = list()
-
-    # The Cazacu-Plunkett-Barlat yield surface has both continues (C_ij, k) as integer (a) coefficients.
-    # This is difficult to combine in a single optimization scheme. Hence, a list of "a" values 
-    # are used and for each the "C_ij" and "k" coefficients are fitted. 
-    # In the end the Cazacu-Plunkett-Barlat surface is taken with the lowest MSE.
-    
-    # lowest_MSE: float = None # type: ignore
-    # index_lowest_MSE = 0
-    # for index in range(len(a_coeff_test_values)):
-
-    #     if use_extended == False:
-    #         cazacu_plunkett_barlat_fit = fit_surface(CazacuPlunkettBarlat(a = a_coeff_test_values[index]), data_set, yield_stress_ref)
-    #         cazacu_plunkett_barlat_fit = fit_surface(CazacuPlunkettBarlat(), data_set, yield_stress_ref)
-    #         pass
-    #     else:
-    #         cazacu_plunkett_barlat_fit = fit_surface(CazacuPlunkettBarlatExtendedN(a = a_coeff_test_values[index], n=use_extended), data_set, yield_stress_ref)
-
-    #     fitted_cazacu_plunkett_barlat_list.append(cazacu_plunkett_barlat_fit) # type: ignore
-    #     MSE = cazacu_plunkett_barlat_fit.get_and_set_MSE(data_set)
-
-    #     if lowest_MSE == None: # type: ignore
-    #         lowest_MSE = MSE
-    #         index_lowest_MSE = index
-    #         continue
         
-    #     if lowest_MSE > MSE:
-    #         lowest_MSE = MSE
-    #         index_lowest_MSE = index
-    
+    data_set = read_yield_points(dataset_path, symmetry)
 
     
     if use_extended == False:
@@ -134,8 +114,7 @@ def fit_cazacu_plunkett_barlat(yield_stress_ref: float, dataset_path: str, outpu
 
         initial_guess: list [float] = np.squeeze(np.ones((1,number_optimization_coefficients))).tolist()
         initial_guess[-1] = 4
-    
-        bounds = [(0, 1)] + [(0, 3)] * 9 + [(1.5, None)]
+
         
         cazacu_plunkett_barlat_fit = fit_surface(CazacuPlunkettBarlat(), data_set, yield_stress_ref, initial_guess, bounds)
     else:
@@ -145,9 +124,8 @@ def fit_cazacu_plunkett_barlat(yield_stress_ref: float, dataset_path: str, outpu
         initial_guess: list [float] = np.squeeze(np.ones((1,number_optimization_coefficients // use_extended))).tolist()
         initial_guess[-1] = 4
         initial_guess = initial_guess * use_extended
-        bounds = [(0, 1)] + [(0, 3)] * 9 + [(1.5, None)]
-        bounds = bounds * use_extended
-        cazacu_plunkett_barlat_fit = fit_surface(CazacuPlunkettBarlatExtendedN(n=use_extended), data_set, yield_stress_ref, initial_guess, bounds)
+        bounds_ex = bounds * use_extended
+        cazacu_plunkett_barlat_fit = fit_surface(CazacuPlunkettBarlatExtendedN(n=use_extended), data_set, yield_stress_ref, initial_guess, bounds_ex)
 
 
     # cazacu_plunkett_barlat = fitted_cazacu_plunkett_barlat_list[index_lowest_MSE]

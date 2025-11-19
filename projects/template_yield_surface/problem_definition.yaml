@@ -134,6 +134,11 @@ yield_surface:
     yield_criterion: Cazacu-Plunkett-Barlat
     # NOTE: this field is not spelling checked. This simplifies adding custom yield sufaces.
     # See end of this section for formulation of fitted equations.
+    
+    # Optional: bounds for the Cazacu-Plunkett-Barlat function
+    # [(min_k, max_k),(min_C_ii, max_C_ii), (min_a, max_a)]
+    bounds_CPB: [[0, 1],[0, 3], [1.5, None]]
+    
     yield_stress_ref: 448.86e6
 
     # Choose: manual, automatic

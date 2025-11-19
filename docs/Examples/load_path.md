@@ -1,19 +1,21 @@
 # Simple loading and unloading case
+
 In this example, a loading and unloading case will be simulated using DAMASK. First, a load is applied in the `x-y` shear direction, then a normal `x-x` direction after which the material is unloaded. The resulting stress and strain at every increment will be the output data.
 
 It will be assumed that the user provides a ready-to-use grid file (`grid.vti`) and material properties file (`material_properties.yaml`).
 
 The overall steps will be:
+
 - Creating a project and adding the settings
 - Running the simulation
 - Finding the results
-
 
 ## Creating the project
 
 In this example, the project name is assumed to be `loading_unloading`, the grid file to be located in the project folder as `input_files/grid.vti` and the material properties file in the project folder as `input_files/material_properties.yaml`. In this example the randomly grid and material properties files are used from the ExampleProject, with the estimated yield strengths found in the [`uniaxial yield points`](yield_point.md) example.
 
 Within the project folder, create the `problem_definition.yaml`. Add the following configuration:
+
 ```
 general: 
     simulation_type     : load_path
@@ -63,25 +65,32 @@ load_path:
     stress_z_z: [    0,     0, 0]
 
     enable_yield_detection: False
- ```
+```
+
 In this configuration the following important settings for this simulation are found:
 
 The simulation type is set for the elasticity properties:
+
 - `simulation_type`     : load_path
-  
+
 The simulation will have 45 increments in total, 15 per applied stress state for 3 stress states:
+
 - `N_increments`: 15
 
 For the first stress state, the normal xx direction is unloaded, then it is loaded and finally it is unloaded again:
+
 - `stress_x_x`: [0, 600e6, 0]
 
 For the first stress state, the shear xy direction is loaded, then it is unloaded for the next two states:
+
 - `stress_x_y`: [0, 600e6, 0]
 
 All other directions remain unloaded of the rest of the test:
+
 - `stress_`: [0, 0, 0]
-    
+
 The simulation will not stop when yielding is detected:
+
 - `enable_yield_detection`: False
   
   `Note:` This yield detection is only properly defined for the first stress state, for the stress states after the first the yielding definitions and/or application breaks and yielding might be detected when it should or shouldn't be.
@@ -89,7 +98,9 @@ The simulation will not stop when yielding is detected:
 This concludes setting up the simulation details.
 
 ## Running the simulations
+
 With the project folder created, the grid and materials added and problem definition defined, the project can be run. Go to installation root and run the project. Do not forget to activate a Conda environment if needed.
+
 ```
 # Activate Conda environment if needed:
 conda activate [environment_name]
@@ -97,16 +108,19 @@ conda activate [environment_name]
 # Run the project
 python run_project.py loading_unloading
 ```
+
 This should end up in a summary of the simulations to run. 
 
 Check if the settings match what was expected and confirm.
 
 ## The simulation is completed
+
 When the simulations are completed, the results will be stored in the results folder inside of the project folder.
 
 Unlike the other simulation types, the load path results are found in the `load_path` folder and then inside of a `load_path` folder including the date and time of when the simulation was run. For example, the results could be found in a folder similar to `results/load_path/load_path_2024-11-19_13-21-51/`. 
- 
+
 In this folder, the `load_path_results.csv` file can be found, this contains the homogenized stress and strain data on each increment. For this simulation, the contents of this file look similar to:
+
 ```
 increment,stress_xx,stress_yy,stress_zz,stress_yz,stress_xz,stress_xy,strain_xx,strain_yy,strain_zz,strain_yz,strain_xz,strain_xy
 0,[-1.5684328e-05],[-1.99684232e-05],[-1.85399078e-05],[-2.69367796e-07],[6.5920516e-07],[9.02677384e-07],[0.],[0.],[0.],[0.],[0.],[0.]
@@ -159,4 +173,3 @@ increment,stress_xx,stress_yy,stress_zz,stress_yz,stress_xz,stress_xy,strain_xx,
 
 Also, the stress strain curve can be found, this is located under `results/stress_strain_curve.png`. For this simulation example, the following stress/strain curves have been found:
 ![Stress strain curves of the loading/unloading case](stress_strain_curve_loading_unloading.png).
-

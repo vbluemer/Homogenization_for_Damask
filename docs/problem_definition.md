@@ -1,51 +1,54 @@
 # Problem definition manual
+
 This documents reference for all the values that in the `problem_definition.yaml` file. The sections of the not used simulation types may be removed as long as the Main sections and the section of the Simulation type are present.
 
 The sections `General`, `Yielding condition` and `Solver` are considered the Main sections and should be present independent of the simulation type chosen. For the chosen simulation type, also the relevant section needs to be filled in. For any section present, all values should have at least a valid value. 
 
 **Main sections**
+
 - [General](#general)
-    - [Simulation type](#simulation-type)
-    - [Remove DAMASK files after job completion](#remove-damask-files-after-job-completion)
-    - [Dimensions](#dimensions)
-    - [Material properties](#material-properties)
-    - [Grid file](#grid-file)
-    - [Stress tensor type](#stress-tensor-type)
-    - [Strain tensor type](#strain-tensor-type)
+  - [Simulation type](#simulation-type)
+  - [Remove DAMASK files after job completion](#remove-damask-files-after-job-completion)
+  - [Dimensions](#dimensions)
+  - [Material properties](#material-properties)
+  - [Grid file](#grid-file)
+  - [Stress tensor type](#stress-tensor-type)
+  - [Strain tensor type](#strain-tensor-type)
 - [Yielding condition](#yielding-condition)
-    - [Yield condition](#yield-condition)
-    - [Plastic strain yield](#plastic-strain-yield)
-    - [Modulus degradation percentage](#modulus-degradation-percentage)
-    - [Over-estimated tensile yield](#over-estimated-tensile-yield)
-    - [Over-estimated shear yield](#over-estimated-shear-yield)
+  - [Yield condition](#yield-condition)
+  - [Plastic strain yield](#plastic-strain-yield)
+  - [Modulus degradation percentage](#modulus-degradation-percentage)
+  - [Over-estimated tensile yield](#over-estimated-tensile-yield)
+  - [Over-estimated shear yield](#over-estimated-shear-yield)
 - [Solver](#solver)
-    - [Number of increments](#number-of-increments)
-    - [CPU cores](#cpu-cores)
-    - [Stop after subsequent parsing errors](#stop-after-subsequent-parsing-errors)
-    - [Solver type](#solver-type)
-    - [Monitor update cycle](#monitor-update-cycle)
-    - [Other solver settings](#other-solver-settings)
+  - [Number of increments](#number-of-increments)
+  - [CPU cores](#cpu-cores)
+  - [Stop after subsequent parsing errors](#stop-after-subsequent-parsing-errors)
+  - [Solver type](#solver-type)
+  - [Monitor update cycle](#monitor-update-cycle)
+  - [Other solver settings](#other-solver-settings)
 
 **Simulation type specific sections**
+
 - [Yield point](#yield-point)
-    - [Load direction(s)](#load-directions)
+  - [Load direction(s)](#load-directions)
 - [Yield surface](#yield-surface)
-    - [Yield criterion](#yield-criterion)
-    - [Stress state generation](#stress-state-generation)
-    - [Assume tensile compressive symmetry](#assume-tensile-compressive-symmetry)
-    - [Load points per plane](#load-points-per-plane)
-    - [Manual stress states](#manual-stress-states)
+  - [Yield criterion](#yield-criterion)
+  - [Stress state generation](#stress-state-generation)
+  - [Assume tensile compressive symmetry](#assume-tensile-compressive-symmetry)
+  - [Load points per plane](#load-points-per-plane)
+  - [Manual stress states](#manual-stress-states)
 - [Elastic tensor](#elastic-tensor)
-    - [Material type](#material-type)
-    - [Strain step](#strain-step)
-    - [Component fitting](#component-fitting)
-    - [Number of load cases](#number-of-load-cases)
+  - [Material type](#material-type)
+  - [Strain step](#strain-step)
+  - [Component fitting](#component-fitting)
+  - [Number of load cases](#number-of-load-cases)
 - [Load path](#load-path)
-    - [Stress states](#stress-states)
-    - [Enable yielding detection](#enable-yielding-detection)
+  - [Stress states](#stress-states)
+  - [Enable yielding detection](#enable-yielding-detection)
 
+# General
 
-# General 
 - general:
 
 The general section define what type of analysis must be done, what files will be used for the DAMASK simulations and what definitions to use for the tensors.
@@ -104,13 +107,13 @@ Yielding can be detected during and after simulations have been completed. This 
 
 (`stress_strain_curve`, `modulus_degradation`) The definition to be used for yielding detection. Supports detection through percentage of permanent plastic deformation derived from stress-strain curve and through modulus degradation. Stress-strain curve condition takes the strain set in `plastic_strain_yield` as yielding threshold. It is recommend to only use this condition in uni-axial load cases. Modulus degradation is a energetic yielding condition which compares the ratio between strain and deformation energy. Degradation of this ratio indicates yielding in linear elastic materials. Factor of change in this ratio used for yielding threshold can be set in the `modulus_degradation_percentage` setting.
 
-###  Plastic strain yield
+### Plastic strain yield
 
 - plastic_strain_yield
 
 (`float [-]`) Permanent strain used for yielding threshold in the stress-strain curve yielding condition. This condition is only applied in loaded direction(s).
 
-###  Modulus degradation percentage
+### Modulus degradation percentage
 
 - modulus_degradation_percentage
 
@@ -171,7 +174,7 @@ For documentation on `N_staggered_iter_max`, `N_cutback_max`, `N_iter_min`, `N_i
 # Yield point
 
 - yield_point:
- 
+
 The settings in this section are used for the `yield_point` simulation type. This simulation type identifies the yield stresses in uni-axial loading directions. 
 
 Do not forget to set the `estimated_tensile_yield` and `estimated_shear_yield` in the [Yielding condition](#yielding-condition) section.
@@ -224,10 +227,9 @@ For `manual` creation, define the loading directions with loading magnitude in t
 
 (`integer [count]`) Number of loading directions to create for yield identification. For value of `1`, only uni-axial tests are performed. 
 
-
 ### Manual stress states
 
- - stress_x_x, stress_x_y, stress_x_z, stress_y_y, stress_y_z, stress_z_z
+- stress_x_x, stress_x_y, stress_x_z, stress_y_y, stress_y_z, stress_z_z
 
 (`float [Pa]`, `list(float) [Pa]`) The loading directions with over-exaggerated stress magnitudes to identify yielding in. Can either by single value for each loading direction, or list of equal length in each direction. 
 
@@ -290,4 +292,3 @@ The settings in section are used for the `load_path` simulation type. This simul
 - enable_yield_detection
 
 (`True`, `False`) Option to monitor for yielding conditions. If yielding conditions are met, the simulation will be terminated prematurely. `Note:` this option is best used for load paths with just one loading direction or where yielding only occurs in the first loading step as the application of yielding definitions break in changing loading directions.
- 

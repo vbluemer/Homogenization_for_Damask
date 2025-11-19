@@ -72,13 +72,10 @@ def main_loop(project_name_input: str, scripts_folder: str, skip_checks: bool = 
         # Run either the normal procedure or run the postprocessing mode.
         if problem_definition.general.path.postprocessing_only:
             (problem_definition, damask_job) = pre_process_damask_files(problem_definition, damask_job)
-            print("Skip execution of jobs, as postprocessing_only flag is on")
+            print(f"Skip execution of job {damask_job.job_number} of {damask_job.total_jobs}: postprocessing_only flag is on")
             run_ended_succesfully = True
             all_jobs_succeseeded = True
-            # Use the iterative mode (experimental)
-            # raise Exception("iterative modes are currently disabled on public version")
-            # run_ended_succesfully = run_iterative_mode(problem_definition, damask_job)
-            # run_ended_succesfully = run_iterative_bfgs(problem_definition, damask_job)
+
         else:
             # Pre-process files needed to run DAMASK_grid per job
             (problem_definition, damask_job) = pre_process_damask_files(problem_definition, damask_job)
