@@ -1,0 +1,163 @@
+homogenization:
+  dummy:
+    N_constituents: 1
+    mechanical: {type: pass}
+phase:
+  A:
+    references: ['https://www.totalmateria.com/page.aspx?ID=CheckArticle&site=ktn&NM=221', 'https://en.wikipedia.org/wiki/Titanium']
+    lattice: cF
+    rho: 2700.0
+    mechanical:
+      output: [F, P, F_e, F_p, L_p, O]
+      elastic:
+        type: Hooke
+        references: ['G.N. Kamm and G.A. Alers, Journal of Applied Physics 35:327-330, 1964, https://doi.org/10.1063/1.1713309, fit to Tab. I (T_min=100K, T_max=300K)', 'D. Gerlich and E.S. Fisher, Journal of Physics and Chemistry of Solids 30:1197-1205, 1969,
+            https://doi.org/10.1016/0022-3697(69)90377-1, fit to Tab. 2 (T_min=293K, T_max=900K)']
+        C_11: 106900000000.0
+        C_11,T: -36910000.0
+        C_11,T^2: -9790.0
+        C_12: 60500000000.0
+        C_12,T: -8412000.0
+        C_12,T^2: -3972.0
+        C_44: 28400000000.0
+        C_44,T: -14130000.0
+        C_44,T^2: -3408.0
+        T_ref: 293.15
+      plastic:
+        type: phenopowerlaw
+        references: ['T.J. Barrett and M. Knezevic, Computer Methods in Applied Mechanics and Engineering 354:245-270, 2019, https://doi.org/10.1016/j.cma.2019.05.035, fitted to data shown in Fig 1 and Fig. 2a']
+        output: [xi_sl, gamma_sl]
+        N_sl: [12]
+        dot_gamma_0_sl: [0.001]
+        n_sl: [20]
+        a_sl: [3.7]
+        xi_0_sl: [76000000.0]
+        xi_inf_sl: [266000000.0]
+        h_0_sl-sl: [1020000000.0]
+        h_sl-sl: [1, 1, 5.123, 0.574, 1.123, 1.123, 1]
+material:
+- constituents:
+  - phase: A
+    O: [0.2783431015992449, 0.8722900418928549, 0.3874314873790999, -0.10738735118202862]
+    v: 1.0
+  homogenization: dummy
+- constituents:
+  - phase: A
+    O: [0.3639036223223307, -0.49278738596932803, -0.645491048281485, 0.45615354046491047]
+    v: 1.0
+  homogenization: dummy
+- constituents:
+  - phase: A
+    O: [0.08844423171043331, 0.10660561176356617, 0.9541820537049139, 0.2652347447170895]
+    v: 1.0
+  homogenization: dummy
+- constituents:
+  - phase: A
+    O: [0.3007223975018679, 0.4030016196051974, -0.12287543595982328, 0.855603507165556]
+    v: 1.0
+  homogenization: dummy
+- constituents:
+  - phase: A
+    O: [0.5579222451397643, -0.8151780456218942, 0.04146460418482388, -0.14996069122963357]
+    v: 1.0
+  homogenization: dummy
+- constituents:
+  - phase: A
+    O: [0.16920638275117134, 0.6783785475318788, -0.5114124537496642, 0.4996289107273019]
+    v: 1.0
+  homogenization: dummy
+- constituents:
+  - phase: A
+    O: [0.10984291172324064, -0.270014306647388, 0.5603404886320705, 0.7752711433746668]
+    v: 1.0
+  homogenization: dummy
+- constituents:
+  - phase: A
+    O: [0.21960881885613234, -0.7904564726472778, 0.30718607568295164, -0.48227299990476935]
+    v: 1.0
+  homogenization: dummy
+- constituents:
+  - phase: A
+    O: [0.15320924241235917, -0.20907519955812057, -0.5292848923694446, -0.8078811742320948]
+    v: 1.0
+  homogenization: dummy
+- constituents:
+  - phase: A
+    O: [0.5703810337428564, -0.23940858190548017, -0.7262278352421148, 0.2999035487885885]
+    v: 1.0
+  homogenization: dummy
+- constituents:
+  - phase: A
+    O: [0.5835793096819027, 0.20216691505261516, 0.6768332340422744, -0.40057521274434654]
+    v: 1.0
+  homogenization: dummy
+- constituents:
+  - phase: A
+    O: [0.004555895035131912, 0.5183887266943477, -0.698832603911934, 0.4928340121849422]
+    v: 1.0
+  homogenization: dummy
+- constituents:
+  - phase: A
+    O: [0.5773738959404507, -0.410656035927103, 0.2473093177782318, -0.6609380498830801]
+    v: 1.0
+  homogenization: dummy
+- constituents:
+  - phase: A
+    O: [0.17916295725005976, 0.8861551590901103, 0.40594242912507283, -0.1335680089071847]
+    v: 1.0
+  homogenization: dummy
+- constituents:
+  - phase: A
+    O: [0.5897266873428184, -0.7318340571751454, -0.1831792304382053, -0.2882476652642632]
+    v: 1.0
+  homogenization: dummy
+- constituents:
+  - phase: A
+    O: [0.009359105595628072, 0.3563300363866149, 0.8212176639836312, 0.4455814860072526]
+    v: 1.0
+  homogenization: dummy
+- constituents:
+  - phase: A
+    O: [0.5173076498003869, 0.7114272964985571, 0.46634957081070305, 0.09371272624050273]
+    v: 1.0
+  homogenization: dummy
+- constituents:
+  - phase: A
+    O: [0.7370395617648954, 0.20719418163681297, -0.4022083374682469, 0.5020674344749828]
+    v: 1.0
+  homogenization: dummy
+- constituents:
+  - phase: A
+    O: [0.4166480653285578, -0.6955582082242623, 0.17405589103930588, -0.5588449833579406]
+    v: 1.0
+  homogenization: dummy
+- constituents:
+  - phase: A
+    O: [0.6684253426596958, -0.5468682343702302, 0.31303966070906336, 0.3951567617417293]
+    v: 1.0
+  homogenization: dummy
+- constituents:
+  - phase: A
+    O: [0.32811300851029457, -0.2632998516979465, 0.8514697371540731, -0.313072401295509]
+    v: 1.0
+  homogenization: dummy
+- constituents:
+  - phase: A
+    O: [0.09790497577242545, 0.5420409921046423, 0.22784014314428053, -0.8029290427984342]
+    v: 1.0
+  homogenization: dummy
+- constituents:
+  - phase: A
+    O: [0.4898998192293954, -0.5357526418093843, 0.46969956265204954, -0.5023440999531542]
+    v: 1.0
+  homogenization: dummy
+- constituents:
+  - phase: A
+    O: [0.029540385382199313, -0.6790976698928666, -0.2379120148751545, 0.6937950659637143]
+    v: 1.0
+  homogenization: dummy
+- constituents:
+  - phase: A
+    O: [0.5576295903821873, -0.08129862645679893, -0.5020842583600597, -0.6560115629876203]
+    v: 1.0
+  homogenization: dummy

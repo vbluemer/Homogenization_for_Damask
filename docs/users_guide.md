@@ -74,7 +74,9 @@ Whenever the `yield_surface` simulation is completed it will write all the yield
 
 The Hill yield surface [[`source`](https://royalsocietypublishing.org/doi/abs/10.1098/rspa.1948.0045)] is fitted to the following equation:
 
-$$10^6 + F( \sigma_y - \sigma_z)^2 + G( \sigma_z - \sigma_x)^2 + H( \sigma_x - \sigma_y)^2 + 2L \tau_{yz}^2 + 2M \tau_{zx}^2 + 2N \tau_{xy}^2  = 0$$ 
+$$
+F( \sigma_y - \sigma_z)^2 + G( \sigma_z - \sigma_x)^2 + H( \sigma_x - \sigma_y)^2 + 2L \tau_{yz}^2 + 2M \tau_{zx}^2 + 2N \tau_{xy}^2 - \sigma_{\textup{Y}}^2 = 0
+$$
 
 Where $F$, $G$, $H$, $L$, $M$ and $N$ are the coefficients fitted by the code, and the stress state in the unit of `MPa`
 
@@ -82,14 +84,17 @@ Where $F$, $G$, $H$, $L$, $M$ and $N$ are the coefficients fitted by the code, a
 
 The Cazacu-Plunkett-Barlat [[`source`](https://doi.org/10.1016/j.ijplas.2007.07.013)] is fitted to the following equation:
 
-$$-10^6 + 
+$$
 \left(|\Sigma_1| - k\Sigma_1\right)^a + 
 \left(|\Sigma_2| - k\Sigma_2\right)^a + 
-\left(|\Sigma_3| - k\Sigma_3\right)^a = 0$$
+\left(|\Sigma_3| - k\Sigma_3\right)^a - \sigma_{\textup{Y}}^a= 0
+$$
 
 Where
 
-$$\Sigma^{Voigt} = C \cdot S^{Voigt}$$
+$$
+\Sigma^{\textup{Voigt}} = C \cdot S^{\textup{Voigt}}
+$$
 
 $S$ is the deviatoric stress matrix, $\Sigma$ is a transformed stress state and $\Sigma_i$ the principle stresses. $C$, $k$ and $a$ are the fitted coefficients returned by the code and the stresses in the deviatoric stress $S$ given in `MPa`.
 
@@ -97,15 +102,21 @@ $S$ is the deviatoric stress matrix, $\Sigma$ is a transformed stress state and 
 
 The Cazacu-Plunkett-Barlat Extended n [[`source`](https://doi.org/10.1016/j.ijplas.2007.07.013)] is fitted to the following equation:
 
-$$-10^6 + \sum^n_{i=1} f^i(S) = 0$$
+$$
+\sum^n_{i=1} f^i(S) = 0
+$$
 
 Where
 
-$$f^i(S) = \left(|\Sigma^i_1| - k^i\Sigma^i_1\right)^a + 
+$$
+f^i(S) = \left(|\Sigma^i_1| - k^i\Sigma^i_1\right)^a + 
 \left(|\Sigma^i_2| - k^i\Sigma^i_2\right)^a + 
-\left(|\Sigma^i_3| - k^i\Sigma^i_3\right)^a$$
+\left(|\Sigma^i_3| - k^i\Sigma^i_3\right)^a - \sigma_{\textup{Y}}^a
+$$
 
-$$\Sigma^{i,Voigt} = C^i \cdot S^{Voigt}$$
+$$
+\Sigma^{i,\textup{Voigt}} = C^i \cdot S^{\textup{Voigt}}
+$$
 
 $S$ is the deviatoric stress matrix, $\Sigma^i$ is a transformed stress state and $\Sigma^i_j$ the principle stresses. $C^1, C^2, ..., C^n$, $k^1, k^2, ..., k^n$ and $a$ are the fitted coefficients returned by the code and the stresses in the deviatoric stress $S$ given in `MPa`.
 
@@ -163,38 +174,7 @@ This function always uses the [`optimization`](problem_definition.md#component-f
 
 ## Fitting of yield surface
 
-For fitting of the components of the elastic matrix, the `fit_elastic_tensor.py` script located in the root folder can be used. This script needs to be run in the following way:
-
-```
-python fit_yield_surface.py [yield_surface_name] [dataset_path] [output_csv_path] [plot_path]
-
-# Example using dummy values:
-python fit_yield_surface.py Hill yield_points.csv fitted_hill_coefficients.csv hill_plot.png
-```
-
-The script can also be called as a standalone python function:
-
-```
-# Import the script in the same folder
-from fit_yield_surface import fit_yield_surface_from_dataset
-
-yield_surface = fit_yield_surface_from_dataset(yield_surface_name, dataset_path, output_path, plot_path)
-
-# Example using dummy values:
-Hill = fit_yield_surface_from_dataset("Hill", "yield_surfaces.csv", "hill_fitted.csv", "hill_plot.png")
-
-# This function returns a YieldSurfaces class instance.
-```
-
-Here, `[yield_surface_name]` must be replaced with the name of a yield surface. See the list of supported yield surfaces types in the [Problem definition guide](problem_definition.md#yield-criterion).
-
-Replace `[dataset_path]` with the path of a `.csv` file containing the required data points needed for finding the components of the elastic matrix. If too little data points are supplied, the function will still complete. It is up to the user to guarantee that enough data has been supplied. Take into account that for the `Hill` and `Cazacu-Plunkett-Barlat` yield criterion there is a conversion done on the stress data from `Pa` to `MPa`. The `.csv` file must contain column names on the first row with at least the fields:
-
- `stress_xx`, `stress_yy`, `stress_zz`, `stress_yz`, `stress_xz`, `stress_xy`
-
-Replace `[output_path]` with the path of a `.csv` file to which the the fitted yield surface should be written to. 
-
-Replace `[plot_path]` with the path of a `.png` file to which the plot of the yield surface must be written to. This plot will contain all 3 combinations of independent normal stress directions and all 3 combinations of independent shear directions. For the provided yield points to show up on one of these plots, the provided yield points should only have either a normal loading or shear loading, and the loading should be along at most 2 axis (very small loading values in other directions are neglected). All data points are used for in the data fitting process, regardless of being on a plot or not.
+The script `fit_yield_surface_and_plot.py` can be used in order to compare yield points and yield surfaces from different projects in one figure. This helps tracking the evolution of a yield surface or can help visualize the differences of fitted yield functions or the influence of parameter bounds. By default, it runs with the visualization settings provided in `compare_results/visualization_settings.yaml`.
 
 # Examples
 
@@ -235,11 +215,3 @@ The features that will be discussed are the application of additional yield surf
 ## Implementation of an additional yield surface
 
 For reference on how to add a yield surface, view the tutorial [`here`](implement_yield_surface.md).
-
-## using the optimizer for experimental data
-
-A script has been included name `optimize_material_file_for_elastic_tensor.py`, find it [`here`](../optimize_material_file_for_elastic_tensor.py). The aim of this script is to be an example on how to calibrate the settings of the material properties to to some experimental data of the elastic matrix. 
-
-In this example, some dummy values are used to stand in for experimental data. Note however that this script is meant as a demonstration and not as a fine-tuned approach. It shows that the it is possible to read the results of a simulation, adjust the properties in one of the input files and re-run the simulation until the simulations match the experimental data. 
-
-For reference on the use of the script and considerations for application of the script, see the comments provided in the script itself

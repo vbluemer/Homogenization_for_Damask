@@ -63,7 +63,7 @@ For the simulation type, choose either `yield_point`, `yield_surface`, `elastic_
 
 - remove_damask_files_after_job_completion
 
-(`True`, `False`) The DAMASK simulations are run within folders called `damask_files`, these might include the grid files, material definitions and the simulation files created by DAMASK. Especially the DAMASK simulation files can be large (1 to 10 GB or larger). To prevent taking up too much space, the DAMASK working directory can be cleaned after a simulation is completion. 
+(`True`, `False`) The DAMASK simulations are run within folders called `damask_files`, these might include the grid files, material definitions and the simulation files created by DAMASK. Especially the DAMASK simulation files can be large (1 to 10 GB or larger). To prevent taking up too much space, the DAMASK working directory can be cleaned after a simulation is completion. If you intent to re-evaluate results with a different threshold for the onset of yielding, choose `False`.
 
 ### Dimensions
 
@@ -95,6 +95,10 @@ For the simulation type, choose either `yield_point`, `yield_surface`, `elastic_
 
 (`true_strain`, `Green_Lagrange`) The definition for calculating the strain in the gridpoints and for homogenization. Supports `true strain` (recommended) and `Green Lagrange` strain tensor definitions.
 
+### Postprocessing only
+
+(`True`,`False`) If you intent to re-evaluate existing result files with a changed criterion or threshold for yielding, choose `True`. This requires the existance of results in the form of `.hdf5` files.
+
 # Yielding condition
 
 - yielding_condition:
@@ -105,7 +109,7 @@ Yielding can be detected during and after simulations have been completed. This 
 
 - yield_condition
 
-(`stress_strain_curve`, `modulus_degradation`) The definition to be used for yielding detection. Supports detection through percentage of permanent plastic deformation derived from stress-strain curve and through modulus degradation. Stress-strain curve condition takes the strain set in `plastic_strain_yield` as yielding threshold. It is recommend to only use this condition in uni-axial load cases. Modulus degradation is a energetic yielding condition which compares the ratio between strain and deformation energy. Degradation of this ratio indicates yielding in linear elastic materials. Factor of change in this ratio used for yielding threshold can be set in the `modulus_degradation_percentage` setting.
+(`stress_strain_curve`, `modulus_degradation`,`plastic work`) The definition to be used for yielding detection. Supports detection through percentage of permanent plastic deformation derived from stress-strain curve, through modulus degradation, and plastic work done on the microstructure. Stress-strain curve condition takes the strain set in `plastic_strain_yield` as yielding threshold. It is recommend to only use this condition in uni-axial load cases. Modulus degradation is a energetic yielding condition which compares the ratio between strain and deformation energy. Degradation of this ratio indicates yielding in linear elastic materials. Factor of change in this ratio used for yielding threshold can be set in the `modulus_degradation_percentage` setting. `plastic_work` computes the accumulated plastic work based on slip on the individual slip systems and compares it to a user-defined threshold.
 
 ### Plastic strain yield
 
@@ -118,6 +122,12 @@ Yielding can be detected during and after simulations have been completed. This 
 - modulus_degradation_percentage
 
 (`float [-]`) Degradation percentage of ratio between linear deformation energy (Hooke's law) / strain magnitude compared to fully linear case. Used as yielding threshold in the modulus degradation yielding condition. 
+
+### Plastic work threshold
+
+- plastic_work_threshold
+
+(`float [J/m3]`) Amount of plastic work done on the microstructure that is used as a threshold to identify macroscopic yielding
 
 ### Over-estimated tensile yield
 
@@ -205,6 +215,10 @@ Implementation of custom yield surfaces is possible. This requires the user to w
 
 If less then expected results are shown in the resulting plot of the yield surface, or the `yield_points_yield_surface.csv` contains less then expected yielding points, check the `results_database.yaml` under the section `yield_surface` for `NO_YIELDING_FOUND`. If these are present, the applied loading was not great enough to induce yielding in the material. Either increase the `estimated_tensile_yield` and `estimated_shear_yield` values if automatic stress state generation is used or increase the magnitude given in the manual stress state if manual stress state generation is used, see [`Stress state generation`](#stress-state-generation).
 
+### Reference yield stress
+
+- yield_stress_ref `(Pa)`: Reference yield stress in the yield function formula.
+
 ### Stress state generation
 
 - stress_state_creation
@@ -219,13 +233,13 @@ For `manual` creation, define the loading directions with loading magnitude in t
 
 - assume_tensile_compressive_symmetry
 
-(`True`, `False`) For creating stress states, assume that yield point in tensile and compressive states are symmetric.
+(`True`, `False`) For creating stress states, assume that yield point in tensile and compressive states are symmetric. If `True`, load points are only generated in two of the four quadrants.
 
-### Load points per plane
+### Load points per quadrant
 
-- load_points_per_plane
+- load_points_per_quadrant
 
-(`integer [count]`) Number of loading directions to create for yield identification. For value of `1`, only uni-axial tests are performed. 
+(`integer [count]`) Number of loading directions per quadrant to create for yield point identification. Must be a power of `2`. For value of `1`, only uni-axial tests are performed. 
 
 ### Manual stress states
 
@@ -281,11 +295,17 @@ For `combined_directions`, all 21 unique combinations of uni-axial and bidirecti
 
 The settings in section are used for the `load_path` simulation type. This simulation type simulates the load path as defined in the settings and gives the homogenized stress and strains at each increment.
 
-### Stress states
+### Stress steps
 
 - stress_x_x, stress_x_y, stress_x_z, stress_y_y, stress_y_z, stress_z_z
 
 (`float [Pa]`, `list(float) [Pa]`) The stress state(s) to simulate. Can either by single value for each loading direction, or list of equal length in each direction. In between each stress state, the number of increments is defined by [`N_increments`](#solver) from the solver section.
+
+### Deformation gradient steps
+
+- F_x_x, F_x_y, F_x_z, F_y_y, F_y_z, F_z_z
+
+(`float [-]`,` list(float) [-]`) The deformation gradient steps to simulate. Must be compatible to the list of requested stress states, in terms of which components are prescribed, and which are unknown, as enforced by DAMASK. Indicate unknown/free components with an x.
 
 ### Enable yielding detection
 
