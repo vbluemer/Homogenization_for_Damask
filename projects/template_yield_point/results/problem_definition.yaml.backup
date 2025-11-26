@@ -65,11 +65,11 @@ yielding_condition:
 
     # (over)Estimated yield point in uniaxial tension.
     # Must be higher than actual yield point for yielding to be found.
-    estimated_tensile_yield: 400e6
+    estimated_tensile_yield: 550e6
 
     # (over)Estimated yield point in pure shear.
     # Must be higher than actual yield point for yielding to be found.
-    estimated_shear_yield: 250e6
+    estimated_shear_yield: 300e6
 
 # Settings used for solver
 # Default settings should be ok in most cases, but can be adapted if needed.

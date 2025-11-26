@@ -1,8 +1,8 @@
 # Elastic matrix of isotropic material
 
-In this example, the components of the isotropic elastic matrix will be fitted to simulation data. The elastic data will be acquired by running the nesscecary DAMASK simulations. Two methods will be used for fitting, one with an algebraic approach and one with an regression based approach.
+In this example, the components of the homogenized elastic tensor will be identified from a series of numerical experiments. Two methods will be used for fitting, one with an algebraic approach and one with an regression based approach.
 
-It will be assumed that the user provides a ready-to-use grid file (`grid.vti`) and material properties file (`material_properties.yaml`).
+It will be assumed that the user provides a ready-to-use grid file (`Polycrystal_25_5x5x5.vti`) and material properties file (`titanium_zero_rotation_assigned.yaml`).
 
 The overall steps will be:
 
@@ -13,7 +13,7 @@ The overall steps will be:
 
 ## Creating the project
 
-In this example, the project name is assumed to be `fit_elastic`, the grid file to be located in the project folder as `input_files/grid.vti` and the material properties file in the project folder as `input_files/material_properties.yaml`. In this example the randomly grid and material properties files are used from the ExampleProject, with the estimated yield strengths found in the [`uniaxial yield points`](yield_point.md) example.
+In this example, the project name is assumed to be `template_elastic_tensor`, the grid file to be located in the project folder as `input_files/Polycrystal_25_5x5x5.vti` and the material properties file in the project folder as `input_files/titanium_zero_rotation_assigned.yaml`. In this example, all material points are unrotated with respect to the referece orientation, meaning they posses Euler angles of `[0,0,0]`. This allows a quick sanity check of results, as the components of the input material should be recovered in the homogenized result.
 
 Within the project folder, create the `problem_definition.yaml`. Add the following configuration:
 
@@ -26,7 +26,6 @@ general:
     grid_file           : "input_files/grid.vti"
     stress_tensor_type: "Cauchy"
     strain_tensor_type: "true_strain"
-    reduce_parasitic_stresses : False
 
 yielding_condition:
     # These are not relevant for this simulation but have to be present
@@ -57,7 +56,7 @@ solver:
     monitor_update_cycle: 5 
 
 elastic_tensor:
-    material_type: isotropic
+    material_type: anisotropic
     strain_step: 1e-7
     component_fitting: algebraic
     number_of_load_cases: minimum
@@ -99,59 +98,54 @@ This should end up in a summary of the simulations to run.
 
 Check if the settings match what was expected and confirm.
 
-## The simulation is completed
+## Results
 
-When the simulations are completed, the results will be stored in the results folder inside of the project folder.
+After all required simulations are concluded and postprocessing is done, two files can be found in the project directory. These are:
 
-Directly in the results folder, two files can be found, these are:
-
-1. `elastic_tensor_data.csv`: this is the file containing the data extracted form the simulations. In this case that is only 1 simulation that needed to be performed:
+1. `elastic_tensor_data.csv`: this file contains the elastic response to the applied strain in `xx`,`yy`, an all other directions. Because we used the setting `anisotropic`, no assumption of symmetry was done and the full set of 6 loadcases was performed to characterize the homogenized elastic response.
    
    ```
    field_name,stress_xx,stress_yy,stress_zz,stress_xy,stress_xz,stress_yz,strain_xx,strain_yy,strain_zz,strain_xy,strain_xz,strain_yz
-   strain_xx,16731.53427299464,7783.933026998837,7591.270663524702,-38.27332233825143,-24.32190042691757,91.53982146555383,9.999999568245186e-08,-4.893594794577097e-17,-4.3894712420253994e-17,3.9329340499548915e-18,-1.1548470058196328e-19,7.687243060060078e-19
-   ```
-2. `elastic_tensor.csv`: The components of fitted elastic matrix, included with the unit associated stress unit and mean square of the fit. 
+   strain_xx,16250.002446338549,9179.999545993098,6889.999659247517,0.0,0.0,0.0,9.999999505439053e-08,0.0,0.0,0.0,0.0,0.0
+   strain_xy,0.002684483718229847,0.002684483718229847,0.0006884492975700667,7070.000000000414,0.0,0.0,-5.003996372522174e-15,-5.003996372522174e-15,0.0,1.9999999989472907e-07,0.0,0.0
+   strain_xz,0.0030280752355422097,0.0008028577802576903,0.0031185029008979287,0.0,9360.00000000043,0.0,-4.999064490099561e-15,-1.1102230246251568e-16,-5.119950550789857e-15,2.662166329353621e-23,1.999999997837068e-07,-2.2204459489174614e-16
+   strain_yy,9179.999545993098,16250.002446338549,6889.999659247517,0.0,0.0,0.0,0.0,9.999999505439053e-08,0.0,0.0,0.0,0.0
+   strain_yz,0.0008028577802576903,0.0030280752355422097,0.0031185029008979287,0.0,0.0,9360.00000000043,0.0,-5.003996372522174e-15,-5.003996372522174e-15,0.0,0.0,1.9999999989472907e-07
+   strain_zz,6889.999659247517,6889.999659247517,18060.002718823012,0.0,0.0,0.0,0.0,0.0,9.999999505439053e-08,0.0,0.0,0.0
    
    ```
-    unit_stress,MSE,C_11,C_12,C_13,C_14,C_15,C_16,C_21,C_22,C_23,C_24,C_25,C_26,C_31,C_32,C_33,C_34,C_35,C_36,C_41,C_42,C_43,C_44,C_45,C_46,C_51,C_52,C_53,C_54,C_55,C_56,C_61,C_62,C_63,C_64,C_65,C_66
-    MPa,4.718670157102958e-06,167315.34995386715,77839.33363073906,77839.33363073906,0.0,0.0,0.0,77839.33363073906,167315.34995386715,77839.33363073906,0.0,0.0,0.0,77839.33363073906,77839.33363073906,167315.34995386715,0.0,0.0,0.0,0.0,0.0,0.0,44738.008161564045,0.0,0.0,0.0,0.0,0.0,0.0,44738.008161564045,0.0,0.0,0.0,0.0,0.0,0.0,44738.008161564045
-   ```
-   
-   ## Using the regression based fitting
-   
-   The only change in the problem definition is the `component_fitting` setting in the `problem_definition.yaml`. This change in setting does not require the simulation results to be reevaluated, hence, the result will be found quickly:
+
+2. `elastic_tensor.csv`: this file contains the computed elastic tensor in Voigt matrix form, the unit, and the mean squared error when compared to datapoints.
    
    ```
-   ### Settings not mentioned here remain unchanged (and still have to be present)
+      162500.03,     91800.00,     68900.00,         0.00,         0.00,         0.00
+       91800.00,    162500.03,     68900.00,         0.00,         0.00,         0.00
+       68900.00,     68900.00,    180600.04,         0.00,         0.00,         0.00
+           0.00,         0.00,         0.00,     46800.00,         0.00,         0.00
+           0.00,         0.00,         0.00,         0.00,     46800.00,         0.00
+           0.00,         0.00,         0.00,         0.00,         0.00,     35350.00
+   unit,MPa
+   MSE,0.00
+   
    ```
 
-general: 
-    ....
+## Using the regression based fitting
 
-yielding_condition:
-    # These are not relevant for this simulation but have to be present
-    ...
+By changing the setting 
 
-solver:
-    ... 
+- `component_fitting: optimization` 
 
-elastic_tensor:
-    ...
-    component_fitting: optimization
-    number_of_load_cases: minimum
+the macroscopic elastic tensor can be computed using an optimization approach, which fits the components to numerical datapoints. As for the example at hand, the change of results is negligible.
 
 ```
-With these adjustments made, run the project again. Make sure to reuse the already stored simulation results when prompted.
+   162500.06,     91799.95,     68900.04,        -0.03,        -0.05,         0.04
+    91799.95,    162500.12,     68900.04,        -0.04,         0.00,        -0.02
+    68900.04,     68900.04,    180599.94,        -0.19,        -0.02,         0.02
+       -0.03,        -0.04,        -0.19,     46799.98,         0.01,         0.00
+       -0.05,         0.00,        -0.02,         0.01,     46799.94,         0.01
+        0.04,        -0.02,         0.02,         0.00,         0.01,     35350.11
+unit,MPa
+MSE,0.00
 
-## The updated simulation is completed
-With the simulation completed, the contents of the `elastic_tensor_data.csv` remain unchanged, however, the `elastic_tensor.csv` contains different values:
+
 ```
-
-unit_stress,MSE,C_11,C_12,C_13,C_14,C_15,C_16,C_21,C_22,C_23,C_24,C_25,C_26,C_31,C_32,C_33,C_34,C_35,C_36,C_41,C_42,C_43,C_44,C_45,C_46,C_51,C_52,C_53,C_54,C_55,C_56,C_61,C_62,C_63,C_64,C_65,C_66
-MPa,1.726256527249081e-05,167315.35383055027,76876.03147814867,76876.03147814867,0.0,0.0,0.0,76876.03147814867,167315.35383055027,76876.03147814867,0.0,0.0,0.0,76876.03147814867,76876.03147814867,167315.35383055027,0.0,0.0,0.0,0.0,0.0,0.0,45219.6611762008,0.0,0.0,0.0,0.0,0.0,0.0,45219.6611762008,0.0,0.0,0.0,0.0,0.0,0.0,45219.6611762008
-
-```
-These values are ever so slightly different then with algebraic fitted results. This is because of the assumption made for the `isotropic` material properties. The algebraic fitting process assumes that the elastic response matches the assumed material type. Hence, for the strain step in the `x-x` direction this requires the same response in `y-y` direction and the `z-z` directions. Therefore, the algebraic fit just takes the response in `y-y` direction to represent the `z-z` direction as well.
-
-However, from the data in `elastic_tensor_data.csv` it can be seen that this is not the case. The regression approach takes into account all values, and therefore gets to different results.

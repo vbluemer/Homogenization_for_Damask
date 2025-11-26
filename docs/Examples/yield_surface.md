@@ -1,8 +1,8 @@
-# Fitting Hill yield surface
+# Fitting Cazacu-Plunkett-Barlat yield surface
 
-In this example, the Hill yield surface will be fitted with yielding data in multiple loading directions. The yielding data will be acquired by running the nesscecary DAMASK simulations. Two yield surfaces will be fitted, one with only uniaxial load tests and one with bidirectional yield tests included.
+In this example, the Cazacu-Plunkett-Barlat (CPB) yield surface will be fitted with yielding data in multiple loading directions. The yielding data will be acquired by running the nesscecary DAMASK simulations. 
 
-It will be assumed that the user provides a ready-to-use grid file (`grid.vti`), material properties file (`material_properties.yaml`) and has a reasonable estimate for the yield strengths, see the example on [`uniaxial yield points`](yield_point.md) how to find this last requirement.
+It will be assumed that the user provides a ready-to-use grid file (`Polycrystal_25_5x5x5.vti`), material properties file (`titanium_assigned.yaml`) and has a reasonable estimate for the yield strengths, see the example on [`uniaxial yield points`](yield_point.md) how to find this last requirement.
 
 The overall steps will be:
 
@@ -12,7 +12,7 @@ The overall steps will be:
 
 ## Creating the project
 
-In this example, the project name is assumed to be `fit_hill`, the grid file to be located in the project folder as `input_files/grid.vti` and the material properties file in the project folder as `input_files/material_properties.yaml`. In this example the randomly grid and material properties files are used from the ExampleProject, with the estimated yield strengths found in the [`uniaxial yield points`](yield_point.md) example.
+In this example, the project name is assumed to be `template_yield_surface`, the grid file to be located in the project folder as `input_files/Polycrystal_25_5x5x5.vti` and the material properties file in the project folder as `input_files/titanium_assigned.yaml`. 
 
 Within the project folder, create the `problem_definition.yaml`. Add the following configuration:
 
@@ -21,17 +21,18 @@ general:
     simulation_type     : yield_surface
     remove_damask_files_after_job_completion: True
     dimensions          : 3D
-    material_properties : "input_files/material_properties.yaml"
-    grid_file           : "input_files/grid.vti"
+    material_properties : "input_files/titanium_assigned.yaml"
+    grid_file           : "input_files/Polycrystal_25_5x5x5.vti"
     stress_tensor_type: "Cauchy"
     strain_tensor_type: "true_strain"
-    reduce_parasitic_stresses : False
+    postprocessing_only: False
 
 yielding_condition:
-    yield_condition: stress_strain_curve
+    yield_condition: plastic_work
     plastic_strain_yield: 0.002
-    modulus_degradation_percentage: 0.15
-    estimated_tensile_yield: 650e6
+    modulus_degradation_percentage: 0.1
+    plastic_work_threshold: 808647.5307
+    estimated_tensile_yield: 600e6
     estimated_shear_yield: 350e6
 
 solver:
@@ -54,13 +55,16 @@ solver:
     simulation_time : 1000         
     monitor_update_cycle: 5    
 
-yield_surface:
-    yield_criterion: Hill
-    stress_state_creation: manual
+yield_surface:   
+    yield_criterion: Cazacu-Plunkett-Barlat
+    bounds_CPB: [[0, 1],[0, 3], [1.5, None]]
+    yield_stress_ref: 448.86e6
+
+    stress_state_creation: automatic 
 
     # Automatic generation settings: 
     assume_tensile_compressive_symmetry: True
-    load_points_per_plane: 1
+    load_points_per_quadrant: 2
 
     # Manual creation settings:
     stress_x_x: [ 650e6,      0,      0,     0,     0,     0]
@@ -71,163 +75,129 @@ yield_surface:
     stress_z_z: [     0,      0,  650e6,     0,     0,     0]
 ```
 
-In this configuration the following important settings for this simulation are found:
-
-The simulation type is set for the yield surface:
-
-- `simulation_type`     : yield_surface
-
-The yielding condition is set to be 0.2% of plastic strain. This is a suitable definition because only uniaxial loading will be applied in this run.
-
-- `yield_condition`: stress_strain_curve
-- `plastic_strain_yield`: 0.002
-
-The yield surface to be fitted is Hill:
-
-- `yield_criterion`: Hill
-
-The loading directions to test yielding in will be defined by the user:
-
-- `stress_state_creation`: manual
-
-The loading direction and magnitude are setup for uniaxial yielding:
-
-- `stress_x_x`: [ 650e6,  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0]
-- `stress_x_y`: [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0, 350e6,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0]
-- `stress_x_z`: [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0, 350e6,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0]
-- `stress_y_y`: [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,  650e6,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0]
-- `stress_y_z`: [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0, 350e6]
-- `stress_z_z`: [ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,  650e6,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0]
-
-This concludes setting up the simulation details.
-
-## Running the simulations
-
-With the project folder created, the grid and materials added and problem definition defined, the project can be run. Go to installation root and run the project. Do not forget to activate a Conda environment if needed.
-
-```
-# Activate Conda environment if needed:
-conda activate [environment_name]
-
-# Run the project
-python run_project.py fit_hill
-```
-
-This should end up in a summary of the simulations to run. 
-
-Check if the settings match what was expected and confirm.
-
-## The simulations are completed
-
-When the simulations are completed, the results will be stored in the results folder inside of the project folder.
-
-Directly in the results folder, three files can be found, these are:
-
-1. `yield_points_yield_surface.csv`: This file contains the yield points that have been found found.
-   
-   ```
-   field_name,unit,stress_xx,stress_yy,stress_zz,stress_xy,stress_xz,stress_yz
-    stress_xx=0_yy=0_zz=0_xy=0_xz=0_yz=350000000-0,Pa,-414.12442246457266,2063308.2347022966,-88.18719174432681,326.6733914353258,-361.6648476862681,220511071.9005208
-    stress_xx=0_yy=0_zz=0_xy=0_xz=350000000-0_yz=0,Pa,3023133.684340043,-222.03878300775446,-78.52769201105238,174647.82286968385,288406382.90091133,-194.19379140429533
-    stress_xx=0_yy=0_zz=0_xy=350000000-0_xz=0_yz=0,Pa,2659354.027203298,-573.4357862756814,318.11305747897217,263461906.74636516,378.3795240305898,-30.433705820888946
-    stress_xx=0_yy=0_zz=650000000-0_xy=0_xz=0_yz=0,Pa,1254.128768166286,527.7854602454739,424530822.6395018,-209.77376066556897,96.11620153879807,445.1151705029939
-    stress_xx=0_yy=650000000-0_zz=0_xy=0_xz=0_yz=0,Pa,1113.0095386840167,398853651.75510514,-567.8334646442477,13.074524390932282,-235.25191206748934,-440.68624875677307
-    stress_xx=650000000-0_yy=0_zz=0_xy=0_xz=0_yz=0,Pa,492694368.35456675,359.2731477615205,880.5424790918764,-149.12313108569276,-170.0804035486115,-528.4448882835304
-   ```
-   
-   If some loading directions did not result in the detection of yielding, these will be located in a file called `yield_points_yield_surface_NO_YIELD.csv`
-
-2. `Hill.csv`: This contains the the coefficients of the Hill yield surface and the mean square error of the fit. See [`Users guide`](../users_guide.md#hill) to see the formulation used for the Hill fit.
-   
-   ```
-    F,G,H,L,M,N,unit_stress,MSE
-    3.857531901670379,1.6910637586328663,2.428448634138371,10.28247302204908,6.01095842899721,7.20313721713033,MPa,0.0
-   ```
-
-3. `Hill.png`: This contains the plot of the yield surface along with the simulated yielding data:
-    ![Fit of Hill surface](Hill.png)
-
-Also the folder `yield_surface` is created, in this, the the individual stress-strain curves and modulus degradation diagrams are shown. These have been created during each run and can be used to monitor the progress of the individual simulations.
-
-The `results_database.yaml` is considered an internal document, however, it can be reviewed for the data it is containing. If this file is deleted, the code forgets the results it has stored. 
-
-## Using automatic generated states
-
-Included is an algorithm that can create n number of load points along each loading plane (see the `Hill.png` for the loading directions). In the following example, this setting will be used to created combined loading directions.
-
-The following changes need to made to the previous `problem_definition.yaml`:
-
-```
-### Settings not mentioned here remain unchanged (and still have to be present)
-general: 
-    ...
-
-yielding_condition:
-    yield_condition: modulus_degradation
-    modulus_degradation_percentage: 0.15
-    ...
-
-solver:
-    ...
-
-yield_surface:
-    ...
-    stress_state_creation: automatic
-
-    # Automatic generation settings: 
-    assume_tensile_compressive_symmetry: True
-    load_points_per_plane: 3
-    ...
-```
-
-Here, the following changes have been made:
-
-The automatic stress state generation mode is enabled:
-
-- `stress_state_creation`: automatic
-
-Symmetry is assumed in tensile and compressive yield strength:
-
-- `assume_tensile_compressive_symmetry`: True
-
-Three loading directions will be tested per plane. As there are 6 planes this results in 3x6=18 simulations:
-
-- `load_points_per_plane`: 3
-
 **Change in yielding condition**
 
-Bidirectional loading directions will be used for this simulation. The definition of 0.2% strain for yielding based on the stress-strain curve does not work for these load cases. Therefore the the energetic yielding condition `modulus_degradation` will be used for this simulation:
+Bidirectional loading directions will be used for this simulation. The definition of 0.2% strain for yielding based on the stress-strain curve does not work for these load cases. Therefore the the yielding condition `plastic_work` will be used for this simulation:
 
-- `yield_condition`: modulus_degradation
+- `yield_condition`: plastic_work
 
-This condition also needs a threshold to define when yielding has occurred. This threshold is applied to the modulus (ratio between linear deformation energy and strain squared). Here, a 15% degradation of the linear modulus is chosen to approach (but not exactly match) the 0.2% plastic strain condition:
-
-- `modulus_degradation_percentage`: 0.15
-
-## Run the updated project
-
-Run the updated project. The very first messages of the script will mention that a change in settings is detected and some results are moved to a backup folder. Note however, the already existing Hill fit still exists until it is overwritten! Running the rest of the code should function as it had before.
-
-Take into account that this set will take 3 times as long to run.
-
-## Fitting Plunkett-Cazacu-Barlat
-
-Wait for all the simulations to complete successfully. This will give an updated fit and plots of the Hill yield surface. If this yield surface is to be compared to the `Plunkett-Cazacu-Barlat` surface, this can be achieved by adjusting only the yield `yield_criterion` in the problem definition:
+This condition also needs a threshold to define when yielding has occurred. The value is identified from a uniaxial yield test, where the amount of accumulated plastic work density at yielding is observed. The data can be extracted from the file `load_case_results`, recorded in the rightmost column:
 
 ```
-### Settings not mentioned here remain unchanged (and still have to be present)
+      increment, stress_xx[MPa], stress_yy[MPa], stress_zz[MPa], stress_yz[MPa], stress_xz[MPa], stress_xy[MPa],      strain_xx,      strain_yy,      strain_zz,      strain_yz,      strain_xz,      strain_xy,       Wp[J/m3]
+              0,           0.00,           0.00,           0.00,          -0.00,           0.00,           0.00,       0.000000,       0.000000,       0.000000,       0.000000,       0.000000,       0.000000,         0.0000
+              1,          53.35,          -0.00,          -0.00,          -0.00,           0.00,          -0.00,       0.000473,      -0.000164,      -0.000144,      -0.000007,      -0.000001,      -0.000002,         0.0000
+              2,         106.73,          -0.00,          -0.00,          -0.00,          -0.00,          -0.00,       0.000945,      -0.000328,      -0.000288,      -0.000014,      -0.000002,      -0.000005,         0.0004
+              3,         160.15,           0.00,           0.01,           0.00,           0.00,           0.00,       0.001416,      -0.000491,      -0.000432,      -0.000021,      -0.000003,      -0.000007,         1.1764
+              4,         213.59,          -0.00,          -0.00,          -0.00,          -0.00,          -0.00,       0.001888,      -0.000656,      -0.000576,      -0.000028,      -0.000005,      -0.000009,       352.3793
+              5,         267.09,          -0.00,          -0.00,           0.00,           0.00,           0.00,       0.002398,      -0.000849,      -0.000732,      -0.000046,      -0.000004,      -0.000012,     14146.0645
+              6,         320.68,           0.00,          -0.00,          -0.00,           0.00,          -0.00,       0.003106,      -0.001172,      -0.000955,      -0.000100,      -0.000010,      -0.000015,     99912.5391
+              7,         374.44,           0.00,          -0.01,          -0.00,           0.00,          -0.00,       0.004105,      -0.001677,      -0.001288,      -0.000218,      -0.000031,      -0.000003,    298834.9301
+              8,         428.40,           0.00,          -0.00,           0.00,          -0.00,          -0.00,       0.005354,      -0.002338,      -0.001716,      -0.000396,      -0.000083,       0.000024,    608303.8432
+              9,         482.67,           0.00,           0.00,          -0.00,          -0.00,           0.00,       0.007014,      -0.003255,      -0.002301,      -0.000642,      -0.000200,       0.000060,   1139760.3514
+             10,         537.64,           0.00,          -0.00,          -0.00,          -0.00,           0.00,       0.009655,      -0.004790,      -0.003248,      -0.001084,      -0.000419,       0.000055,   2253033.2093
+             11,         593.97,          -0.01,           0.00,          -0.00,          -0.00,           0.00,       0.014155,      -0.007502,      -0.004872,      -0.001830,      -0.000850,      -0.000204,   4546869.2841
+             12,         653.10,           0.01,          -0.00,           0.00,          -0.00,          -0.00,       0.022210,      -0.012514,      -0.007736,      -0.003165,      -0.001380,      -0.000873,   9283668.4896
+             13,         718.42,           0.00,           0.00,           0.00,          -0.01,           0.00,       0.037764,      -0.022462,      -0.013076,      -0.006251,      -0.001740,      -0.002566,  19649774.0961
+             14,         803.20,           0.01,           0.01,           0.00,          -0.00,           0.00,       0.076112,      -0.047404,      -0.025523,      -0.012009,      -0.002148,      -0.007846,  48826005.3833
+     yieldpoint,         448.86,           0.00,          -0.00,          -0.00,          -0.00,          -0.00,       0.005980,      -0.002684,      -0.001937,      -0.000489,      -0.000127,       0.000038,    808647.5307
+```
+
+## Results
+
+After all jobs and fitted are concluded, the results can be observed in the project folder. The fitted parameters are recorded in `Cazacu-Plunkett-Barlat.csv`:
+
+```
+        C_11,        C_12,        C_13,        C_14,        C_15,        C_16,        C_21,        C_22,        C_23,        C_24,        C_25,        C_26,        C_31,        C_32,        C_33,        C_34,        C_35,        C_36,        C_41,        C_42,        C_43,        C_44,        C_45,        C_46,        C_51,        C_52,        C_53,        C_54,        C_55,        C_56,        C_61,        C_62,        C_63,        C_64,        C_65,        C_66,           a,           k, unit_stress,         MSE
+    0.177040,    1.813120,    0.936096,    0.000000,    0.000000,    0.000000,    1.813120,    0.796320,    0.435368,    0.000000,    0.000000,    0.000000,    0.936096,    0.435368,    1.821307,    0.000000,    0.000000,    0.000000,    0.000000,    0.000000,    0.000000,    1.166243,    0.000000,    0.000000,    0.000000,    0.000000,    0.000000,    0.000000,    1.235040,    0.000000,    0.000000,    0.000000,    0.000000,    0.000000,    0.000000,    1.416717,    3.059065,    0.000000,         MPa,   52.437968
+```
+
+The plotted contour of the yield surface is plotted in the different component planes in the file `Cazacu-Plunkett-Barlat.png`:
+
+![Stress-strain curve of x-x simulation](figures/Cazacu-Plunkett-Barlat.png)
+
+Note that the blue datapoints in the tensile half of the plot are based on actual simulations, while the red ones are deduced using the assumption of tensile-compressive symmetry.
+
+## Fitting yield loci after pre-deformation
+
+In order to fit a yield surface to the plastic onset of a microstructure that underwent a pre-deformation, the settings below can be used. Important additions and changes are `restart_file_path` and `history_loadcase_path` in the general settings and the change of `assume_tensile_compressive_symmetry` from `True` to `False`. Note that an unchanged amount of points per quadrant will lead to a doubled number of required simulations without the assumption of symmetry.
+
+```
 general: 
-    ...
+    simulation_type     : yield_surface
+    remove_damask_files_after_job_completion: True
+    dimensions          : 3D
+    material_properties : "input_files/titanium_assigned.yaml"
+    grid_file           : "input_files/Polycrystal_25_5x5x5.vti"
+    stress_tensor_type: "Cauchy"
+    strain_tensor_type: "true_strain"
+    postprocessing_only: False
+
+    restart_file_path: "input_files/template_preloading_restart.hdf5"
+    history_loadcase_path:  "input_files/LOADCASE.yaml"
 
 yielding_condition:
-    ...
+    yield_condition: plastic_work
+    plastic_strain_yield: 0.002
+    modulus_degradation_percentage: 0.1
+    plastic_work_threshold: 808647.5307
+    estimated_tensile_yield: 600e6
+    estimated_shear_yield: 350e6
 
 solver:
-    ...
+    N_increments: 15
+    cpu_cores: 0
+    # The following settings are technical DAMASK settings
+    stop_after_subsequent_parsing_errors: 20
+    solver_type: "spectral_basic"
+    N_staggered_iter_max: 10      
+    N_cutback_max: 3        
+    N_iter_min: 1            
+    N_iter_max: 100         
+    eps_abs_div_P: 1.0e-4            
+    eps_rel_div_P: 5.0e-4            
+    eps_abs_P: 1.0e3                  
+    eps_rel_P: 1.0e-3                 
+    eps_abs_curl_F: 1.0e-10          
+    eps_rel_curl_F: 5.0e-4           
 
-yield_surface:
+    simulation_time : 1000         
+    monitor_update_cycle: 5    
+
+yield_surface:   
     yield_criterion: Cazacu-Plunkett-Barlat
-    ...
+    bounds_CPB: [[0, 1],[0, 3], [1.5, None]]
+    yield_stress_ref: 448.86e6
+
+    stress_state_creation: automatic 
+
+    # Automatic generation settings: 
+    assume_tensile_compressive_symmetry: False
+    load_points_per_quadrant: 2
+
+    # Manual creation settings:
+    stress_x_x: [ 650e6,      0,      0,     0,     0,     0]
+    stress_x_y: [     0,      0,      0, 350e6,     0,     0]
+    stress_x_z: [     0,      0,      0,     0, 350e6,     0]
+    stress_y_y: [     0,  650e6,      0,     0,     0,     0]
+    stress_y_z: [     0,      0,      0,     0,     0, 350e6]
+    stress_z_z: [     0,      0,  650e6,     0,     0,     0]
 ```
 
-If the project is run in this way without any other setting changing, the code will ask to reuse the existing yielding data. Confirm by pressing `Enter`. This will take the user to the summary mentioning that all results are reused and no jobs need to run. Confirming again will directly take the execution to the fitting of the `Plunkett-Cazacu-Barlat` yield surface, saving the time of having to redo all simulations.
+Results can be observed in files analogous to those of the previous analysis:
+
+```
+        C_11,        C_12,        C_13,        C_14,        C_15,        C_16,        C_21,        C_22,        C_23,        C_24,        C_25,        C_26,        C_31,        C_32,        C_33,        C_34,        C_35,        C_36,        C_41,        C_42,        C_43,        C_44,        C_45,        C_46,        C_51,        C_52,        C_53,        C_54,        C_55,        C_56,        C_61,        C_62,        C_63,        C_64,        C_65,        C_66,           a,           k, unit_stress,         MSE
+    1.070181,    2.070981,    0.970012,    0.000000,    0.000000,    0.000000,    2.070981,    0.763178,    0.561522,    0.000000,    0.000000,    0.000000,    0.970012,    0.561522,    1.412155,    0.000000,    0.000000,    0.000000,    0.000000,    0.000000,    0.000000,    1.003310,    0.000000,    0.000000,    0.000000,    0.000000,    0.000000,    0.000000,    1.055135,    0.000000,    0.000000,    0.000000,    0.000000,    0.000000,    0.000000,    1.203475,    1.718533,    0.183448,         MPa,   68.297671
+
+```
+
+![Cazacu-Plunkett-Barlat_predeformation.png](figures/Cazacu-Plunkett-Barlat_predeformation.png)
+
+Note that there are no red datapoints, as all datapoints are based on actual simulations and deduced from the assumption of symmetry of tension and compression.
+
+### Comparison of yield surfaces
+
+Using the standalone script `fit_yield_surface_and_plot.py`, two yield surfaces can be compared visually (which is demonstrated with a set of two yield loci unrelated to this example):
+
+![comparison.png](figures/comparison.png)

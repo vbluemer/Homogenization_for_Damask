@@ -247,12 +247,12 @@ load_path:
     stress_y_z: [     0]
     stress_z_z: [     0]
     
-    F_x_x: [    x, x]
-    F_x_y: [    x, x]
-    F_x_z: [    x, x]
-    F_y_y: [    x, x]
-    F_y_z: [    x, x]
-    F_z_z: [    x, x]
+    F_x_x: [    x]
+    F_x_y: [    x]
+    F_x_z: [    x]
+    F_y_y: [    x]
+    F_y_z: [    x]
+    F_z_z: [    x]
 
     unloading: False
     # This stress is imposed as the components of the first order Piola-Kirchoff stress tensor.

@@ -206,11 +206,19 @@ def write_elastic_tensor_to_file(elastic_tensor: NDArray[np.float64], file_name:
     result_dict[0]["unit_stress"] = "MPa"
     result_dict[0]["MSE"] = MSE
     Messages.ElasticTensor.writing_results(file_name)
-
-    with open(file_name, 'w', newline='') as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=component_names_flat)
-        writer.writeheader()
-        writer.writerows(result_dict)
+        
+    with open(file_name, "w") as f:
+        for row in component_names:
+            values = [result_dict[0][name] for name in row]
+            formatted_row = ", ".join(f"{v:12.2f}" for v in values)
+            f.write(formatted_row + "\n")
+        f.write("unit,MPa\n")
+        f.write(f"MSE,{result_dict[0]['MSE']:.2f}\n\n")
+    
+    # with open(file_name, 'w', newline='') as csvfile:
+    #     writer = csv.DictWriter(csvfile, fieldnames=component_names_flat)
+    #     writer.writeheader()
+    #     writer.writerows(result_dict)
 
 def calculate_elastic_tensor_main(problem_definition: ProblemDefinition) -> None:
     # This function redirects to either calculate_elastic_tensor_algebraic or calculate_elastic_tensor_common

@@ -5,27 +5,27 @@ general_settings:
   stress_tensor_type: Cauchy
 yield_point:
   N_increments: 15
-  estimated_shear_yield: 250000000.0
-  estimated_tensile_yield: 400000000.0
+  estimated_shear_yield: 300000000.0
+  estimated_tensile_yield: 550000000.0
   x-x:
-  - - NO_YIELD_DETECTED
-    - NO_YIELD_DETECTED
-    - NO_YIELD_DETECTED
-  - - NO_YIELD_DETECTED
-    - NO_YIELD_DETECTED
-    - NO_YIELD_DETECTED
-  - - NO_YIELD_DETECTED
-    - NO_YIELD_DETECTED
-    - NO_YIELD_DETECTED
+  - - 446401469.46813315
+    - -4348.011170683678
+    - -922.4410282257295
+  - - -4348.011170683678
+    - 648.770083031525
+    - 1755.757920212019
+  - - -922.4410282257295
+    - 1755.757920212019
+    - -677.2888678599168
   x-y:
-  - - 2481481.5131067894
-    - 249415106.5839264
-    - 1029.9181893487976
-  - - 249415106.5839264
-    - -1739.9948845542785
-    - -96.80606503039405
-  - - 1029.9181893487976
-    - -96.80606503039405
-    - -1787.925334942243
+  - - 2499900.6914927796
+    - 250093621.21288902
+    - 922.2082782821932
+  - - 250093621.21288902
+    - -488.3589603409457
+    - 739.3939213871301
+  - - 922.2082782821932
+    - 739.3939213871301
+    - -102.3988556494387
   yield_condition: stress_strain_curve
   yield_condition_value: 0.002
