@@ -1,0 +1,31 @@
+general_settings:
+  grid_file: /home/vincent/local_Homogenization_for_Damask/projects/template_yield_point/input_files/Polycrystal_25_5x5x5.vti
+  material_properties: /home/vincent/local_Homogenization_for_Damask/projects/template_yield_point/input_files/titanium_assigned.yaml
+  strain_tensor_type: true_strain
+  stress_tensor_type: Cauchy
+yield_point:
+  N_increments: 15
+  estimated_shear_yield: 250000000.0
+  estimated_tensile_yield: 400000000.0
+  x-x:
+  - - NO_YIELD_DETECTED
+    - NO_YIELD_DETECTED
+    - NO_YIELD_DETECTED
+  - - NO_YIELD_DETECTED
+    - NO_YIELD_DETECTED
+    - NO_YIELD_DETECTED
+  - - NO_YIELD_DETECTED
+    - NO_YIELD_DETECTED
+    - NO_YIELD_DETECTED
+  x-y:
+  - - 2481481.5131067894
+    - 249415106.5839264
+    - 1029.9181893487976
+  - - 249415106.5839264
+    - -1739.9948845542785
+    - -96.80606503039405
+  - - 1029.9181893487976
+    - -96.80606503039405
+    - -1787.925334942243
+  yield_condition: stress_strain_curve
+  yield_condition_value: 0.002

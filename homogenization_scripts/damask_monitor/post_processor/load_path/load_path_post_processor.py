@@ -90,23 +90,23 @@ class LoadCaseResults:
                 increment_data[f"stress_{direction}[MPa]".rjust(buffer)] = f"{np.squeeze(stress_vector[index]/1e6):{buffer}.2f}"
                 increment_data[f"strain_{direction}".rjust(buffer)] = f"{np.squeeze(strain_vector[index]):{buffer}.6f}"
             increment_data[f"Wp[J/m3]".rjust(buffer)] = f"{Wp:{buffer}.4f}"
-
-            increment_list.append(increment_data)
-        
+            increment_list.append(increment_data) 
             increment_counter += 1
 
         if interpolated_yield_value:
             stress = interpolated_yield_value.stress
             strain = interpolated_yield_value.strain
             Wp     = interpolated_yield_value.wp 
-        
             stress_vector = damask_helper.stress_tensor_to_vector_notation(stress)
             strain_vector = damask_helper.strain_tensor_to_vector_notation(strain)
+            increment_data: dict[str, float|int|str] = dict()
             increment_data["increment".rjust(buffer)] = f"yieldpoint".rjust(buffer)
             for direction, index in zip(directions, directions_indices):
                 increment_data[f"stress_{direction}[MPa]".rjust(buffer)] = f"{np.squeeze(stress_vector[index]/1e6):{buffer}.2f}"
                 increment_data[f"strain_{direction}".rjust(buffer)] = f"{np.squeeze(strain_vector[index]):{buffer}.6f}"
             increment_data[f"Wp[J/m3]".rjust(buffer)] = f"{Wp:{buffer}.4f}"
+            increment_list.append(increment_data) 
+            increment_counter += 1
             
         field_names: list[str] = ["increment".rjust(buffer)]
         for direction in directions:
@@ -119,7 +119,7 @@ class LoadCaseResults:
             writer = csv.DictWriter(csvfile, fieldnames=field_names)
             writer.writeheader()
             writer.writerows(increment_list)
-                    
+                            
         self.stress_per_material_point = stress_per_material_point
         self.strain_per_material_point = strain_per_material_point
 
@@ -134,7 +134,11 @@ class LoadCaseResults:
 
 def load_path_post_process(problem_definition: ProblemDefinition, damask_job: DamaskJob.LoadPath, interpolated_results: InterpolatedResults | None = None):
     results_folder = problem_definition.general.path.results_folder
-    readable_results_file = os.path.join(results_folder, 'load_path_results.csv')
+
+    if getattr(damask_job, "simulation_type", None) == "yield_point":
+        readable_results_file = os.path.join(results_folder, 'yield_point_results_'+damask_job.field_name+'.csv')
+    else:
+        readable_results_file = os.path.join(results_folder, 'load_path_results.csv')
     problem_definition.general.path.load_path_csv = readable_results_file
 
     load_path_results = LoadCaseResults(problem_definition, damask_job, readable_results_file, interpolated_results)
