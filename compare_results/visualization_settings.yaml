@@ -1,38 +1,80 @@
-# config.yaml
 
-yield_point_databases:
-  - "compare_results/yield_points_predeformed.csv"
-  - "compare_results/yield_points_undeformed.csv"
 
-# Hill, Cazacu-Plunkett-Barlat, Cazacu-Plunkett-Barlat_extended_n
-yield_surface_type: "Cazacu-Plunkett-Barlat"
+# 'comparison' or 'evolution'
+mode: 'comparison'
 
-# Optional: bounds for the Cazacu-Plunkett-Barlat function
-# [(min_k, max_k),(min_C_ii, max_C_ii), (min_a, max_a)]
-#bounds_CPB:
-#  - [[0, 1],[0, 3], [1.5, None]]
-#  - [[0, 1],[0, 3], [1.5, None]]
-  
-reference_yield_stress: 
-  - 472.41e6
-  - 472.41e6
-  
-yield_point_symmetry:
-  - False
-  - True
-
-# style: linewidth, marker size, marker edgewidth, fontsize
-style:
-  - [3, 12, 2, 16]
-  - [2, 12, 1, 16]
-  
-# colour: yield point marker, symmetric marker, countour 
-colour:    
-  - '#0072BD'
-  - '#D95319'
-  - '#7E2F8E'
-  
-# opacity of compared yield surface   
-alpha: 0.4
-  
-plot_only: False
+evolution:
+    yield_point_databases:
+      - "compare_results/inputs_evolution/yield_points_yield_surface_05.csv"
+      - "compare_results/inputs_evolution/yield_points_yield_surface_1.csv"
+#      - "compare_results/inputs_evolution/yield_points_yield_surface_15.csv"
+      - "compare_results/inputs_evolution/yield_points_yield_surface_2.csv"
+    yield_function_files:
+      - "compare_results/inputs_evolution/Cazacu-Plunkett-Barlat_05.pkl"
+      - "compare_results/inputs_evolution/Cazacu-Plunkett-Barlat_1.pkl"
+#      - "compare_results/inputs_evolution/Cazacu-Plunkett-Barlat_15.pkl"
+      - "compare_results/inputs_evolution/Cazacu-Plunkett-Barlat_2.pkl"
+    
+    # Hill, Cazacu-Plunkett-Barlat, Cazacu-Plunkett-Barlat_extended_n
+    yield_surface_type: "Cazacu-Plunkett-Barlat"
+    
+    # Optional: bounds for the Cazacu-Plunkett-Barlat function
+    # [(min_k, max_k),(min_C_ii, max_C_ii), (min_a, max_a)]
+    #bounds_CPB: [[0, 1],[0, 3], [1.5, None]]
+      
+    reference_yield_stress: 472.41e6
+      
+    yield_point_symmetry: True
+    
+    # style: linewidth, marker size, marker edgewidth, fontsize
+    style: [3, 12, 2, 16]
+      
+    # colour: yield point marker, symmetric marker, countour 
+    colour:    
+      - '#0072BD'
+      - '#7E2F8E'
+      
+    plot_only: True
+      
+      
+      
+comparison: 
+    yield_point_databases:
+      - "compare_results/inputs_comparison/yield_points_predeformed.csv"
+      - "compare_results/inputs_comparison/yield_points_undeformed.csv"
+    yield_function_files:
+      - "compare_results/inputs_comparison/yield_points_predeformed.pkl"
+      - "compare_results/inputs_comparison/yield_points_undeformed.pkl"
+    
+    # Hill, Cazacu-Plunkett-Barlat, Cazacu-Plunkett-Barlat_extended_n
+    yield_surface_type: "Cazacu-Plunkett-Barlat"
+    
+    # Optional: bounds for the Cazacu-Plunkett-Barlat function
+    # [(min_k, max_k),(min_C_ii, max_C_ii), (min_a, max_a)]
+    #bounds_CPB:
+    #  - [[0, 1],[0, 3], [1.5, None]]
+    #  - [[0, 1],[0, 3], [1.5, None]]
+      
+    reference_yield_stress: 
+      - 472.41e6
+      - 472.41e6
+      
+    yield_point_symmetry:
+      - False
+      - True
+    
+    # style: linewidth, marker size, marker edgewidth, fontsize
+    style:
+      - [3, 12, 2, 16]
+      - [2, 12, 1, 16]
+      
+    # colour: yield point marker, symmetric marker, countour 
+    colour:    
+      - '#0072BD'
+      - '#D95319'
+      - '#7E2F8E'
+      
+    # opacity of compared yield surface   
+    alpha: 0.4
+      
+    plot_only: True

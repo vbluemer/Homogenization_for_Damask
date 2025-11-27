@@ -130,10 +130,12 @@ class CazacuPlunkettBarlat:
         
         result_dict[0]["a"] = self.a
         result_dict[0]["k"] = self.k
+        
+        result_dict[0]["sigma_Y_ref"] = self.yield_stress_ref * self.unit_conversion()
 
         component_names_flat_all = component_names_flat_all + ["unit_stress"]
         result_dict[0]["unit_stress"] = self.unit_name()
-
+        
         if not MSE == None:
             result_dict[0]["MSE"] = MSE
             component_names_flat_all = component_names_flat_all + ["MSE"]

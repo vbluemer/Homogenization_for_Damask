@@ -90,10 +90,10 @@ class Hill:
     def write_to_file(self, path:str, MSE: float | None = None) -> None:
         
         coefficient_names: list[str] = [
-            "F", "G", "H", "L", "M", "N","unit_stress"]
+            "F", "G", "H", "L", "M", "N","sigma_Y_ref","unit_stress"]
 
         result_vals: list[float] = [
-            self.f, self.g, self.h, self.l, self.m, self.n, self.unit_name()]
+            self.f, self.g, self.h, self.l, self.m, self.n, self.yield_stress_ref * self.unit_conversion() ,self.unit_name()]
         
         if not MSE == None:
             coefficient_names = coefficient_names + ["MSE"]
@@ -110,10 +110,9 @@ class Hill:
         for name, value in zip(coefficient_names, result_vals):
             result_dict[0][name] = value
 
-
         Messages.YieldSurface.writing_results(self.display_name(), path)
         with open(path, 'w', newline='') as csvfile:
-            writer = csv.DictWriter(csvfile, fieldnames=coefficient_names)
+            writer = csv.DictWriter(csvfile, fieldnames=result_dict[0].keys())
             writer.writeheader()
             writer.writerows(result_dict)
 

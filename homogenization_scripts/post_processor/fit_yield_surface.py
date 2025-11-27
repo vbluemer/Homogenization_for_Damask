@@ -2,6 +2,8 @@
 import os
 import textwrap
 import numpy as np
+import pickle as pkl
+from pathlib import Path
 
 # Local packages
 from .yield_surfaces.cazacu_plunkett_barlat import *
@@ -73,6 +75,10 @@ def fit_example_yield_surface(dataset_path: str, output_path: str, plot_path: st
     example_yield_surface.write_to_file(output_path, example_yield_surface.mean_square_error_stress)
 
     make_plot_yield_surface(example_yield_surface, data_set, plot_path, symmetry)
+    
+    pkl_name = Path(output_path).with_suffix('.pkl')
+    with open(pkl_name, "wb") as f:
+        pkl.dump(example_yield_surface, f)
 
     return example_yield_surface
 
@@ -88,6 +94,10 @@ def fit_hill(yield_stress_ref: float, dataset_path: str, output_path: str, plot_
     hill.write_to_file(output_path, hill.mean_square_error_stress)
 
     make_plot_yield_surface(hill, data_set, plot_path, symmetry)
+    
+    pkl_name = Path(output_path).with_suffix('.pkl')
+    with open(pkl_name, "wb") as f:
+        pkl.dump(hill, f)
 
     return hill
 
@@ -100,7 +110,7 @@ def fit_cazacu_plunkett_barlat(yield_stress_ref: float,
                                use_extended: bool | int, 
                                bounds = None) -> CazacuPlunkettBarlat:
     if bounds is None:
-        bounds = [(0, 1)] + [(0, 3)] * 9 + [(1.5, None)]
+        bounds = [(0, 1)] + [(0, None)] * 9 + [(1.5, None)]
     else:
         bounds = [tuple(None if x == "None" else x for x in pair) for pair in bounds]
         bounds = [bounds[0]] + [bounds[1]] * 9 + [bounds[2]]
@@ -136,7 +146,11 @@ def fit_cazacu_plunkett_barlat(yield_stress_ref: float,
     cazacu_plunkett_barlat.write_to_file(output_path, cazacu_plunkett_barlat.mean_square_error_stress)
 
     make_plot_yield_surface(cazacu_plunkett_barlat, data_set, plot_path, symmetry)
-
+    
+    pkl_name = Path(output_path).with_suffix('.pkl')
+    with open(pkl_name, "wb") as f:
+        pkl.dump(cazacu_plunkett_barlat, f)
+        
     return cazacu_plunkett_barlat
 
 

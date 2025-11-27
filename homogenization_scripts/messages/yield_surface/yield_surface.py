@@ -33,7 +33,7 @@ class YieldSurface:
         print(f"")
         print(f"Fitted Barlat-cazacu with MSE (stress) of: {cazacu_plunkett_barlat.mean_square_error_stress}") # type: ignore
         print(f"Unit stress: {cazacu_plunkett_barlat.unit_name()}") # type: ignore
-        print(f"Coefficients of the Barlat-cazacu are:")
+        print(f"Coefficients of the Barlat-Plunkett-Cazacu function are:")
         print(f"k = {cazacu_plunkett_barlat.k}") # type: ignore
         print(f"a = {cazacu_plunkett_barlat.a}") # type: ignore
         print(f"C = ")

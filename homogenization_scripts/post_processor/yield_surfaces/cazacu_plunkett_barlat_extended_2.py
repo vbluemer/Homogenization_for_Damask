@@ -152,8 +152,8 @@ class CazacuPlunkettBarlatExtendedN:
                 for j in range(6):
                     result_dict[0][component_names_i[i][j]] = self.c[n_i_0][i][j]
             
+            result_dict[0]["sigma_Y_ref"] = self.yield_stress_ref * self.unit_conversion()
 
-            
             component_names = component_names + ["unit_stress"]
             result_dict[0]["unit_stress"] = self.unit_name()
         

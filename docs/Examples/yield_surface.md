@@ -189,7 +189,6 @@ Results can be observed in files analogous to those of the previous analysis:
 ```
         C_11,        C_12,        C_13,        C_14,        C_15,        C_16,        C_21,        C_22,        C_23,        C_24,        C_25,        C_26,        C_31,        C_32,        C_33,        C_34,        C_35,        C_36,        C_41,        C_42,        C_43,        C_44,        C_45,        C_46,        C_51,        C_52,        C_53,        C_54,        C_55,        C_56,        C_61,        C_62,        C_63,        C_64,        C_65,        C_66,           a,           k, unit_stress,         MSE
     1.070181,    2.070981,    0.970012,    0.000000,    0.000000,    0.000000,    2.070981,    0.763178,    0.561522,    0.000000,    0.000000,    0.000000,    0.970012,    0.561522,    1.412155,    0.000000,    0.000000,    0.000000,    0.000000,    0.000000,    0.000000,    1.003310,    0.000000,    0.000000,    0.000000,    0.000000,    0.000000,    0.000000,    1.055135,    0.000000,    0.000000,    0.000000,    0.000000,    0.000000,    0.000000,    1.203475,    1.718533,    0.183448,         MPa,   68.297671
-
 ```
 
 ![Cazacu-Plunkett-Barlat_predeformation.png](figures/Cazacu-Plunkett-Barlat_predeformation.png)
@@ -201,3 +200,9 @@ Note that there are no red datapoints, as all datapoints are based on actual sim
 Using the standalone script `fit_yield_surface_and_plot.py`, two yield surfaces can be compared visually (which is demonstrated with a set of two yield loci unrelated to this example):
 
 ![comparison.png](figures/comparison.png)
+
+## Evolution of yield surfaces
+
+Using the `postprocessing_only` flag, the same set of Damask output (HDF5) files, can be evaluated for yielding at different thresholds. The resulting yield points and fitted yield functions can also be visualized using `fit_yield_surface_and_plot.py`, with the `mode` flag in `compare_results/visualization_settings.yaml` set to `evolution` as opposed to `comparison`:
+
+![evolution.png](figures/evolution.png)

@@ -16,13 +16,15 @@ def make_plot_yield_surface(
         yield_surface: YieldSurfaces,
         data_set: DataFrame,
         path: str,
-        symmetry: bool) -> Figure:
+        symmetry: bool,
+        style= None) -> Figure:
 
-    style = FigureStyle(linewidth=3, 
-                        markersize=12,
-                        markeredgewidth = 2,
-                        fontsize=20)
-    
+    if style is None:
+        style = FigureStyle(linewidth=3, 
+                            markersize=12,
+                            markeredgewidth = 2,
+                            fontsize=20)
+        
     fig, axs = plt.subplots(nrows=2, ncols=3) # type: ignore
     fig.set_size_inches(20,(2/3)*20) 
         
