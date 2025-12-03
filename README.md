@@ -54,14 +54,12 @@ conda create -n [environment_name] python=3.12
 conda activate [environment_name]
 
 pip install -r requirements.txt # Install the required packages
-```
 
-If a system-wide installation of DAMASK does not exist yet, it can be installed into the conda environment. 
+# If a system-wide installation of DAMASK does not exist yet, 
+# it can be installed into the conda environment. 
 
-```
 # NOTE: Only use this when DAMASK is not yet
 # installed to prevent compatibility issues
-conda activate [environment_name]
 
 conda config --add channels conda-forge # Add the conda-forge channel
 
