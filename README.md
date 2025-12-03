@@ -5,10 +5,12 @@ This project is an unaffiliated python-interface for [DAMASK](https://github.com
 - design of experiments to acquire datapoints (yield points) along multi-axial stress trajectories
 
 - execution, monitoring, and interpretation of numerical experiments: optional termination of a job once yielding is reached; interpolation of the stress state where yielding occured according to a choice of criteria with user-defined threshold
-  <img title="" src="docs/Examples/figures/stress_strain_curve_x-x_01.png" alt="" width="293">  <img title="" src="docs/Examples/figures/stress_strain_curve_x-y_01.png" alt="" width="295"> 
+
+<img title="" src="docs/Examples/figures/stress_strain_curve_x-x_01.png" alt="" width="293">  <img title="" src="docs/Examples/figures/stress_strain_curve_x-y_01.png" alt="" width="295"> 
 
 - automated fitting of a choice of yield functions to datapoints
-  <img title="" src="docs/Examples/figures/evolution.png" alt="" width="297">  <img title="" src="docs/Examples/figures/comparison.png" alt="" width="308"> 
+
+<img title="" src="docs/Examples/figures/evolution.png" alt="" width="297">  <img title="" src="docs/Examples/figures/comparison.png" alt="" width="308"> 
 
 - automated visualization of macroscopic stress strain curves and yield surfaces
 
