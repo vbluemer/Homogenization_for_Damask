@@ -15,10 +15,10 @@ scripts_folder = os.path.dirname(os.path.abspath(__file__))
 def fit_elastic_tensor_from_dataset(material_type: str, dataset_path: str, output_path: str| None = None) -> NDArray[np.float64]:
 
     data_set: DataFrame = read_elastic_tensor_data_points(dataset_path)
-    elastic_tensor: NDArray[np.float64] = fit_elastic_tensor(material_type, data_set)
+    elastic_tensor, MSE = fit_elastic_tensor(material_type, data_set)
 
     if not output_path == None:
-        write_elastic_tensor_to_file(elastic_tensor, output_path)
+        write_elastic_tensor_to_file(elastic_tensor, output_path, MSE)
 
     return elastic_tensor
 
