@@ -201,7 +201,7 @@ Using the standalone script `fit_yield_surface_and_plot.py`, two yield surfaces 
 
 ![comparison.png](figures/comparison.png)
 
-## Evolution of yield surfaces
+### Evolution of yield surfaces
 
 Using the `postprocessing_only` flag, the same set of Damask output (HDF5) files, can be evaluated for yielding at different thresholds. The resulting yield points and fitted yield functions can also be visualized using `fit_yield_surface_and_plot.py`, with the `mode` flag in `compare_results/visualization_settings.yaml` set to `evolution` as opposed to `comparison`:
 

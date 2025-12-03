@@ -5,12 +5,14 @@ This project is an unaffiliated python-interface for [DAMASK](https://github.com
 - design of experiments to acquire datapoints (yield points) along multi-axial stress trajectories
 
 - execution, monitoring, and interpretation of numerical experiments: optional termination of a job once yielding is reached; interpolation of the stress state where yielding occured according to a choice of criteria with user-defined threshold
+  <img title="" src="docs/Examples/figures/stress_strain_curve_x-x_01.png" alt="" width="293">  <img title="" src="docs/Examples/figures/stress_strain_curve_x-y_01.png" alt="" width="295"> 
 
 - automated fitting of a choice of yield functions to datapoints
+  <img title="" src="docs/Examples/figures/evolution.png" alt="" width="297">  <img title="" src="docs/Examples/figures/comparison.png" alt="" width="308"> 
 
-- visualization of macroscopic stress strain curves and yield surfaces
+- automated visualization of macroscopic stress strain curves and yield surfaces
 
-- evaluation of existing result files with a changed criterion or new threshold for yielding 
+- re-evaluation of existing result files with a changed criterion or new threshold for yielding 
 
 - imposition of a pre-deformation history on the microstructure prior to yield surface identification
 
@@ -23,7 +25,7 @@ It is highly recommended to run this project inside of a Conda (or similar) envi
 ### With Conda (Python 3.12):
 
 ```
-git clone https://github.com/JoppeKleinhout/Homogenization_for_Damask.git
+git clone https://github.com/vbluemer/Homogenization_for_Damask.git
 
 cd Homogenization_for_Damask
 
@@ -103,13 +105,3 @@ For further guidance, review the [`Users guide`](docs/users_guide.md)
 ## Context
 
 This project has been developed by Joppe Kleinhout in the context of pursuing a Msc degree in Mechanical Engineering at the University of Twente, specifically as an internship at the Research chair of Nonlinear Solid Mechanics, and later extended by Vincent Blümer. 
-
-
-
-
-
-
-
-
-
-
